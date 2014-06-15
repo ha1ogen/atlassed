@@ -113,7 +113,7 @@
   text-align: start;
 }
 #Search #SearchBox .search-icon {
-  background: #ffffff url(/Images/search-icon2.png) right no-repeat;
+  background: #ffffff url(../Images/search-icon2.png) right no-repeat;
   background-size: 21.333333333333332px;
 }
 #Search #SearchBox input {

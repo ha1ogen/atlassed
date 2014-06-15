@@ -20,14 +20,14 @@ window.CurrentContext = new (function () {
     var _buildings = null;
     this.GetAllBuildings = function () {
         if (_buildings == null) {
-            ajax({
+            /*ajax({
                 webservice: 'Main',
                 func: 'GetBuildings',
                 async: false,
                 success: function (data) {
                     _buildings = data;
                 }
-            });
+            });*/
         }
         return _buildings;
     }

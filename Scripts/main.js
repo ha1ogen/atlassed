@@ -202,7 +202,7 @@ $().ready(function () {
         dropdownCssClass: 'tile-select2-dropdown'
     });
 
-    LoadBuildings();
+    //LoadBuildings();
 
     SelectBuilding.change(function (evt) {
         if (isNaN($(this).val()))
