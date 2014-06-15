@@ -1,0 +1,167 @@
+﻿#Search {
+    position: absolute;
+    left: 25px;
+    top: 12px;
+    z-index: 99;
+    outline: none;
+    width: @search-box-width;
+    min-width: @search-box-min-width;
+    max-width: @search-box-max-width;
+
+    &.homepage {
+        width: 50%;
+        min-width: 300px;
+        max-width: @search-box-max-width;
+    }
+
+    > div {
+        position: relative;
+    }
+
+    #Logo {
+        color: @primary-color;
+        font-weight: bold;
+        text-shadow: 2px 2px 2px #aaa;
+        text-align: center;
+        font-size: 70px;
+        margin-bottom: 10px;
+    }
+
+    #Instructions {
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    #SearchBox {
+        outline: @default-outline;
+        .box-shadow;
+        width: 100%;
+        text-align: start;
+
+
+        .search-icon {
+            background: white url(/Images/search-icon2.png) right no-repeat;
+            background-size: @search-box-height / 1.5;
+        }
+
+        input {
+            padding: 6px 0 6px 3%;
+            font-size: medium;
+            font-weight: 300;
+            margin: 0;
+            border: none;
+            width: 97%;
+        }
+
+        #SearchButton {
+            background-color: #357ae8;
+            background-image: -webkit-linear-gradient(top,@search-button-color, lighten(@search-button-color, 10%));
+            border: 0;
+            border-radius: 0 2px 2px 0;
+            text-align: center;
+            vertical-align: top;
+            width: 72px;
+            .box-shadow;
+            position: absolute;
+            top: -1px;
+            left: @search-box-width + 1;
+            width: 72px;
+            height: @search-box-height + 0.5;
+            display: inline-block;
+
+            &:hover {
+                background-color: #357ae8;
+                background-image: -webkit-linear-gradient(top,@search-button-color, lighten(@search-button-color, 5%));
+            }
+
+            &::after {
+                background: url(/Images/search-icon.png);
+                background-size: 17px;
+                content: "";
+                display: block;
+                height: 17px;
+                margin: 0 auto;
+                width: 17px;
+            }
+        }
+    }
+
+    #SearchResultSummary {
+        margin: (@default-spacing / 2) 0;
+        padding: @default-spacing / 2;
+        font-weight: bold;
+        text-align: right;
+        .box-shadow;
+        outline: @default-outline;
+        background-color: @default-background-color;
+        cursor: pointer;
+    }
+
+    #SearchResults {
+        display: none;
+        margin-top: @default-spacing * 1.5;
+        padding: @default-spacing;
+        outline: @default-outline;
+        .box-shadow;
+        text-align: start;
+        background-color: @default-background-color;
+        overflow-y: hidden;
+
+        #DetailsCard {
+            margin-bottom: @default-spacing;
+            padding: @default-spacing;
+            .box-shadow;
+            border: @default-outline;
+
+            #DetailsCardTitle {
+                .font-size(1.5);
+                font-weight: bold;
+                margin-top: @default-spacing;
+                margin-bottom: @default-spacing;
+            }
+
+            > table td {
+                padding: @default-spacing;
+            }
+        }
+
+        #SearchResultList {
+            overflow-y: scroll;
+
+            .search-result {
+                margin-bottom: @default-spacing;
+                padding: @default-spacing;
+                min-height: @search-result-icon-width;
+                cursor: pointer;
+                .box-shadow;
+                border: @default-outline;
+
+                .left {
+                    display: inline-block;
+                    margin-right: @search-result-icon-width + 5;
+
+                    .primary-text {
+                        .font-size(1.5);
+                    }
+
+                    .secondary-text {
+                        .font-size(0.99);
+                    }
+                }
+
+                .right {
+                    display: inline-block;
+                    float: right;
+                    width: @search-result-icon-width;
+                    .vertical-align-middle();
+                }
+
+                &:last-of-type {
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,126 @@
+﻿#UpperRightTiles {
+    display: table-row;
+    position: absolute;
+    right: @float-horizontal-margin;
+    top: @float-vertical-margin;
+
+    > * {
+        display: inline-block;
+        margin-left: @default-spacing;
+    }
+}
+
+#LowerLeftTiles {
+    display: table-row;
+    position: absolute;
+    left: @float-horizontal-margin;
+    bottom: @footer-height + @float-vertical-margin;
+
+    > * {
+        display: inline-block;
+        margin-left: @default-spacing;
+    }
+}
+
+#CenterTiles {
+    display: none;
+    position: absolute;
+    margin: auto;
+    text-align: center;
+    vertical-align: middle;
+
+    > * {
+        display: inline-block;
+        margin-left: @default-spacing;
+        margin-top: @default-spacing;
+    }
+}
+
+#ZoomTiles {
+    position: absolute;
+    right: @float-horizontal-margin;
+    bottom: @float-vertical-margin + @footer-height;
+
+    button {
+        height: 30px;
+        width: 30px;
+        .font-size(2);
+        font-weight: bold;
+    }
+}
+
+
+.square-tile(@scale: 1) {
+    .tileStyle;
+    height: @tile-size * @scale;
+    width: @tile-size * @scale;
+}
+
+.tile-select {
+    .square-tile(1);
+    height: @tile-size;
+
+    &.select2-container .select2-choice {
+        height: inherit; // override
+        padding: 0;
+        overflow: hidden;
+        /*position: fixed;*/
+        white-space: nowrap;
+        background-image: none; // override
+        filter: 0;
+        width: @tile-size;
+        border: none;
+        background-color: transparent;
+        text-align: center;
+        font-size: inherit;
+        line-height: inherit;
+        .vertical-align-middle;
+
+        .select2-chosen {
+            margin: 0;
+        }
+
+        .select2-arrow {
+            display: none;
+            clear: both;
+
+            b {
+            }
+        }
+    }
+}
+
+.tile-select2-dropdown {
+    width: @search-result-width !important;
+    margin-top: @default-spacing;
+    padding-top: @default-spacing;
+    border-top: 1px solid #aaa;
+    margin-bottom: @default-spacing;
+    padding-bottom: 0;
+    border-bottom: 1px solid #aaa !important;
+}
+
+.tile-link(@size) {
+    .square-tile(@size);
+    text-align: center;
+
+    div {
+        .font-size(@size);
+        text-align: center;
+        .vertical-align-middle();
+        width: @tile-size * @size;
+        height: @tile-size * @size;
+    }
+}
+
+.tile-link-small {
+    .tile-link(0.25);
+}
+
+.tile-link-medium {
+    .tile-link(1);
+}
+
+.tile-link-large {
+    .tile-link(3);
+}

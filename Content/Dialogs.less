@@ -1,0 +1,33 @@
+﻿#BuildingDialog {
+
+    > div {
+        display: inline-block;
+        border: 1px solid black;
+        padding: @default-spacing;
+    }
+}
+
+#BuildingList {
+    background-color: @default-background-color;
+    .box-shadow;
+    padding: @default-spacing;
+
+    .ul {
+        margin-bottom: @default-spacing;
+
+        > div {
+            padding: @default-spacing / 2;
+            .box-shadow;
+            margin-bottom: @default-spacing / 2;
+            cursor: pointer;
+
+            &:last-of-type {
+                margin-bottom: 0;
+            }
+
+            &:active {
+                background-color: @primary-color;
+            }
+        }
+    }
+}

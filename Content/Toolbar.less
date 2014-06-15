@@ -1,0 +1,30 @@
+﻿#Toolbar {
+    .font-size(.8);
+    position: absolute;
+    margin-left: @float-horizontal-margin + @default-spacing * 2;
+    top: @float-vertical-margin;
+    outline: @default-outline;
+    .box-shadow;
+    .vertical-align-middle();
+    padding: (@default-spacing / 3) @default-spacing;
+    background-color: @default-background-color;
+
+    div {
+        display: inline-block;
+    }
+
+    .toolbar-button-group {
+        /*outline: @default-outline;*/
+        padding: @default-spacing;
+        margin-right: @default-spacing * 2;
+
+        &:last-of-type {
+            margin-right: 0;
+        }
+    }
+
+    .toolbar-button {
+        .button;
+        height: 30px;
+    }
+}

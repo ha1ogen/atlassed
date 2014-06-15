@@ -1,0 +1,79 @@
+﻿.box-shadow {
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3),0 4px 15px -5px rgba(0,0,0,0.3);
+}
+
+.font-size(@scale: 1) {
+    font-size: @default-font-size * @scale;
+}
+
+.vertical-align-middle() {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.width(@width, @min: @width, @max: @width) {
+    width: @width;
+    max-width: @max;
+    min-width: @min;
+}
+
+.height(@height, @min: @height, @max: @height) {
+    height: @height;
+    max-height: @max;
+    min-height: @min;
+}
+
+.square(@size, @min: @size, @max: @size) {
+    .width(@size, @min, @max);
+    .height(@size, @min, @max);
+}
+
+.tileStyle {
+    border: none;
+    outline: @default-outline;
+    background-color: @default-background-color;
+    .box-shadow;
+    font-weight: bold;
+    .font-size(1.5);
+    .vertical-align-middle();
+    display: inline-block;
+    cursor: pointer;
+
+    &:focus {
+        outline: 1px dotted black;
+        outline-offset: -2px;
+    }
+
+    &:hover, &:hover:focus, &:active {
+        outline: 1px solid black;
+        outline-offset: 0;
+    }
+
+
+    &.disabled {
+        outline: none;
+        color: lightgray;
+        outline-color: lightgray;
+
+        .select2-chosen {
+            color: gray;
+        }
+    }
+
+    &:first-of-type {
+        margin-left: 0;
+    }
+}
+
+.button {
+    .tileStyle;
+    padding: @default-spacing;
+
+    &:active {
+        background-color: @primary-color;
+    }
+
+    &.toggle-button.selected {
+        background-color: @primary-color;
+    }
+}
