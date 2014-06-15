@@ -323,6 +323,10 @@ $().ready(function () {
         Scrolling = -1;
         zoom(-2);
     });
+    $('#login').click(function () {
+        $('#LoginWrapper').css('visibility','hidden');
+        $('#AppWrapper').css('visibility','visible');
+    });
 
     Toolbar.find('#T_BUILDINGS').click(function () {
         BuildingDialog.open();
