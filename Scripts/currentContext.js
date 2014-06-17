@@ -28,6 +28,7 @@ window.CurrentContext = new (function () {
                     _buildings = data;
                 }
             });*/
+            _buildings = [{BuildingId:'1', BuildingName:'Test1'}, {BuildingId:'2',BuildingName:'Test2'}];
         }
         return _buildings;
     }
