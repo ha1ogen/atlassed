@@ -50,20 +50,20 @@ function ajax(options) {
         throw 'ajax: failure must be a function';
     }
 
-    var a = $.ajax({
-        url: '' + internalOptions.webservice + 'WebService.asmx/' + internalOptions.func,
-        data: JSON.stringify(internalOptions.params || {}),
-        contentType: 'application/json; charset=utf-8',
-        type: 'post',
-        dataType: 'json',
-        async: internalOptions.async,
-        success: function (data) {
-            internalOptions.success(data.d);
-        },
-        failure: internalOptions.failure,
-        error: internalOptions.error
-    });
-    return a;
+    // var a = $.ajax({
+    //     url: '' + internalOptions.webservice + 'WebService.asmx/' + internalOptions.func,
+    //     data: JSON.stringify(internalOptions.params || {}),
+    //     contentType: 'application/json; charset=utf-8',
+    //     type: 'post',
+    //     dataType: 'json',
+    //     async: internalOptions.async,
+    //     success: function (data) {
+    //         internalOptions.success(data.d);
+    //     },
+    //     failure: internalOptions.failure,
+    //     error: internalOptions.error
+    // });
+    return null;
 }
 
 function CreateTileLink(label, onclick, size) {
