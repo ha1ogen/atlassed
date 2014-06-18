@@ -385,12 +385,13 @@ function mouseup(e) {
 
 function removeWorkstation(obj) {
     if (confirm("Are you sure you want to delete this workstation?")) {
-        if (CurrentContext.RemoveWorkstation(obj.w.LocationId)) {
+        //Temporary Stub to allow for deleting without any server calls
+        //if (CurrentContext.RemoveWorkstation(obj.w.LocationId)) {
             Canvas.remove(obj);
             SearchResultsDetailsCard.clear();
-        } else {
-            alert('Unable to remove the workstation');
-        }
+        //} else {
+        //    alert('Unable to remove the workstation');
+        //}
     }
 }
 
