@@ -28,8 +28,8 @@ window.CurrentContext = new (function () {
                     _buildings = data;
                 }
             });*/
-            _buildings = [{BuildingId:'1', BuildingName:'Test1', BuildingAddress: '200 University Avenue West Waterloo',Floors:[{FloorNumber:'1', FloorId:'FloorId1', FileName:'phase1_1stfloor'},{FloorNumber:'2', FloorId:'FloorId2'}]}, 
-                        {BuildingId:'2',BuildingName:'Test2', Floors:[{FloorNumber:'1', FloorId:'FloorId1'},{FloorNumber:'2', FloorId:'FloorId2'},{FloorNumber:'3', FloorId:'FloorId3'}]}];
+            _buildings = [{BuildingId:'1', BuildingName:'Test1', BuildingAddress: '200 University Avenue West Waterloo',Floors:[{FloorNumber:'1', FloorId:'11', Filename:'phase1_1stfloor.gif'},{FloorNumber:'2', FloorId:'12', Filename:'phase1_2ndfloor.gif'}]}, 
+                        {BuildingId:'2',BuildingName:'Test2', BuildingAddress: '1 Yonge Street Toronto',Floors:[{FloorNumber:'1', FloorId:'21', Filename:'Atlanta7thfloor.gif'},{FloorNumber:'2', FloorId:'22', Filename:'Atlanta8thfloor.gif'},{FloorNumber:'3', FloorId:'23', Filename:'phase5b_2ndfloor.gif'}]}];
         }
         return _buildings;
     }
@@ -169,6 +169,7 @@ window.CurrentContext = new (function () {
             }
         });*/
 
+        data = [{locationId:'1', X: '100', Y:'100'}];
         //Stubbing
         LoadCanvas(f.Filename, data, internalCallback);
     };

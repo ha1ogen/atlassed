@@ -94,7 +94,7 @@ function LoadCanvas(filename, spaces, callback) {
 
     var async = 1;
     var timeout = 1800;
-    fabric.Image.fromURL('/Images/' + filename, function (imgObj) {
+    fabric.Image.fromURL('Images/' + filename, function (imgObj) {
         if (imgObj._originalElement == null) {
             async--
             timeout = -1;
@@ -169,14 +169,14 @@ function LoadCanvas(filename, spaces, callback) {
 
 function RenderObjects(spaces) {
     $.each(spaces || [], function (i, s) {
-        var textObj = createTextObj(s.Name, s.TopLeft.X, s.TopLeft.Y);
+        /*var textObj = createTextObj(s.Name, s.TopLeft.X, s.TopLeft.Y);
         Canvas.add(textObj);
         drawRect(s.TopLeft.X, s.TopLeft.Y, s.BottomRight.X - s.TopLeft.X, s.BottomRight.Y - s.TopLeft.Y)
             .set('w', s).set('text', textObj);
         $.each(s.Workstations || [], function (j, w) {
             drawCircle(s.locationId, w.Point.X, w.Point.Y)
-                .set('w', w);
-        });
+                .set('w', w);*/
+        drawCircle(s.locationId, s.X, s.Y);
     });
     Canvas.renderAll();
 }
