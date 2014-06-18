@@ -28,7 +28,8 @@ window.CurrentContext = new (function () {
                     _buildings = data;
                 }
             });*/
-            _buildings = [{BuildingId:'1', BuildingName:'Test1'}, {BuildingId:'2',BuildingName:'Test2'}];
+            _buildings = [{BuildingId:'1', BuildingName:'Test1', BuildingAddress: '200 University Avenue West Waterloo',Floors:[{FloorNumber:'1', FloorId:'FloorId1', FileName:'phase1_1stfloor'},{FloorNumber:'2', FloorId:'FloorId2'}]}, 
+                        {BuildingId:'2',BuildingName:'Test2', Floors:[{FloorNumber:'1', FloorId:'FloorId1'},{FloorNumber:'2', FloorId:'FloorId2'},{FloorNumber:'3', FloorId:'FloorId3'}]}];
         }
         return _buildings;
     }
@@ -149,7 +150,7 @@ window.CurrentContext = new (function () {
         if (SelectBuilding.val() != f.BuildingId) {
             SelectBuilding.val(f.BuildingId).change();
         }
-        ajax({
+        /*ajax({
             webservice: 'Main',
             func: 'LoadFloorData',
             async: false,
@@ -166,7 +167,10 @@ window.CurrentContext = new (function () {
             error: function (data) {
                 internalCallback(false);
             }
-        });
+        });*/
+
+        //Stubbing
+        LoadCanvas(f.Filename, data, internalCallback);
     };
 
     this.GetFloors = function (buildingId) {

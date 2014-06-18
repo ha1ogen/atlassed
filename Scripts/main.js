@@ -461,7 +461,7 @@ function LoadBuildings() {
     SelectBuilding.empty();
 
     var option = $('<option/>');
-    option.text('Choose...');
+    option.text('Building...');
     option.addClass(NullOptionClass);
     SelectBuilding.append(option);
 
