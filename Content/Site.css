@@ -562,7 +562,6 @@ button {
   vertical-align: middle;
   display: inline-block;
   cursor: pointer;
-  padding: 5px;
 }
 button:focus {
   outline: 1px dotted black;
