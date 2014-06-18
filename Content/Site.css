@@ -74,6 +74,13 @@
 .button.toggle-button.selected {
   background-color: #7bb931;
 }
+#Logo {
+  color: #7bb931;
+  font-weight: bold;
+  text-shadow: 2px 2px 2px #aaa;
+  text-align: center;
+  font-size: 70px;
+}
 #Search {
   position: absolute;
   left: 25px;
@@ -91,14 +98,6 @@
 }
 #Search > div {
   position: relative;
-}
-#Search #Logo {
-  color: #7bb931;
-  font-weight: bold;
-  text-shadow: 2px 2px 2px #aaa;
-  text-align: center;
-  font-size: 70px;
-  margin-bottom: 10px;
 }
 #Search #Instructions {
   text-align: center;
@@ -653,8 +652,15 @@ footer > div {
   margin-left:-150px;
   margin-top:-150px;
   width:300px;
-  height:300px;
+  height:200px;
+  text-align: center;
 }
-#LoginWrapper  input {
+#LoginWrapper input {
   width:300px;
+}
+#LoginWrapper #login {
+  width:100px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top:5px;
 }
