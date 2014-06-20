@@ -3,12 +3,12 @@
     T_DRAW_POLY = 'T_DRAW_POLY',
     T_TAG_WORKSTATION = 'T_TAG_WORKSTATION',
     T_ERASE = 'T_ERASE';
-
+var admin = false;
 window.CurrentContext = new (function () {
     var self = this;
     $().ready(function () {
-        var admin = $('[id$=_ADMIN]').val() == 1;
-        $('[id$=_ADMIN]').remove();
+        //var admin = $('[id$=_ADMIN]').val() == 1;
+        //$('[id$=_ADMIN]').remove();
         self.IsAdmin = function () { return admin; };
 
         self.GetAllBuildings();
