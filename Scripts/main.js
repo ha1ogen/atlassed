@@ -331,6 +331,7 @@ $().ready(function () {
         }
         else{
             admin = false;
+            $('#Toolbar').css('visibility','hidden');
         }
     });
 
