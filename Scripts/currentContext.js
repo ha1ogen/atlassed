@@ -366,7 +366,7 @@ window.CurrentContext = new (function () {
     this.GetUnassignedPeople = function (callback) {
         var async = true;
         var people = true;
-        if (callback === undefined) {
+        /*if (callback === undefined) {
             async = false;
             people = false;
             callback = function (data) {
@@ -378,8 +378,8 @@ window.CurrentContext = new (function () {
             func: 'GetUnassignedPeople',
             async: async,
             success: callback
-        });
-
+        });*/
+        people = [{PersonId: '1', Name: 'TestPerson1'}, {PersonId:'2', Name: 'TestPerson2'}]
         return people;
     }
 

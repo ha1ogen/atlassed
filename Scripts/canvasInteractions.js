@@ -220,9 +220,9 @@ function drawRect(x, y, w, h) {
     return square;
 }
 
-function drawCircle(parentId, x, y) {
+function drawCircle(LocationId, x, y) {
     var circle = new fabric.Circle({
-        parentLocationId: parentId,
+        locationId: LocationId,
         radius: WORKSTATION_RADIUS * AbsoluteScale,
         left: x - (7 * AbsoluteScale),
         top: y - (7 * AbsoluteScale),
@@ -267,11 +267,11 @@ function mousedown(e) {
         case T_TAG_WORKSTATION:
             x = mouse.x;
             y = mouse.y;
-            if (obj !== undefined && obj.type == 'rect') {
-                drawCircle(e.target.w.LocationId, x, y);
-            } else {
-                alert("Workstations can only be placed within marked spaces. Please define the room before attempting to add the workstation.");
-            }
+            //if (obj !== undefined && obj.type == 'rect') {
+                drawCircle(null, x, y);
+            //} else {
+            //    alert("Workstations can only be placed within marked spaces. Please define the room before attempting to add the workstation.");
+            //}
             break;
     }
 }
