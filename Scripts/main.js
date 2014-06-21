@@ -326,6 +326,13 @@ $().ready(function () {
     $('#login').click(function () {
         $('#LoginWrapper').css('visibility','hidden');
         $('#AppWrapper').css('visibility','visible');
+        if ($('#username').val() == 'admin'){
+            admin = true;
+        }
+        else{
+            admin = false;
+            $('#Toolbar').css('visibility','hidden');
+        }
     });
 
     Toolbar.find('#T_BUILDINGS').click(function () {
