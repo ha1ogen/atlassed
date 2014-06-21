@@ -39,15 +39,42 @@ $().ready(function () {
     Instructions = $('#Instructions');
     Watermark = $('#Watermark');
     SearchContainer = $('#Search');
+    SearchInput = $('#SearchBox input');
+    SearchResultContainer = $('#SearchResults');
+    SearchResultSummary = $('#SearchResultSummary');
+    SearchResultsDetailsCard = $('#DetailsCard');
+    SearchResultList = $('#SearchResultList');
+    SearchResultTemplate = $('#SearchResultTemplate');
+    SearchResultDetail = $('#SearchResultDetail');
+    SelectBuilding = $('#Buildings');
+    SelectFloor = $('#Floors');
+    CenterTiles = $('#CenterTiles');
+    ZoomTiles = $('#ZoomTiles');
+    MapLink = $('#MapLink');
+    GoogleMapContainer = $('#GoogleMapContainer');
+    GoogleMapFrame = $('#GoogleMapFrame');
+    MapDiv = $('#canvasWrapper');
+
+    Toolbar = $('#Toolbar');
+    Toolbar.MouseModes = Toolbar.find('#MouseModes');
+    Toolbar.DataActions = Toolbar.find('#DataActions');
+
+    InitializeDialogs();
+
     SearchContainer.closeAll = function () {
         SearchResultSummary.close();
         SearchResultContainer.close();
     };
-    SearchInput = $('#SearchBox input');
-
-    SearchResultContainer = $('#SearchResults');
+    SearchContainer.openAll = function () {
+        SearchResultSummary.open();
+        SearchResultContainer.open();
+    };
+    
+    SearchResultContainer.currentPane = 'list';
     SearchResultContainer.open = function (callback) {
-        if (!SearchResultContainer.is(':visible') && !(SearchResultContainer.currentPane == 'list' && SearchResultList.isEmpty())) {
+        if (!SearchResultContainer.is(':visible') && 
+            !(SearchResultContainer.currentPane == 'list' && 
+                SearchResultList.isEmpty())) {
             SearchResultContainer.show('slide', { direction: 'up' }, 200, callback);
         } else {
             tryCall(callback);
@@ -61,14 +88,14 @@ $().ready(function () {
             tryCall(callback);
         }
     };
-    SearchResultContainer.currentPane = 'list';
     SearchResultContainer.switchPane = function (toPane, callback, detailId) {
         SearchResultContainer.open();
         if (toPane == 'detail' && SearchResultContainer.currentPane != 'detail') {
             SearchResultContainer.currentPane = 'detail';
             if (detailId != SearchResultsDetailsCard.currentId) {
                 SearchResultsDetailsCard.currentId = detailId;
-                SearchResultsDetailsCard.show('slide', { direction: SearchResultList.is(':visible') ? 'right' : 'up' }, 200);
+                SearchResultsDetailsCard.show('slide', 
+                    { direction: SearchResultList.is(':visible') ? 'right' : 'up' }, 200);
                 SearchResultList.close('left');
             } else {
                 tryCall(callback);
@@ -81,7 +108,7 @@ $().ready(function () {
         }
     };
 
-    SearchResultSummary = $('#SearchResultSummary');
+    
     SearchResultSummary.open = function (callback) {
         if (!SearchResultSummary.is(':visible')) {
             SearchResultSummary.show('slide', { direction: 'up' }, 200, callback);
@@ -101,7 +128,7 @@ $().ready(function () {
         SearchResultSummary.find('span').text(numMatches + ' Match' + (numMatches === 1 ? '' : 'es'));
     }
 
-    SearchResultsDetailsCard = $('#DetailsCard');
+    
     SearchResultsDetailsCard.currentId = 0;
     SearchResultsDetailsCard.fillAndShow = function (type, id, title, details, callback) {
         // toggle "Back to Results" link
@@ -141,7 +168,7 @@ $().ready(function () {
         SearchResultsDetailsCard.close('up');
     }
 
-    SearchResultList = $('#SearchResultList');
+    
     SearchResultList.open = function (direction, callback) {
         if (!SearchResultList.is(':visible')) {
             SearchResultList.show('slide', { direction: direction }, 200, callback);
@@ -158,15 +185,10 @@ $().ready(function () {
         }
     };
     SearchResultList.isEmpty = function () {
-        return CurrentContext.SearchResults().length == 0;
+        return CurrentContext.setSearchResults().length == 0;
     };
 
-    SearchResultTemplate = $('#SearchResultTemplate');
-    SearchResultDetail = $('#SearchResultDetail');
-    SelectBuilding = $('#Buildings');
-    SelectFloor = $('#Floors');
-
-    CenterTiles = $('#CenterTiles');
+    
     CenterTiles.close = function () {
         if (CenterTiles.is(':visible')) {
             CenterTiles.hide('fade');
@@ -183,17 +205,6 @@ $().ready(function () {
             CenterTiles.show('fade');
         }
     };
-    ZoomTiles = $('#ZoomTiles');
-    MapLink = $('#MapLink');
-    GoogleMapContainer = $('#GoogleMapContainer');
-    GoogleMapFrame = $('#GoogleMapFrame');
-    MapDiv = $('#canvasWrapper');
-
-    Toolbar = $('#Toolbar');
-    Toolbar.MouseModes = Toolbar.find('#MouseModes');
-    Toolbar.DataActions = Toolbar.find('#DataActions');
-
-    InitializeDialogs();
     // END INITIATE ELEMENT HANDLES
 
     // ATTACH EVENT HANDLERS
@@ -261,29 +272,24 @@ $().ready(function () {
             if (query.length === 0) {
                 CurrentContext.ClearSearch();
 
-                SearchResultContainer.close();
+                SearchContainer.closeAll();
                 return;
             }
 
-            ajax({
-                webservice: 'Main',
-                func: 'Search',
-                params: { query: query },
-                success: FormatSearchResults
-            });
+            var results = CurrentContext.search(query);
+            FormatSearchResults(results);
+            // ajax({
+            //     webservice: 'Main',
+            //     func: 'Search',
+            //     params: { query: query },
+            //     success: FormatSearchResults
+            // });
         })
         .focus(function () {
-            if (!HOME_PAGE) {
-                SearchResultContainer.open();
-            }
+            OnFocus_SearchArea();
         })
         .blur(function (e) {
-            SEARCH_RESULT_CLOSING = true;
-            setTimeout(function () {
-                if (SEARCH_RESULT_CLOSING) {
-                    SearchResultContainer.close();
-                }
-            }, 10);
+            SearchContainer.closeAll();
         });
 
     $('#ClearSearch').click(function () {
@@ -292,22 +298,11 @@ $().ready(function () {
         SearchContainer.closeAll();
         CurrentContext.ClearSearch();
         SearchInput.val('');
-
-        return false;
     });
 
     SearchResultsDetailsCard.find('#BackToResults').click(function () {
         SearchResultContainer.switchPane('list');
     });
-
-    SearchContainer
-        .focus(function () {
-            SEARCH_RESULT_CLOSING = false;
-            if ($(this).attr('id') != '#ClearSearch') {
-                OnFocus_SearchArea();
-            }
-        })
-        .blur(OnBlur_SearchArea);
 
     // TOOLBAR BUTTONS
     Toolbar.MouseModes.find('.toolbar-button').click(function () {
@@ -363,13 +358,13 @@ $().ready(function () {
 });
 
 function OnFocus_SearchArea() {
-    if (CurrentContext.SearchResults().length > 0) {
-        SearchResultContainer.open();
+    if (CurrentContext.setSearchResults().length > 0) {
+        SearchContainer.openAll();
     }
 }
 
 function OnBlur_SearchArea() {
-    SearchResultContainer.close();
+    SearchContainer.closeAll();
 }
 
 function ShowDetails(type, id, callback) {
@@ -527,7 +522,10 @@ function CenterSearch() {
 }
 
 function FormatSearchResults(results) {
-    CurrentContext.SearchResults(results);
+
+    CurrentContext.setSearchResults(results);
+
+
     SearchResultList.empty();
 
     if (results.length > 0) {
@@ -671,16 +669,16 @@ function AppendSearchResult(resultData) {
     result.removeAttr('id');
     result.css('display', '');
     // properties
-    result.attr('data-result-id', resultData.PrimaryId);
-    result.attr('data-result-type', resultData.Type);
-    result.attr('data-result-secondaryid', resultData.SecondaryId);
+    // result.attr('data-result-id', resultData.PrimaryId);
+    // result.attr('data-result-type', resultData.Type);
+    // result.attr('data-result-secondaryid', resultData.SecondaryId);
     if (resultData.Point !== undefined) {
         result.attr('data-result-point', resultData.Point.X + ',' + resultData.Point.Y);
     }
     // set visible elements
     result.find('.primary-text').text(resultData.PrimaryText);
     result.find('.secondary-text').text(resultData.SecondaryText);
-    result.find('.right').text(resultData.right);
+    // result.find('.right').text(resultData.right);
 
     SearchResultList.append(result);
 }

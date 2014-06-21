@@ -17,20 +17,41 @@ window.CurrentContext = new (function () {
     // Building
     this.CurrentBuildingId = 0;
     this.EditBuildingId = 0;
-    var _buildings = null;
+    var _buildings = 
+                [{  BuildingId:'1', 
+                    BuildingName:'University', 
+                    BuildingAddress: '200 University Avenue West Waterloo',
+                    Floors:[{   FloorNumber:'1', 
+                                FloorId:'11', 
+                                Filename:'phase1_1stfloor.gif'},
+                            {   FloorNumber:'2', 
+                                FloorId:'12', 
+                                Filename:'phase1_2ndfloor.gif'}]}, 
+                            
+                {   BuildingId:'2',
+                    BuildingName:'Company', 
+                    BuildingAddress: '1 Yonge Street Toronto',
+                    Floors:[{   FloorNumber:'1', 
+                                FloorId:'21', 
+                                Filename:'Atlanta7thfloor.gif'},
+                            {   FloorNumber:'2', 
+                                FloorId:'22', 
+                                Filename:'Atlanta8thfloor.gif'},
+                            {   FloorNumber:'3', 
+                                FloorId:'23', 
+                                Filename:'phase5b_2ndfloor.gif'}]}];
+
     this.GetAllBuildings = function () {
-        if (_buildings == null) {
-            /*ajax({
+        /*if (_buildings == null) {
+            ajax({
                 webservice: 'Main',
                 func: 'GetBuildings',
                 async: false,
                 success: function (data) {
                     _buildings = data;
                 }
-            });*/
-            _buildings = [{BuildingId:'1', BuildingName:'Test1', BuildingAddress: '200 University Avenue West Waterloo',Floors:[{FloorNumber:'1', FloorId:'11', Filename:'phase1_1stfloor.gif'},{FloorNumber:'2', FloorId:'12', Filename:'phase1_2ndfloor.gif'}]}, 
-                        {BuildingId:'2',BuildingName:'Test2', BuildingAddress: '1 Yonge Street Toronto',Floors:[{FloorNumber:'1', FloorId:'21', Filename:'Atlanta7thfloor.gif'},{FloorNumber:'2', FloorId:'22', Filename:'Atlanta8thfloor.gif'},{FloorNumber:'3', FloorId:'23', Filename:'phase5b_2ndfloor.gif'}]}];
-        }
+            });
+        }*/
         return _buildings;
     }
 
@@ -438,7 +459,7 @@ window.CurrentContext = new (function () {
 
     // SEARCH
     var _searchResults = [];
-    this.SearchResults = function (results) {
+    this.setSearchResults = function (results) {
         if (results === undefined) {
             return _searchResults;
         } else {
@@ -447,6 +468,17 @@ window.CurrentContext = new (function () {
     }
     this.ClearSearch = function () {
         _searchResults = [];
+    }
+
+    this.search = function (query) {
+        var results = [];
+        for (var i = 0 ; i < _buildings.length; i++) {
+            if (_buildings[i].BuildingName.search(query) >= 0) {
+                results.push({PrimaryText:_buildings[i].BuildingName, 
+                    SecondaryText:"Building"})
+            }
+        }
+        return results;
     }
 
     // SELECTION
