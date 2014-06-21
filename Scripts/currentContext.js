@@ -471,9 +471,11 @@ window.CurrentContext = new (function () {
     }
 
     this.search = function (query) {
+        query.toLowerCase();
         var results = [];
         for (var i = 0 ; i < _buildings.length; i++) {
-            if (_buildings[i].BuildingName.search(query) >= 0) {
+            var buildingName = _buildings[i].BuildingName.toLowerCase();
+            if (buildingName.search(query) >= 0) {
                 results.push({PrimaryText:_buildings[i].BuildingName, 
                     SecondaryText:"Building"})
             }
