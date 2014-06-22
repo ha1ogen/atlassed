@@ -190,7 +190,7 @@ window.CurrentContext = new (function () {
             }
         });*/
 
-        data = [{locationId:'1', X: '100', Y:'100'}];
+        data = [{locationObj: {id: '1', Number:'1', PortNumber:'201', Description: 'MainOffice' ,AssignedPerson: null}, X: '100', Y:'130'}];
         //Stubbing
         LoadCanvas(f.Filename, data, internalCallback);
     };

@@ -176,8 +176,9 @@ function RenderObjects(spaces) {
         $.each(s.Workstations || [], function (j, w) {
             drawCircle(s.locationId, w.Point.X, w.Point.Y)
                 .set('w', w);*/
-        drawCircle(s.locationId, s.X, s.Y);
+        drawCircle(s.locationObj, s.X, s.Y);
     });
+    Canvas.sendToBack(ImageObj);
     Canvas.renderAll();
 }
 
@@ -220,9 +221,9 @@ function drawRect(x, y, w, h) {
     return square;
 }
 
-function drawCircle(LocationId, x, y) {
+function drawCircle(locationObj, x, y) {
     var circle = new fabric.Circle({
-        locationId: LocationId,
+        locationObj: locationObj,
         radius: WORKSTATION_RADIUS * AbsoluteScale,
         left: x - (7 * AbsoluteScale),
         top: y - (7 * AbsoluteScale),
@@ -238,6 +239,7 @@ function drawCircle(LocationId, x, y) {
         cornerColor: 'green'
     });
     Canvas.add(circle);
+    Canvas.bringToFront(circle);
     Canvas.renderAll();
     Canvas.setActiveObject(circle);
 
@@ -323,14 +325,15 @@ function mouseup(e) {
     switch (CurrentContext.CurrentTool()) {
         case T_SELECT:
             if (obj !== undefined && obj !== null) {
-                if (obj.type == 'rect') {
+                /*if (obj.type == 'rect') {
                     obj.sendToBack();
                     obj.text.sendToBack();
                     ImageObj.sendToBack();
                     ShowDetails('Space', obj.w.LocationId);
-                } else if (obj.type == 'circle') {
+                } else */
+                if (obj.type == 'circle') {
                     obj.bringToFront();
-                    ShowDetails('Workstation', obj.w.LocationId);
+                    ShowDetails('Workstation', obj.locationObj.id);
                 }
             }
             break;
@@ -505,7 +508,7 @@ function selectObjectByLocationId(locationId) {
 function getObjectByLocationId(locationId) {
     var objects = Canvas.getObjects();
     for (var i in objects) {
-        if (objects[i].w != undefined && objects[i].w.LocationId == locationId) {
+        if (objects[i].locationObj != undefined && objects[i].locationObj.id == locationId) {
             return objects[i];
         }
     }

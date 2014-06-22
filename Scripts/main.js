@@ -391,7 +391,7 @@ function ShowDetails(type, id, callback) {
             break;
         case 'Workstation':
             obj = getObjectByLocationId(id);
-            var w = obj.w;
+            var w = obj.locationObj;
             title = "Workstation " + w.Number;
             details = {
                 Port: w.PortNumber,
