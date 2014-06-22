@@ -247,8 +247,11 @@ $().ready(function () {
 
     $(document).keydown(function (e) {
         // ESC MAP
-        if (e.which = 27 && MAP_SHOWING) {
+        if (e.which === 27 && MAP_SHOWING) {
             GoogleMapContainer.close();
+        }
+        else if (e.which === 13 && $('#LoginWrapper').is(':visible')) {
+            login();
         }
 
         if (SearchInput.is(':focus')) {
@@ -319,15 +322,7 @@ $().ready(function () {
         zoom(-2);
     });
     $('#login').click(function () {
-        $('#LoginWrapper').css('visibility','hidden');
-        $('#AppWrapper').css('visibility','visible');
-        if ($('#username').val() == 'admin'){
-            admin = true;
-        }
-        else{
-            admin = false;
-            $('#Toolbar').css('visibility','hidden');
-        }
+        login();    
     });
 
     Toolbar.find('#T_BUILDINGS').click(function () {
@@ -356,6 +351,18 @@ $().ready(function () {
         $('.admin-only').hide();
     }
 });
+
+function login() {
+    $('#LoginWrapper').css('visibility','hidden');
+    $('#AppWrapper').css('visibility','visible');
+    if ($('#username').val() == 'admin'){
+        admin = true;
+    }
+    else{
+        admin = false;
+        $('#Toolbar').css('visibility','hidden');
+    }    
+}
 
 function OnFocus_SearchArea() {
     if (CurrentContext.setSearchResults().length > 0) {
