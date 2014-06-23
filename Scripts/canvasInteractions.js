@@ -258,6 +258,9 @@ function createTextObj(text, x, y) {
 function mousedown(e) {
     var obj = e.target;
     var mouse = Canvas.getPointer(e.e);
+    console.log("Mousedown x , y");
+    console.log(mouse.x);
+    console.log(mouse.y);
     switch (CurrentContext.CurrentTool()) {
         case T_DRAW_RECT:
             startedDrag = true;
