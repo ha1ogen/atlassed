@@ -126,7 +126,7 @@ function LoadCanvas(filename, spaces, callback) {
         imgObj.top = IMAGE_MARGIN;
         imgObj.opacity = 0.80;
         Canvas.add(imgObj);
-        Canvas.sendToBack(imgObj);
+        ImageObj.sendToBack();
 
         Canvas.observe('mouse:down', function (e) { mousedown(e); });
         Canvas.observe('mouse:move', function (e) { mousemove(e); });
@@ -179,6 +179,7 @@ function RenderObjects(spaces) {
         drawCircle(s.locationObj, s.X, s.Y);
     });
     Canvas.sendToBack(ImageObj);
+    ImageObj.sendToBack();
     Canvas.renderAll();
 }
 
@@ -391,6 +392,7 @@ function removeWorkstation(obj) {
         //Temporary Stub to allow for deleting without any server calls
         //if (CurrentContext.RemoveWorkstation(obj.w.LocationId)) {
             Canvas.remove(obj);
+            HidePin();
             SearchResultsDetailsCard.clear();
         //} else {
         //    alert('Unable to remove the workstation');
@@ -418,7 +420,7 @@ function removeSpace(obj) {
 function mouseover(obj) {
     //obj.stroke = 'black';
     //alert(obj.w.locationId);
-    //console.log(obj.w.Description);
+    console.log(obj.type);
 }
 
 function mouseout(obj) {

@@ -19,18 +19,21 @@ window.CurrentContext = new (function () {
     this.EditBuildingId = 0;
     var _buildings = 
                 [{  BuildingId:'1', 
-                    BuildingName:'University', 
-                    BuildingAddress: '200 University Avenue West Waterloo',
+                    BuildingName:'RCH', 
+                    BuildingAddress: 'J.R. Coutts Engineering Lecture Hall Waterloo',
                     Floors:[{   FloorNumber:'1', 
                                 FloorId:'11', 
-                                Filename:'phase1_1stfloor.gif'},
+                                Filename:'rch1.png'},
                             {   FloorNumber:'2', 
                                 FloorId:'12', 
-                                Filename:'phase1_2ndfloor.gif'}]}, 
+                                Filename:'rch2.png'},
+                            {   FloorNumber:'3', 
+                                FloorId:'13', 
+                                Filename:'rch3.png'}]}, 
                             
                 {   BuildingId:'2',
-                    BuildingName:'Company', 
-                    BuildingAddress: '1 Yonge Street Toronto',
+                    BuildingName:'MC', 
+                    BuildingAddress: 'Mathematics and Computer Waterloo',
                     Floors:[{   FloorNumber:'1', 
                                 FloorId:'21', 
                                 Filename:'Atlanta7thfloor.gif'},
@@ -39,6 +42,15 @@ window.CurrentContext = new (function () {
                                 Filename:'Atlanta8thfloor.gif'},
                             {   FloorNumber:'3', 
                                 FloorId:'23', 
+                                Filename:'phase5b_2ndfloor.gif'},
+                            {   FloorNumber:'4', 
+                                FloorId:'24', 
+                                Filename:'phase5b_2ndfloor.gif'},
+                            {   FloorNumber:'5', 
+                                FloorId:'25', 
+                                Filename:'phase5b_2ndfloor.gif'},
+                            {   FloorNumber:'6', 
+                                FloorId:'26', 
                                 Filename:'phase5b_2ndfloor.gif'}]}];
 
     this.GetAllBuildings = function () {
@@ -189,8 +201,11 @@ window.CurrentContext = new (function () {
                 internalCallback(false);
             }
         });*/
-
-        data = [{locationObj: {id: '1', Number:'1', PortNumber:'201', Description: 'MainOffice' ,AssignedPerson: null}, X: '100', Y:'130'}];
+        if (floorId == '13'){
+            data = [{locationObj: {id: '1', Number:'1', Name:'Room 307', Type:'Classroom', Description: 'Max Occupancy 150' ,AssignedPerson: null}, X: '285', Y:'425'}];
+        }else{
+            data = [{locationObj: {id: '1', Number:'1', Name:'Room', Description: 'Room' ,AssignedPerson: null}, X: '500', Y:'130'}];
+        }
         //Stubbing
         LoadCanvas(f.Filename, data, internalCallback);
     };
@@ -208,7 +223,8 @@ window.CurrentContext = new (function () {
 
     this.AddWorkstation = function (point, workspaceId, number, port, personId, callback) {
         var w = null;
-        ajax({
+        //Stubbing
+        /*ajax({
             webservice: 'Admin',
             func: 'AddWorkstation',
             async: false,
@@ -224,7 +240,7 @@ window.CurrentContext = new (function () {
                     w = data;
                 }
             }
-        });
+        });*/
         return w;
     }
 

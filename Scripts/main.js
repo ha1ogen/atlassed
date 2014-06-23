@@ -399,10 +399,11 @@ function ShowDetails(type, id, callback) {
         case 'Workstation':
             obj = getObjectByLocationId(id);
             var w = obj.locationObj;
-            title = "Workstation " + w.Number;
+            title = "Location "; //+ w.Number;
             details = {
-                Port: w.PortNumber,
-                Location: w.Description,
+                Name: w.Name,
+                Description: w.Description,
+                Type: w.Type == null ? "Undefined" : w.Type,
                 Assigned: w.AssignedPerson == null ? "Unassigned" : w.AssignedPerson.Name
             };
             PlacePin(obj);
@@ -937,7 +938,7 @@ function InitializeDialogs() {
 
     WorkstationDialog.saveCallback = undefined;
     WorkstationDialog.dialog({
-        title: "Add/Edit Workstation",
+        title: "Add/Edit Location",
         autoOpen: false,
         buttons: {
             Cancel: function () {
@@ -953,7 +954,7 @@ function InitializeDialogs() {
 
                 var vMessage = '';
                 if (number.length == 0) {
-                    vMessage += 'Workstation number is required';
+                    vMessage += 'Name is required';
                 }
                 if (vMessage.length !== 0) {
                     alert(vMessage);
@@ -969,19 +970,22 @@ function InitializeDialogs() {
                     w = CurrentContext.SaveWorkstation(WorkstationDialog.locationId, number, port, assignee);
                 }
 
-                if (w == null) {
+                //Stubbing temporarily for demo
+                /*if (w == null) {
                     alert("Error saving workstation");
                     return;
-                }
+                }*/
 
                 AddingObject = false;
                 if (success) {
                     $(this).dialog('close');
                 }
-                WorkstationDialog.saveCallback(w);
-                setTimeout(function () {
+                //Changing for demo
+                //WorkstationDialog.saveCallback(w);
+                WorkstationDialog.saveCallback(1);
+                /*setTimeout(function () {
                     ShowDetails(TYPE_WORKSTATION, w.LocationId);
-                }, 50);
+                }, 50);*/
             }
         },
         modal: true,
