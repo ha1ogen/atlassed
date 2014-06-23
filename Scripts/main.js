@@ -324,6 +324,9 @@ $().ready(function () {
     $('#login').click(function () {
         login();    
     });
+    $('#logout').click(function () {
+        logout();    
+    });
 
     Toolbar.find('#T_BUILDINGS').click(function () {
         BuildingDialog.open();
@@ -362,6 +365,10 @@ function login() {
         admin = false;
         $('#Toolbar').css('visibility','hidden');
     }    
+}
+
+function logout() {
+    location.reload();  
 }
 
 function OnFocus_SearchArea() {
