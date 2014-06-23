@@ -81,6 +81,7 @@ $().ready(function () {
         }
     };
     SearchResultContainer.close = function (callback) {
+        HidePin();
         if (SearchResultContainer.is(':visible')) {
             SearchResultContainer.hide('slide', { direction: 'up' }, 200, callback);
         } else {
