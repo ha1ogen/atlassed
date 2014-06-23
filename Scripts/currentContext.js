@@ -202,7 +202,9 @@ window.CurrentContext = new (function () {
             }
         });*/
         if (floorId == '13'){
-            data = [{locationObj: {id: '1', Number:'1', Name:'Room 307', Type:'Classroom', Description: 'Max Occupancy 150' ,AssignedPerson: null}, X: '285', Y:'425'}];
+            data = [{locationObj: {id: '1', Number:'1', Name:'Room 307', Type:'Classroom', Description: 'Max Occupancy 150' ,AssignedPerson: null}, X: '285', Y:'425'},
+            {locationObj: {id: '2', Number:'1', Name:'Room 301', Type:'Classroom', Description: 'Max Occupancy 175' ,AssignedPerson: null}, X: '886', Y:'392'},
+            {locationObj: {id: '3', Number:'1', Name:'Room 305', Type:'Classroom', Description: 'Max Occupancy 150' ,AssignedPerson: null}, X: '508', Y:'643'}];
         }else{
             data = [{locationObj: {id: '1', Number:'1', Name:'Room', Description: 'Room' ,AssignedPerson: null}, X: '500', Y:'130'}];
         }
