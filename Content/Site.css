@@ -657,10 +657,15 @@ footer > div {
 }
 #LoginWrapper input {
   width:300px;
+  padding:5px;
+  height: 30px;
 }
 #LoginWrapper #login {
   width:100px;
   margin-left: auto;
   margin-right: auto;
-  margin-top:5px;
+  margin-top:10px;
+}
+#logout {
+  padding:10px;
 }
