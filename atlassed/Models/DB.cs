@@ -189,7 +189,19 @@ namespace Atlassed.Models
 
         public static bool ExecNonQueryExpectSuccess(this SqlCommand query)
         {
-            return query.ExecNonQueryExpectAffected(1);
+            try
+            {
+                using (var c = GetConnection())
+                {
+                    query.Connection = c;
+                    query.ExecuteNonQuery();
+                    return true;
+                }
+            }
+            catch (SqlException e)
+            {
+                return false;
+            }
         }
 
         public static bool ExecNonQueryExpectAffected(this SqlCommand query, int expectedAffectedRows)

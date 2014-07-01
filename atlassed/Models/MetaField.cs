@@ -104,7 +104,7 @@ namespace Atlassed.Models
             return metaConstraintsTable;
         }
 
-        public MetaField Update()
+        public MetaField CommitUpdate()
         {
             if (!_isCommitted)
             {

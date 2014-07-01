@@ -10,28 +10,41 @@ namespace Atlassed.Controllers
 {
     public class FloorsController : ApiController
     {
-        // GET api/<controller>/5
         public FloorMap Get(int id)
         {
-            return FloorMap.GetFloor(id);
+            var f = FloorMap.GetFloor(id);
+            if (f == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+            return f;
         }
 
-        // POST api/<controller>
         public FloorMap Post([FromBody]FloorMap floor)
         {
             return FloorMap.Create(floor);
         }
 
-        // PUT api/<controller>/5
-        public void Put(int id, [FromBody]string value)
+        public FloorMap Put([FromBody]FloorMap floor)
         {
-            throw new NotImplementedException();
+            var f = FloorMap.Update(floor);
+            if (f == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return f.CommitUpdate();
         }
 
-        // DELETE api/<controller>/5
-        public void Delete(int id)
+        public bool Delete(int id)
         {
-            throw new NotImplementedException();
+            var f = FloorMap.GetFloor(id);
+            if (f == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return f.Delete();
         }
     }
 }

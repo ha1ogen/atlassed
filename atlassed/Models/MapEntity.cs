@@ -37,7 +37,7 @@ namespace Atlassed.Models
             MapId = data.GetInt32(Map._mapId);
             EntityPoints = Point.ParseMultiPointString(data.GetString(_entityPoints));
 
-            var label = MetaProperties.GetValue(data.GetString(MapEntityClass._mapLabelFieldName));
+            var label = MetaPropertiesObject().GetValue(data.GetString(MapEntityClass._mapLabelFieldName));
             MapLabel = label == null ? "[null]" : label.Value<string>("Value");
 
             _isCommitted = true;
@@ -66,6 +66,16 @@ namespace Atlassed.Models
             return new MapEntity(entity.MapId, entity.ClassName, entity.EntityPoints, entity.MetaProperties.ToString());
         }
 
+        public static MapEntity Update(MapEntity entity)
+        {
+            var e = GetMapEntity(entity.EntityId);
+            if (e == null) return null;
+
+            e.MetaProperties = entity.MetaProperties;
+
+            return e;
+        }
+
         public static List<SearchResult> Search(string query)
         {
             return DB.NewSP(_spSearchMapEntities)
@@ -74,7 +84,7 @@ namespace Atlassed.Models
                         .ToList();
         }
 
-        public MapEntity Update()
+        public MapEntity CommitUpdate()
         {
             if (!_isCommitted)
             {

@@ -13,31 +13,48 @@ namespace Atlassed.Controllers
         [Route("api/maps/{mapId}/entities")]
         public IEnumerable<MapEntity> GetMapEntities(int mapId, string classNames = "")
         {
+            if (CampusMap.GetCampus(mapId) == null && FloorMap.GetFloor(mapId) == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
             return MapEntity.GetAllMapEntities(mapId, classNames);
         }
 
-        // GET api/<controller>/5
         public MapEntity Get(int id)
         {
-            return MapEntity.GetMapEntity(id);
+            var e = MapEntity.GetMapEntity(id);
+            if (e == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+            return e;
         }
 
-        // POST api/<controller>
         public MapEntity Post([FromBody]MapEntity entity)
         {
             return MapEntity.Create(entity);
         }
 
-        // PUT api/<controller>/5
-        public MapEntity Put([FromBody]MapEntity value)
+        public MapEntity Put([FromBody]MapEntity entity)
         {
-            throw new NotImplementedException();
+            var e = MapEntity.Update(entity);
+            if (e == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return e.CommitUpdate();
         }
 
-        // DELETE api/<controller>/5
         public bool Delete(int id)
         {
-            throw new NotImplementedException();
+            var e = MapEntity.GetMapEntity(id);
+            if (e == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+            return e.Delete();
         }
     }
 }

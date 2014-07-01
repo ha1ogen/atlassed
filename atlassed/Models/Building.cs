@@ -61,11 +61,12 @@ namespace Atlassed.Models
         public static Building Update(Building building)
         {
             var b = Building.GetBuilding(building.BuildingId);
+            if (b == null) return null;
 
             b.BuildingName = building.BuildingName;
             b.MetaProperties = building.MetaProperties;
 
-            return b.Update();
+            return b;
         }
 
         public static List<SearchResult> Search(string query)
@@ -78,7 +79,7 @@ namespace Atlassed.Models
             return new SearchResult(BuildingId, this.GetType().Name, BuildingName, CampusMap.GetCampus(CampusMapId).CampusName);
         }
 
-        public Building Update()
+        public Building CommitUpdate()
         {
             if (!_isCommitted)
             {

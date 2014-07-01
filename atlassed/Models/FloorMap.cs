@@ -72,8 +72,20 @@ namespace Atlassed.Models
         {
             return new FloorMap(floor.BuildingId, floor.FloorOrdinal, floor.FloorCode, floor.FloorLabel, floor.MetaProperties.ToString());
         }
+        public static FloorMap Update(FloorMap floor)
+        {
+            var f = FloorMap.GetFloor(floor.FloorMapId);
+            if (f == null) return null;
 
-        public FloorMap Update()
+            f.FloorOrdinal = floor.FloorOrdinal;
+            f.FloorCode = floor.FloorCode;
+            f.FloorLabel = floor.FloorLabel;
+            f.MetaProperties = floor.MetaProperties;
+
+            return f;
+        }
+
+        public FloorMap CommitUpdate()
         {
             if (!_isCommitted)
             {

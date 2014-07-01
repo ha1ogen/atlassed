@@ -8,7 +8,7 @@ namespace Atlassed.Models
 {
     interface IDbRow<T>
     {
-        T Update();
+        T CommitUpdate();
         bool Delete();
     }
 }

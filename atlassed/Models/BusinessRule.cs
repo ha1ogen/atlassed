@@ -60,7 +60,7 @@ namespace Atlassed.Models
             _isCommitted = true;
         }
 
-        public BusinessRule Update()
+        public BusinessRule CommitUpdate()
         {
             if (!_isCommitted)
             {

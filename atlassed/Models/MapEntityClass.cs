@@ -43,7 +43,7 @@ namespace Atlassed.Models
             _isCommitted = true;
         }
 
-        public MapEntityClass Update()
+        public MapEntityClass CommitUpdate()
         {
             if (!_isCommitted)
             {

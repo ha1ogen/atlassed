@@ -15,8 +15,11 @@ namespace Atlassed.Models
         public const string _objectId = "objectId";
         protected const string _metaProperties = "metaProperties";
 
-        public JObject MetaProperties { get; set; }
-
+        public string MetaProperties { get; set; }
+        public JObject MetaPropertiesObject()
+        {
+            return JObject.Parse(MetaProperties);
+        }
         protected MetaObject()
         {
 
@@ -24,12 +27,12 @@ namespace Atlassed.Models
 
         protected MetaObject(string metaProperties)
         {
-            MetaProperties = JObject.Parse(metaProperties);
+            MetaProperties = metaProperties;
         }
 
         protected MetaObject(IDataRecord data)
         {
-            MetaProperties = JObject.Parse(data.GetString(_metaProperties));
+            MetaProperties = data.GetString(_metaProperties);
         }
 
         protected IEnumerable<SqlDataRecord> GenerateMetaFieldTable()
@@ -42,11 +45,23 @@ namespace Atlassed.Models
                 metaData[0] = new SqlMetaData("FieldName", SqlDbType.VarChar, 30);
                 metaData[1] = new SqlMetaData("FieldValue", SqlDbType.VarChar, -1);
 
-                foreach (KeyValuePair<string, JToken> prop in MetaProperties)
+                var metaPropertiesObject = MetaPropertiesObject();
+
+                foreach (KeyValuePair<string, JToken> prop in metaPropertiesObject)
                 {
                     SqlDataRecord record = new SqlDataRecord(metaData);
                     record.SetString(0, prop.Key);
-                    record.SetString(1, prop.Value.SelectToken("Value").ToString());
+                    // coming from the DB the value will be an object representing the field, with a "Value" key
+                    // coming from the client the value will be a single value
+                    var value = prop.Value.SelectToken("Value") ?? prop.Value;
+                    if (value.Type == JTokenType.Null)
+                    {
+                        record.SetDBNull(1);
+                    }
+                    else
+                    {
+                        record.SetString(1, value.ToString());
+                    }
                     metaFields.Add(record);
                 }
             }

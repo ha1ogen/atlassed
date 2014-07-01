@@ -62,7 +62,7 @@ namespace Atlassed.Models
             return new SearchResult(CampusMapId, this.GetType().Name, CampusName, "");
         }
 
-        public CampusMap Update()
+        public CampusMap CommitUpdate()
         {
             if (!_isCommitted)
             {
