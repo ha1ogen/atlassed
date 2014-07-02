@@ -7,6 +7,7 @@ using Newtonsoft.Json.Linq;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using Newtonsoft.Json;
 
 namespace Atlassed.Models
 {
@@ -15,11 +16,11 @@ namespace Atlassed.Models
         public const string _objectId = "objectId";
         protected const string _metaProperties = "metaProperties";
 
+        [JsonIgnore]
         public string MetaProperties { get; set; }
-        public JObject MetaPropertiesObject()
-        {
-            return JObject.Parse(MetaProperties);
-        }
+
+        [JsonProperty("MetaProperties")]
+        public JObject MetaPropertiesObject { get { return JObject.Parse(MetaProperties); } }
         protected MetaObject()
         {
 
@@ -45,7 +46,7 @@ namespace Atlassed.Models
                 metaData[0] = new SqlMetaData("FieldName", SqlDbType.VarChar, 30);
                 metaData[1] = new SqlMetaData("FieldValue", SqlDbType.VarChar, -1);
 
-                var metaPropertiesObject = MetaPropertiesObject();
+                var metaPropertiesObject = MetaPropertiesObject;
 
                 foreach (KeyValuePair<string, JToken> prop in metaPropertiesObject)
                 {

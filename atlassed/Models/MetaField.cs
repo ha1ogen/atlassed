@@ -18,6 +18,7 @@ namespace Atlassed.Models
         private const string _fieldLabel = "fieldLabel";
         private const string _fieldDescription = "fieldDescription";
         private const string _fieldIsRequired = "fieldIsRequired";
+        private const string _defaultValue = "defaultValue";
         private const string _fieldIsUnique = "fieldIsUnique";
         private const string _metaConstraints = "metaConstraints";
 
@@ -56,7 +57,7 @@ namespace Atlassed.Models
             _isCommitted = true;
         }
 
-        public MetaField(string className, string fieldName, MetaFieldType fieldType, string fieldLabel, string fieldDescription, bool fieldIsRequired, bool fieldIsUnique, string metaConstraints)
+        public MetaField(string className, string fieldName, MetaFieldType fieldType, string fieldLabel, string fieldDescription, bool fieldIsRequired, string defaultValue, bool fieldIsUnique, string metaConstraints)
         {
             ClassName = className;
             FieldName = fieldName;
@@ -71,6 +72,11 @@ namespace Atlassed.Models
                 .AddParam(MetaClass._className, ClassName)
                 .AddParam(_fieldName, FieldName)
                 .AddParam(_fieldType, FieldType.ToString())
+                .AddParam(_fieldLabel, FieldLabel)
+                .AddParam(_fieldDescription, FieldDescription)
+                .AddParam(_fieldIsRequired, FieldIsRequired)
+                .AddParam(_defaultValue, defaultValue)
+                .AddParam(_fieldIsUnique, FieldIsUnique)
                 .AddTVParam(_metaConstraints, GenerateMetaConstraintTable(MetaConstraints))
                 .ExecuteNonQuery();
 

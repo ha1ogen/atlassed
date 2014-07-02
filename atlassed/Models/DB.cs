@@ -18,6 +18,8 @@ namespace Atlassed.Models
     {
         private const string ReturnParamName = "__RETURN";
 
+        public static string ConnectionString = null;
+
         private static SqlConnection _transactionConnection = null;
 
         public class FakeTransaction : DbTransaction
@@ -82,7 +84,10 @@ namespace Atlassed.Models
                 return _transactionConnection;
             }
 
-            var c = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString);
+            if (ConnectionString == null)
+                ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+
+            var c = new SqlConnection(ConnectionString);
             c.Open();
             return c;
         }

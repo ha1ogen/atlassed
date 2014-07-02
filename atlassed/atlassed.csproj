@@ -73,7 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Site.css" />
-    <Content Include="Default.aspx" />
+    <Content Include="index.html" />
     <Content Include="Global.asax" />
     <Content Include="Images\maps\map-2.png" />
     <Content Include="Images\pin.png" />
@@ -99,13 +99,6 @@
     <Compile Include="Controllers\FloorsController.cs" />
     <Compile Include="Controllers\MainController.cs" />
     <Compile Include="Controllers\MapEntitiesController.cs" />
-    <Compile Include="Default.aspx.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Default.aspx.designer.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

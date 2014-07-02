@@ -37,7 +37,7 @@ namespace Atlassed.Models
             MapId = data.GetInt32(Map._mapId);
             EntityPoints = Point.ParseMultiPointString(data.GetString(_entityPoints));
 
-            var label = MetaPropertiesObject().GetValue(data.GetString(MapEntityClass._mapLabelFieldName));
+            var label = MetaPropertiesObject.GetValue(data.GetString(MapEntityClass._mapLabelFieldName));
             MapLabel = label == null ? "[null]" : label.Value<string>("Value");
 
             _isCommitted = true;
