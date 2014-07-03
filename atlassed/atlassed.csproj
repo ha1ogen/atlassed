@@ -95,29 +95,32 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\BuildingController.cs" />
-    <Compile Include="Controllers\FloorsController.cs" />
-    <Compile Include="Controllers\MainController.cs" />
-    <Compile Include="Controllers\MapEntitiesController.cs" />
+    <Compile Include="Controllers\MapData\BuildingsController.cs" />
+    <Compile Include="Controllers\MapData\FloorsController.cs" />
+    <Compile Include="Controllers\MapData\MapEntitiesController.cs" />
+    <Compile Include="Controllers\SinglePageAppApiController.cs" />
+    <Compile Include="Controllers\UserManagement\SessionController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Building.cs" />
-    <Compile Include="Models\BusinessRule.cs" />
-    <Compile Include="Models\BusinessRuleClass.cs" />
-    <Compile Include="Models\CampusMap.cs" />
+    <Compile Include="Models\MapData\Building.cs" />
+    <Compile Include="Models\MapData\BusinessRule.cs" />
+    <Compile Include="Models\MapData\BusinessRuleClass.cs" />
+    <Compile Include="Models\MapData\CampusMap.cs" />
     <Compile Include="Models\DB.cs" />
-    <Compile Include="Models\FloorMap.cs" />
+    <Compile Include="Models\MapData\FloorMap.cs" />
     <Compile Include="Models\IDbRow.cs" />
-    <Compile Include="Models\ISearchable.cs" />
-    <Compile Include="Models\Map.cs" />
-    <Compile Include="Models\MapEntity.cs" />
-    <Compile Include="Models\MapEntityClass.cs" />
-    <Compile Include="Models\MetaClass.cs" />
-    <Compile Include="Models\MetaField.cs" />
-    <Compile Include="Models\MetaObject.cs" />
-    <Compile Include="Models\Point.cs" />
-    <Compile Include="Models\SearchResult.cs" />
+    <Compile Include="Models\MapData\ISearchable.cs" />
+    <Compile Include="Models\MapData\Map.cs" />
+    <Compile Include="Models\MapData\MapEntity.cs" />
+    <Compile Include="Models\MapData\MapEntityClass.cs" />
+    <Compile Include="Models\MapData\MetaClass.cs" />
+    <Compile Include="Models\MapData\MetaField.cs" />
+    <Compile Include="Models\MapData\MetaObject.cs" />
+    <Compile Include="Models\MapData\Point.cs" />
+    <Compile Include="Models\MapData\SearchResult.cs" />
+    <Compile Include="Models\UserManagement\Credentials.cs" />
+    <Compile Include="Models\UserManagement\Session.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

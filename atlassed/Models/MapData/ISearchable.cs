@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Atlassed.Models
+namespace Atlassed.Models.MapData
 {
     public interface ISearchable
     {

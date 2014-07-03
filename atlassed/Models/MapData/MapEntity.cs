@@ -4,7 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Web;
 
-namespace Atlassed.Models
+namespace Atlassed.Models.MapData
 {
     public class MapEntity : MetaObject, IDbRow<MapEntity>
     {

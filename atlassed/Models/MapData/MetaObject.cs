@@ -9,7 +9,7 @@ using System.Data.SqlClient;
 using System.Diagnostics;
 using Newtonsoft.Json;
 
-namespace Atlassed.Models
+namespace Atlassed.Models.MapData
 {
     public abstract class MetaObject
     {

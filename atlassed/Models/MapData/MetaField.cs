@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Web;
 
-namespace Atlassed.Models
+namespace Atlassed.Models.MapData
 {
     public enum MetaFieldType { STR, INT, DEC, BOOL, DATE, BRULE }
 

@@ -1,4 +1,4 @@
-﻿using Atlassed.Models;
+﻿using Atlassed.Models.MapData;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 
-namespace Atlassed.Controllers
+namespace Atlassed.Controllers.MapData
 {
     public class FloorsController : ApiController
     {

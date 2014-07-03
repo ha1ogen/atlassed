@@ -1,4 +1,4 @@
-﻿using Atlassed.Models;
+﻿using Atlassed.Models.MapData;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -8,7 +8,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.ModelBinding;
 
-namespace Atlassed.Controllers
+namespace Atlassed.Controllers.MapData
 {
     [RoutePrefix("api/buildings")]
     public class BuildingsController : ApiController
