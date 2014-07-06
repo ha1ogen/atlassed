@@ -99,6 +99,13 @@ namespace Atlassed.Models.MapData
                 .ExecExpectOne(x => new MapEntityClass(x));
         }
 
+        public static MapEntityClass GetMapEntityClass(int classId)
+        {
+            return DB.NewSP(_spGetMapEntityClasses)
+                .AddParam(_classId, classId)
+                .ExecExpectOne(x => new MapEntityClass(x));
+        }
+
         public static List<MapEntityClass> GetAllMapEntityClasses()
         {
             return DB.NewSP(_spGetMapEntityClasses)

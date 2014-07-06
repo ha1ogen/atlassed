@@ -13,6 +13,7 @@ namespace Atlassed.Models.MapData
     public class MetaField : IDbRow<MetaField>
     {
         public const string _fieldId = "fieldId";
+        private const string _fieldOrdinal = "fieldOrdinal";
         public const string _fieldName = "fieldName";
         private const string _fieldType = "fieldType";
         private const string _fieldLabel = "fieldLabel";
@@ -29,6 +30,7 @@ namespace Atlassed.Models.MapData
 
         public int FieldId { get; set; }
         public string ClassName { get; set; }
+        public int FieldOrdinal { get; set; }
         public string FieldName { get; set; }
         public string FieldType { get; set; }
         public string FieldLabel { get; set; }
@@ -51,6 +53,7 @@ namespace Atlassed.Models.MapData
         {
             FieldId = data.GetInt32(_fieldId);
             ClassName = data.GetString(MetaClass._className);
+            FieldOrdinal = data.GetInt32(_fieldOrdinal);
             FieldName = data.GetString(_fieldName);
             FieldType = data.GetString(_fieldType);
             FieldLabel = data.GetString(_fieldLabel);
@@ -84,6 +87,8 @@ namespace Atlassed.Models.MapData
                 .AddParam(_fieldIsUnique, FieldIsUnique)
                 .AddTVParam(_metaConstraints, GenerateMetaConstraintTable())
                 .ExecExpectScalarValue<int>();
+
+            FieldOrdinal = GetMetaField(FieldId).FieldOrdinal;
 
             _isCommitted = true;
         }

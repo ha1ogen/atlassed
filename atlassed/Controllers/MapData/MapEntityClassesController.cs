@@ -8,7 +8,6 @@ using System.Web.Http;
 
 namespace Atlassed.Controllers.MapData
 {
-    [RoutePrefix("api/MapEntityClasses")]
     public class MapEntityClassesController : SinglePageAppApiController
     {
         public IEnumerable<MapEntityClass> Get()
@@ -16,12 +15,10 @@ namespace Atlassed.Controllers.MapData
             return MapEntityClass.GetAllMapEntityClasses();
         }
 
-        [Route("{className}")]
-        public MapEntityClass Get(string className)
+        public MapEntityClass Get(int id)
         {
-            var mec = MapEntityClass.GetMapEntityClass(className);
-            if (mec == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+            var mec = MapEntityClass.GetMapEntityClass(id);
+            if (mec == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
             return mec;
         }
@@ -40,12 +37,10 @@ namespace Atlassed.Controllers.MapData
             return mec.CommitUpdate();
         }
 
-        [Route("{className}")]
-        public bool Delete(string className)
+        public bool Delete(int id)
         {
-            var mec = MapEntityClass.GetMapEntityClass(className);
-            if (mec == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+            var mec = MapEntityClass.GetMapEntityClass(id);
+            if (mec == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
             return mec.Delete();
         }
