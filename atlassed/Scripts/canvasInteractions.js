@@ -50,7 +50,8 @@ function ZoomPin() {
     Pin.left = point.X - 9; // half of pin img width...
 }
 function HidePin() {
-    Pin.opacity = 0;
+    if (Pin !== null)
+        Pin.opacity = 0;
 };
 
 var AddingObject = false;
