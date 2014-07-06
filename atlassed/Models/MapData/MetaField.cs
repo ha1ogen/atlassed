@@ -1,4 +1,5 @@
 ﻿using Microsoft.SqlServer.Server;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -9,10 +10,9 @@ using System.Web;
 
 namespace Atlassed.Models.MapData
 {
-    public enum MetaFieldType { STR, INT, DEC, BOOL, DATE, BRULE }
-
     public class MetaField : IDbRow<MetaField>
     {
+        public const string _fieldId = "fieldId";
         public const string _fieldName = "fieldName";
         private const string _fieldType = "fieldType";
         private const string _fieldLabel = "fieldLabel";
@@ -27,14 +27,18 @@ namespace Atlassed.Models.MapData
         private const string _spDeleteMetaField = "DeleteMetaField";
         private const string _spGetMetaFields = "GetMetaFields";
 
-        public string ClassName { get; private set; }
+        public int FieldId { get; set; }
+        public string ClassName { get; set; }
         public string FieldName { get; set; }
-        public MetaFieldType FieldType { get; set; }
+        public string FieldType { get; set; }
         public string FieldLabel { get; set; }
         public string FieldDescription { get; set; }
         public bool FieldIsRequired { get; set; }
         public bool FieldIsUnique { get; set; }
+        [JsonIgnore]
         public string MetaConstraints { get; set; }
+        [JsonProperty("MetaConstraints")]
+        public JObject MetaConstraintsObject { get { return JObject.Parse(MetaConstraints ?? "{}"); } }
 
         private readonly bool _isCommitted = false;
 
@@ -45,9 +49,10 @@ namespace Atlassed.Models.MapData
 
         public MetaField(IDataRecord data)
         {
+            FieldId = data.GetInt32(_fieldId);
             ClassName = data.GetString(MetaClass._className);
             FieldName = data.GetString(_fieldName);
-            FieldType = (MetaFieldType)Enum.Parse(typeof(MetaFieldType), data.GetString(_fieldType));
+            FieldType = data.GetString(_fieldType);
             FieldLabel = data.GetString(_fieldLabel);
             FieldDescription = data.GetString(_fieldDescription);
             FieldIsRequired = data.GetBoolean(_fieldIsRequired);
@@ -57,7 +62,7 @@ namespace Atlassed.Models.MapData
             _isCommitted = true;
         }
 
-        public MetaField(string className, string fieldName, MetaFieldType fieldType, string fieldLabel, string fieldDescription, bool fieldIsRequired, string defaultValue, bool fieldIsUnique, string metaConstraints)
+        public MetaField(string className, string fieldName, string fieldType, string fieldLabel, string fieldDescription, bool fieldIsRequired, string defaultValue, bool fieldIsUnique, string metaConstraints)
         {
             ClassName = className;
             FieldName = fieldName;
@@ -68,7 +73,7 @@ namespace Atlassed.Models.MapData
             FieldIsUnique = fieldIsUnique;
             MetaConstraints = metaConstraints;
 
-            DB.NewSP(_spAddMetaField)
+            FieldId = DB.NewSP(_spAddMetaField)
                 .AddParam(MetaClass._className, ClassName)
                 .AddParam(_fieldName, FieldName)
                 .AddParam(_fieldType, FieldType.ToString())
@@ -77,24 +82,23 @@ namespace Atlassed.Models.MapData
                 .AddParam(_fieldIsRequired, FieldIsRequired)
                 .AddParam(_defaultValue, defaultValue)
                 .AddParam(_fieldIsUnique, FieldIsUnique)
-                .AddTVParam(_metaConstraints, GenerateMetaConstraintTable(MetaConstraints))
-                .ExecuteNonQuery();
+                .AddTVParam(_metaConstraints, GenerateMetaConstraintTable())
+                .ExecExpectScalarValue<int>();
 
             _isCommitted = true;
         }
 
-        public static IEnumerable<SqlDataRecord> GenerateMetaConstraintTable(string metaConstraints)
+        public IEnumerable<SqlDataRecord> GenerateMetaConstraintTable()
         {
             var metaConstraintsTable = new List<SqlDataRecord>();
 
             try
             {
-                var reader = JObject.Parse(metaConstraints);
                 SqlMetaData[] metaData = new SqlMetaData[2];
                 metaData[0] = new SqlMetaData("ConstraintType", SqlDbType.VarChar, 10);
                 metaData[1] = new SqlMetaData("ConstraintValue", SqlDbType.VarChar, 50);
 
-                foreach (KeyValuePair<string, JToken> prop in reader)
+                foreach (KeyValuePair<string, JToken> prop in MetaConstraintsObject)
                 {
                     SqlDataRecord record = new SqlDataRecord(metaData);
                     record.SetString(0, prop.Key);
@@ -110,6 +114,26 @@ namespace Atlassed.Models.MapData
             return metaConstraintsTable;
         }
 
+        public static MetaField Create(MetaField metaField, string defaultValue)
+        {
+            return new MetaField(metaField.ClassName, metaField.FieldName, metaField.FieldType, metaField.FieldLabel, metaField.FieldDescription, metaField.FieldIsRequired, defaultValue, metaField.FieldIsUnique, metaField.MetaConstraints);
+        }
+
+        public static MetaField Update(MetaField metaField)
+        {
+            var mf = GetMetaField(metaField.FieldId);
+            if (mf == null) return null;
+
+            mf.FieldName = metaField.FieldName;
+            mf.FieldLabel = metaField.FieldLabel;
+            mf.FieldDescription = metaField.FieldDescription;
+            mf.FieldIsRequired = metaField.FieldIsRequired;
+            mf.FieldIsUnique = metaField.FieldIsUnique;
+            mf.MetaConstraints = metaField.MetaConstraints;
+
+            return mf;
+        }
+
         public MetaField CommitUpdate()
         {
             if (!_isCommitted)
@@ -118,13 +142,14 @@ namespace Atlassed.Models.MapData
             }
 
             return DB.NewSP(_spEditMetaField)
+                    .AddParam(_fieldId, FieldId)
                     .AddParam(MetaClass._className, ClassName)
                     .AddParam(_fieldName, FieldName)
                     .AddParam(_fieldLabel, FieldLabel)
                     .AddParam(_fieldDescription, FieldDescription)
                     .AddParam(_fieldIsRequired, FieldIsRequired)
                     .AddParam(_fieldIsUnique, FieldIsUnique)
-                    .AddTVParam(_metaConstraints, GenerateMetaConstraintTable(MetaConstraints))
+                    .AddTVParam(_metaConstraints, GenerateMetaConstraintTable())
                     .ExecNonQueryExpectSuccess()
                 ? GetMetaField(ClassName, FieldName)
                 : null;
@@ -145,10 +170,15 @@ namespace Atlassed.Models.MapData
 
         public static MetaField GetMetaField(string className, string fieldName)
         {
-
             return DB.NewSP(_spGetMetaFields)
                 .AddParam(MetaClass._className, className)
                 .AddParam(_fieldName, fieldName)
+                .ExecExpectOne(x => new MetaField(x));
+        }
+        public static MetaField GetMetaField(int fieldId)
+        {
+            return DB.NewSP(_spGetMetaFields)
+                .AddParam(_fieldId, fieldId)
                 .ExecExpectOne(x => new MetaField(x));
         }
 

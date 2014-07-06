@@ -95,7 +95,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\MapData\CampusesController.cs" />
+    <Compile Include="Controllers\MapData\MetaFieldsController.cs" />
+    <Compile Include="Controllers\SecuredImageHandler.cs" />
     <Compile Include="Controllers\MapData\BuildingsController.cs" />
+    <Compile Include="Controllers\MapData\MapEntityClassesController.cs" />
+    <Compile Include="Controllers\MapData\BusinessRuleClassesController.cs" />
+    <Compile Include="Controllers\MapData\BusinessRulesController.cs" />
     <Compile Include="Controllers\MapData\FloorsController.cs" />
     <Compile Include="Controllers\MapData\MapEntitiesController.cs" />
     <Compile Include="Controllers\SinglePageAppApiController.cs" />
@@ -117,6 +123,7 @@
     <Compile Include="Models\MapData\MetaClass.cs" />
     <Compile Include="Models\MapData\MetaField.cs" />
     <Compile Include="Models\MapData\MetaObject.cs" />
+    <Compile Include="Models\MapData\Coordinate.cs" />
     <Compile Include="Models\MapData\Point.cs" />
     <Compile Include="Models\MapData\SearchResult.cs" />
     <Compile Include="Models\UserManagement\Credentials.cs" />
@@ -132,6 +139,7 @@
     <Content Include="Content\Site.less" />
     <Content Include="Content\Tiles.less" />
     <Content Include="Content\Toolbar.less" />
+    <Content Include="Models\MapData\ClassDiagram.cd" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

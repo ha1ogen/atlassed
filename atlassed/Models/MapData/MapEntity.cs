@@ -55,8 +55,7 @@ namespace Atlassed.Models.MapData
                     .AddParam(MetaClass._className, ClassName)
                     .AddParam(_entityPoints, Point.MultiToString(EntityPoints))
                     .AddTVParam(_metaProperties, GenerateMetaFieldTable())
-                    .AddReturn(SqlDbType.Int)
-                    .ExecExpectReturnValue<int>();
+                    .ExecExpectScalarValue<int>();
 
             _isCommitted = true;
         }
@@ -76,10 +75,14 @@ namespace Atlassed.Models.MapData
             return e;
         }
 
-        public static List<SearchResult> Search(string query)
+        public static List<SearchResult> Search(string query, string classNames, int? mapId, int skip, int? take)
         {
             return DB.NewSP(_spSearchMapEntities)
                         .AddParam(SearchResult._query, query)
+                        .AddParam("classNames", classNames)
+                        .AddParam(Map._mapId, mapId)
+                        .AddParam("skip", skip)
+                        .AddParam("take", take)
                         .ExecExpectMultiple<SearchResult>(x => new SearchResult(x))
                         .ToList();
         }

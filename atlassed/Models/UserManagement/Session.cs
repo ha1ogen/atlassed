@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 
@@ -14,7 +15,17 @@ namespace Atlassed.Models.UserManagement
         public Session(Credentials credentials)
         {
             SessionId = new Guid();
+
+            //TODO: DB sessions
+            //TODO: authenticate
+            //TODO: get roles
         }
+
+        public Session(IDataRecord data)
+        {
+
+        }
+
         public bool Destroy()
         {
             return false;

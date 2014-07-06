@@ -10,7 +10,7 @@ namespace Atlassed.Models.MapData
 
     public class MetaClass
     {
-
+        public const string _classId = "classId";
         public const string _className = "className";
         protected const string _classType = "classType";
         protected const string _classTypeDescription = "classTypeDescription";
@@ -18,23 +18,29 @@ namespace Atlassed.Models.MapData
 
         protected const string _spGetMetaClasses = "GetMetaClasses";
 
-        public string ClassName { get; private set; }
-        public ClassType ClassType { get; set; }
+        public int ClassId { get; set; }
+        public string ClassName { get; set; }
+        public string ClassType { get; set; }
         public string ClassTypeDescription { get; private set; }
         public string ClassLabel { get; set; }
-        public List<MetaField> Fields { get { throw new NotImplementedException(); } }
+        public List<MetaField> MetaFields { get { return MetaField.GetAllMetaFields(ClassName); } }
 
+        public MetaClass()
+        {
+
+        }
         protected MetaClass(IDataRecord data)
         {
-            ClassName = data.GetString(data.GetOrdinal(_className));
-            ClassType = (ClassType)Enum.Parse(typeof(ClassType), data.GetString(data.GetOrdinal(_classType)));
-            ClassTypeDescription = data.GetString(data.GetOrdinal(_classTypeDescription));
-            ClassLabel = data.GetString(data.GetOrdinal(_classLabel));
+            ClassId = data.GetInt32(_classId);
+            ClassName = data.GetString(_className);
+            ClassType = data.GetString(_classType);
+            ClassTypeDescription = data.GetString(_classTypeDescription);
+            ClassLabel = data.GetString(_classLabel);
         }
         protected MetaClass(string className, ClassType classType, string classLabel)
         {
             ClassName = className;
-            ClassType = classType;
+            ClassType = classType.ToString();
             ClassLabel = classLabel;
         }
     }

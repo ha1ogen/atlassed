@@ -6,10 +6,9 @@ using System.Web;
 
 namespace Atlassed.Models.MapData
 {
-    public class Building : MetaObject, IDbRow<Building>, ISearchable
+    public class Building : MetaObject, IDbRow<Building>
     {
         public const string _buildingId = "buildingId";
-        private const string _buildingName = "buildingName";
 
         private const string _spAddBuilding = "AddBuilding";
         private const string _spEditBuilding = "EditBuilding";
@@ -18,7 +17,6 @@ namespace Atlassed.Models.MapData
 
         public int BuildingId { get; set; }
         public int CampusMapId { get; set; }
-        public string BuildingName { get; set; }
 
         private readonly bool _isCommitted = false;
 
@@ -30,32 +28,28 @@ namespace Atlassed.Models.MapData
             : base(data)
         {
             BuildingId = data.GetInt32(_buildingId);
-            BuildingName = data.GetString(_buildingName);
             CampusMapId = data.GetInt32(CampusMap._campusMapId);
 
             _isCommitted = true;
         }
 
-        private Building(int campusMapId, string buildingName, string entityPoints, string metaProperties)
+        private Building(int campusMapId, List<Point> entityPoints, string metaProperties)
             : base(metaProperties)
         {
             CampusMapId = campusMapId;
-            BuildingName = buildingName;
 
             BuildingId = DB.NewSP(_spAddBuilding)
                 .AddParam(CampusMap._campusMapId, CampusMapId)
-                .AddParam(_buildingName, BuildingName)
-                .AddParam(MapEntity._entityPoints, entityPoints)
+                .AddParam(MapEntity._entityPoints, Point.MultiToString(entityPoints))
                 .AddTVParam(_metaProperties, GenerateMetaFieldTable())
-                .AddReturn(SqlDbType.Int)
-                .ExecExpectReturnValue<int>();
+                .ExecExpectScalarValue<int>();
 
             _isCommitted = true;
         }
 
-        public static Building Create(Building building, string entityPoints)
+        public static Building Create(Building building, List<Point> entityPoints)
         {
-            return new Building(building.CampusMapId, building.BuildingName, entityPoints, building.MetaProperties.ToString());
+            return new Building(building.CampusMapId, entityPoints, building.MetaProperties.ToString());
         }
 
         public static Building Update(Building building)
@@ -63,20 +57,9 @@ namespace Atlassed.Models.MapData
             var b = Building.GetBuilding(building.BuildingId);
             if (b == null) return null;
 
-            b.BuildingName = building.BuildingName;
             b.MetaProperties = building.MetaProperties;
 
             return b;
-        }
-
-        public static List<SearchResult> Search(string query)
-        {
-            return GetAllBuildings().Where(x => x.BuildingName.ToLowerInvariant().Contains(query.ToLowerInvariant())).ToSearchResults();
-        }
-
-        public SearchResult ToSearchResult()
-        {
-            return new SearchResult(BuildingId, this.GetType().Name, BuildingName, CampusMap.GetCampus(CampusMapId).CampusName);
         }
 
         public Building CommitUpdate()
@@ -88,7 +71,6 @@ namespace Atlassed.Models.MapData
 
             return DB.NewSP(_spEditBuilding)
                     .AddParam(_buildingId, BuildingId)
-                    .AddParam(_buildingName, BuildingName)
                     .AddTVParam(_metaProperties, GenerateMetaFieldTable())
                     .ExecNonQueryExpectSuccess()
                 ? GetBuilding(BuildingId)

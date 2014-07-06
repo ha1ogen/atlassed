@@ -20,7 +20,7 @@ namespace Atlassed.Models.MapData
         private const string _spGetBusinessRules = "GetBusinessRules";
 
         public int BusinessRuleId { get; set; }
-        public string BusinessRuleClass { get; set; }
+        public string ClassName { get; set; }
         public string Code { get; set; }
         public string Description { get; set; }
         public bool IsSystemRule { get; set; }
@@ -32,9 +32,10 @@ namespace Atlassed.Models.MapData
         }
 
         public BusinessRule(IDataRecord data)
+            : base(data)
         {
             BusinessRuleId = data.GetInt32(_businessRuleId);
-            BusinessRuleClass = data.GetString(_businessRuleClass);
+            ClassName = data.GetString(_businessRuleClass);
             Code = data.GetString(_code);
             Description = data.GetString(_description);
             IsSystemRule = data.GetBoolean(_isSystemRule);
@@ -45,19 +46,35 @@ namespace Atlassed.Models.MapData
         public BusinessRule(string className, string code, string description, string metaProperties)
             : base(metaProperties)
         {
-            BusinessRuleClass = className;
+            ClassName = className;
             Code = code;
             Description = description;
 
             BusinessRuleId = DB.NewSP(_spAddBusinessRule)
-                .AddParam(MetaClass._className, BusinessRuleClass)
+                .AddParam(MetaClass._className, ClassName)
                 .AddParam(_code, Code)
                 .AddParam(_description, Description)
                 .AddTVParam(_metaProperties, GenerateMetaFieldTable())
-                .AddReturn(SqlDbType.Int)
-                .ExecExpectReturnValue<int>();
+                .ExecExpectScalarValue<int>();
 
             _isCommitted = true;
+        }
+
+        public static BusinessRule Create(BusinessRule businessRule)
+        {
+            return new BusinessRule(businessRule.ClassName, businessRule.Code, businessRule.Description, businessRule.MetaProperties);
+        }
+
+        public static BusinessRule Update(BusinessRule businessRule)
+        {
+            var br = GetBusinessRule(businessRule.BusinessRuleId);
+            if (br == null) return null;
+
+            br.Code = businessRule.Code;
+            br.Description = businessRule.Description;
+            br.MetaProperties = businessRule.MetaProperties;
+
+            return br;
         }
 
         public BusinessRule CommitUpdate()

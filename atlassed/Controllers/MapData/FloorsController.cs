@@ -8,30 +8,28 @@ using System.Web.Http;
 
 namespace Atlassed.Controllers.MapData
 {
-    public class FloorsController : ApiController
+    public class FloorsController : SinglePageAppApiController
     {
         public FloorMap Get(int id)
         {
             var f = FloorMap.GetFloor(id);
             if (f == null)
-            {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
+
             return f;
         }
 
-        public FloorMap Post([FromBody]FloorMap floor)
+        public HttpResponseMessage Post([FromBody]FloorMap floor)
         {
-            return FloorMap.Create(floor);
+            var f = FloorMap.Create(floor);
+            return Request.CreateResponse(HttpStatusCode.Created, f);
         }
 
         public FloorMap Put([FromBody]FloorMap floor)
         {
             var f = FloorMap.Update(floor);
             if (f == null)
-            {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
 
             return f.CommitUpdate();
         }
@@ -40,9 +38,7 @@ namespace Atlassed.Controllers.MapData
         {
             var f = FloorMap.GetFloor(id);
             if (f == null)
-            {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
 
             return f.Delete();
         }

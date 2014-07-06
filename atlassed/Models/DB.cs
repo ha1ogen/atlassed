@@ -175,21 +175,20 @@ namespace Atlassed.Models
 
             return query;
         }
-
-        public static T ReturnValue<T>(this SqlCommand query)
+        
+        // EXECUTORS
+        public static T ExecExpectScalarValue<T>(this SqlCommand query)
         {
-            return (T)query.Parameters[ReturnParamName].Value;
+            return query.ExecExpectOne<T>(x => (T)x.GetValue(0));
         }
 
-        // EXECUTORS
-        public static T ExecExpectReturnValue<T>(this SqlCommand query)
+        public static int ExecNonQuery(this SqlCommand query)
         {
             using (var c = GetConnection())
             {
                 query.Connection = c;
-                query.ExecuteNonQuery();
+                return query.ExecuteNonQuery();
             }
-            return query.ReturnValue<T>();
         }
 
         public static bool ExecNonQueryExpectSuccess(this SqlCommand query)
@@ -205,6 +204,7 @@ namespace Atlassed.Models
             }
             catch (SqlException e)
             {
+                Debug.WriteLine(e.Message);
                 return false;
             }
         }
@@ -231,12 +231,12 @@ namespace Atlassed.Models
             }
         }
 
-        public static T ExecExpectOne<T>(this SqlCommand query, Func<SqlDataReader, T> convert)
+        public static T ExecExpectOne<T>(this SqlCommand query, Func<IDataRecord, T> convert)
         {
             return query.ExecExpectMultiple(convert).FirstOrDefault();
         }
 
-        public static Collection<T> ExecExpectMultiple<T>(this SqlCommand query, Func<SqlDataReader, T> convert)
+        public static Collection<T> ExecExpectMultiple<T>(this SqlCommand query, Func<IDataRecord, T> convert)
         {
             using (var c = GetConnection())
             {

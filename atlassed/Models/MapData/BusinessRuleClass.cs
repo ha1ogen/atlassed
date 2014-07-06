@@ -14,25 +14,42 @@ namespace Atlassed.Models.MapData
 
         private readonly bool _isCommitted = false;
 
+        public BusinessRuleClass()
+        {
+            _isCommitted = false;
+        }
         public BusinessRuleClass(IDataRecord data)
-            : base(
-                data.GetString(data.GetOrdinal(_className)),
-                ClassType.BRULE,
-                data.GetString(data.GetOrdinal(_classLabel))
-            )
+            : base(data)
         {
             _isCommitted = true;
         }
 
         public BusinessRuleClass(string className, string classLabel)
-            : base(className, ClassType.ENTITY, classLabel)
+            : base(className, MapData.ClassType.BRULE, classLabel)
         {
             DB.NewSP(_spAddBusinessRuleClass)
                 .AddParam(_className, ClassName)
                 .AddParam(_classLabel, classLabel)
-                .ExecuteNonQuery();
+                .ExecNonQuery();
 
             _isCommitted = true;
+        }
+
+        public static BusinessRuleClass Create(BusinessRuleClass businessRuleClass)
+        {
+            new BusinessRuleClass(businessRuleClass.ClassName, businessRuleClass.ClassLabel);
+            // populate class type description
+            return GetBusinessRuleClass(businessRuleClass.ClassName);
+        }
+
+        public static BusinessRuleClass Update(BusinessRuleClass businessRuleClass)
+        {
+            var brc = GetBusinessRuleClass(businessRuleClass.ClassName);
+            if (brc == null) return null;
+
+            brc.ClassLabel = businessRuleClass.ClassLabel;
+
+            return brc;
         }
 
         public BusinessRuleClass CommitUpdate()
@@ -67,14 +84,14 @@ namespace Atlassed.Models.MapData
         {
             return DB.NewSP(_spGetMetaClasses)
                 .AddParam(_className, className)
-                .AddParam(_classType, ClassType.BRULE.ToString())
+                .AddParam(_classType, MapData.ClassType.BRULE.ToString())
                 .ExecExpectOne(x => new BusinessRuleClass(x));
         }
 
         public static List<BusinessRuleClass> GetAllBusinessRuleClasses()
         {
             return DB.NewSP(_spGetMetaClasses)
-                .AddParam(_classType, ClassType.BRULE.ToString())
+                .AddParam(_classType, MapData.ClassType.BRULE.ToString())
                 .ExecExpectMultiple(x => new BusinessRuleClass(x)).ToList();
         }
     }

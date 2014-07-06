@@ -6,7 +6,7 @@ using System.Web;
 
 namespace Atlassed.Models.MapData
 {
-    public class FloorMap : MetaObject, IDbRow<FloorMap>
+    public class FloorMap : Map, IDbRow<FloorMap>
     {
         public const string _floorMapId = "floorMapId";
         private const string _floorOrdinal = "floorOrdinal";
@@ -19,7 +19,6 @@ namespace Atlassed.Models.MapData
         private const string _spDeleteFloor = "DeleteFloor";
         private const string _spGetFloors = "GetFloors";
 
-        public int FloorMapId { get; set; }
         public int BuildingId { get; set; }
         public int FloorOrdinal { get; set; }
         public string FloorCode { get; set; }
@@ -28,7 +27,7 @@ namespace Atlassed.Models.MapData
         private readonly bool _isCommitted = false;
         public FloorMap()
         {
-            FloorMapId = 0;
+            MapId = 0;
             FloorOrdinal = 0;
             FloorCode = string.Empty;
             FloorLabel = string.Empty;
@@ -39,7 +38,7 @@ namespace Atlassed.Models.MapData
         public FloorMap(IDataRecord data)
             : base(data)
         {
-            FloorMapId = data.GetInt32(_floorMapId);
+            MapId = data.GetInt32(_floorMapId);
             BuildingId = data.GetInt32(Building._buildingId);
             FloorOrdinal = data.GetInt32(_floorOrdinal);
             FloorCode = data.GetString(_floorCode);
@@ -56,14 +55,13 @@ namespace Atlassed.Models.MapData
             FloorCode = floorCode;
             FloorLabel = floorLabel;
 
-            FloorMapId = DB.NewSP(_spAddFloor)
+            MapId = DB.NewSP(_spAddFloor)
                 .AddParam(Building._buildingId, BuildingId)
                 .AddParam(_floorOrdinal, FloorOrdinal)
                 .AddParam(_floorCode, FloorCode)
                 .AddParam(_floorLabel, FloorLabel)
                 .AddTVParam(_metaProperties, GenerateMetaFieldTable())
-                .AddReturn(SqlDbType.Int)
-                .ExecExpectReturnValue<int>();
+                .ExecExpectScalarValue<int>();
 
             _isCommitted = true;
         }
@@ -74,7 +72,7 @@ namespace Atlassed.Models.MapData
         }
         public static FloorMap Update(FloorMap floor)
         {
-            var f = FloorMap.GetFloor(floor.FloorMapId);
+            var f = FloorMap.GetFloor(floor.MapId);
             if (f == null) return null;
 
             f.FloorOrdinal = floor.FloorOrdinal;
@@ -93,13 +91,13 @@ namespace Atlassed.Models.MapData
             }
 
             return DB.NewSP(_spEditFloor)
-                    .AddParam(_floorMapId, FloorMapId)
+                    .AddParam(_floorMapId, MapId)
                     .AddParam(_floorOrdinal, FloorOrdinal)
                     .AddParam(_floorCode, FloorCode)
                     .AddParam(_floorLabel, FloorLabel)
                     .AddTVParam(_metaProperties, GenerateMetaFieldTable())
                     .ExecNonQueryExpectSuccess()
-                ? GetFloor(FloorMapId)
+                ? GetFloor(MapId)
                 : null;
 
         }
@@ -112,7 +110,7 @@ namespace Atlassed.Models.MapData
             }
 
             return DB.NewSP(_spDeleteFloor)
-                    .AddParam(_floorMapId, FloorMapId)
+                    .AddParam(_floorMapId, MapId)
                     .ExecNonQueryExpectSuccess();
         }
 

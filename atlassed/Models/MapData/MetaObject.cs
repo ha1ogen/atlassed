@@ -20,7 +20,7 @@ namespace Atlassed.Models.MapData
         public string MetaProperties { get; set; }
 
         [JsonProperty("MetaProperties")]
-        public JObject MetaPropertiesObject { get { return JObject.Parse(MetaProperties); } }
+        public JObject MetaPropertiesObject { get { return JObject.Parse(MetaProperties ?? "{}"); } }
         protected MetaObject()
         {
 

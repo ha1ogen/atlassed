@@ -6,25 +6,27 @@ using System.Web;
 
 namespace Atlassed.Models.MapData
 {
-    public class CampusMap : MetaObject, IDbRow<CampusMap>, ISearchable
+    public class CampusMap : Map, IDbRow<CampusMap>, ISearchable
     {
         public const string _campusMapId = "campusMapId";
         private const string _campusName = "campusName";
+        private const string _mapCoordinates = "mapCoordinates";
 
         private const string _spAddCampusMap = "AddCampusMap";
         private const string _spEditCampusMap = "EditCampusMap";
         private const string _spDeleteCampusMap = "DeleteCampusMap";
         private const string _spGetCampusMaps = "GetCampuses";
 
-        public int CampusMapId { get; set; }
         public string CampusName { get; set; }
+        public Coordinate MapCoordinates { get; set; }
 
         private readonly bool _isCommitted = false;
 
         public CampusMap()
         {
-            CampusMapId = 0;
+            MapId = 0;
             CampusName = string.Empty;
+            MapCoordinates = new Coordinate();
 
             _isCommitted = false;
         }
@@ -32,24 +34,43 @@ namespace Atlassed.Models.MapData
         public CampusMap(IDataRecord data)
             : base(data)
         {
-            CampusMapId = data.GetInt32(data.GetOrdinal(_campusMapId));
+            MapId = data.GetInt32(data.GetOrdinal(_campusMapId));
             CampusName = data.GetString(data.GetOrdinal(_campusName));
+            MapCoordinates = Coordinate.Parse(data.GetString(_mapCoordinates));
 
             _isCommitted = true;
         }
 
-        public CampusMap(string campusName, string metaProperties)
+        public CampusMap(string campusName, Coordinate mapCoordinates, string metaProperties)
             : base(metaProperties)
         {
             CampusName = campusName;
+            MapCoordinates = mapCoordinates;
 
-            CampusMapId = DB.NewSP(_spAddCampusMap)
+            MapId = DB.NewSP(_spAddCampusMap)
                     .AddParam(_campusName, CampusName)
+                    .AddParam(_mapCoordinates, MapCoordinates.ToString())
                     .AddTVParam(_metaProperties, GenerateMetaFieldTable())
-                    .AddReturn(SqlDbType.Int)
-                    .ExecExpectReturnValue<int>();
+                    .ExecExpectScalarValue<int>();
 
             _isCommitted = true;
+        }
+
+        public static CampusMap Create(CampusMap campus)
+        {
+            return new CampusMap(campus.CampusName, campus.MapCoordinates, campus.MetaProperties);
+        }
+
+        public static CampusMap Update(CampusMap campus)
+        {
+            var c = GetCampus(campus.MapId);
+            if (c == null) return null;
+
+            c.CampusName = campus.CampusName;
+            c.MapCoordinates = campus.MapCoordinates;
+            c.MetaProperties = campus.MetaProperties;
+
+            return c;
         }
 
         public static List<SearchResult> Search(string query)
@@ -59,7 +80,7 @@ namespace Atlassed.Models.MapData
 
         public SearchResult ToSearchResult()
         {
-            return new SearchResult(CampusMapId, this.GetType().Name, CampusName, "");
+            return new SearchResult(MapId, this.GetType().Name, CampusName, "");
         }
 
         public CampusMap CommitUpdate()
@@ -70,11 +91,12 @@ namespace Atlassed.Models.MapData
             }
 
             return DB.NewSP(_spEditCampusMap)
-                    .AddParam(_campusMapId, CampusMapId)
+                    .AddParam(_campusMapId, MapId)
                     .AddParam(_campusName, CampusName)
+                    .AddParam(_mapCoordinates, MapCoordinates.ToString())
                     .AddTVParam(_metaProperties, GenerateMetaFieldTable())
                     .ExecNonQueryExpectSuccess()
-                ? GetCampus(CampusMapId)
+                ? GetCampus(MapId)
                 : null;
 
         }
@@ -87,7 +109,7 @@ namespace Atlassed.Models.MapData
             }
 
             return DB.NewSP(_spDeleteCampusMap)
-                    .AddParam(_campusMapId, CampusMapId)
+                    .AddParam(_campusMapId, MapId)
                     .ExecNonQueryExpectSuccess();
         }
 

@@ -10,42 +10,36 @@ using System.Web.Http.ModelBinding;
 
 namespace Atlassed.Controllers.MapData
 {
-    [RoutePrefix("api/buildings")]
-    public class BuildingsController : ApiController
+    public class BuildingsController : SinglePageAppApiController
     {
-        [Route("{buildingId:int}/floors")]
-        public List<FloorMap> GetFloors(int buildingId)
+        [Route("api/buildings/{id}/floors")]
+        public List<FloorMap> GetFloors(int id)
         {
-            if (Building.GetBuilding(buildingId) == null)
-            {
+            if (Building.GetBuilding(id) == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
 
-            return FloorMap.GetAllFloors(buildingId);
+            return FloorMap.GetAllFloors(id);
         }
 
         public Building Get(int id)
         {
             var b = Building.GetBuilding(id);
             if (b == null)
-            {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
             return b;
         }
 
-        public Building Post([FromBody]NewBuilding building)
+        public HttpResponseMessage Post([FromBody]NewBuilding building)
         {
-            return Building.Create(building, building.EntityPoints);
+            var b = Building.Create(building, building.EntityPoints);
+            return Request.CreateResponse(HttpStatusCode.Created, b);
         }
 
         public Building Put([FromBody]Building building)
         {
             var b = Building.Update(building);
             if (b == null)
-            {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
 
             return b.CommitUpdate();
         }
@@ -54,9 +48,7 @@ namespace Atlassed.Controllers.MapData
         {
             var b = Building.GetBuilding(id);
             if (b == null)
-            {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
 
             return b.Delete();
         }
@@ -65,6 +57,6 @@ namespace Atlassed.Controllers.MapData
     public class NewBuilding : Building
     {
         [DisplayFormat(ConvertEmptyStringToNull = false)]
-        public string EntityPoints { get; set; }
+        public List<Point> EntityPoints { get; set; }
     }
 }

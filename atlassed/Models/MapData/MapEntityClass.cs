@@ -8,6 +8,8 @@ namespace Atlassed.Models.MapData
 {
     public class MapEntityClass : MetaClass, IDbRow<MapEntityClass>
     {
+        private const string _iconFilenameExtension = ".png";
+
         public const string _mapLabelFieldName = "mapLabelFieldName";
 
         private const string _spAddMapEntityClass = "AddMapEntityClass";
@@ -16,31 +18,49 @@ namespace Atlassed.Models.MapData
         private const string _spGetMapEntityClasses = "GetMapEntityClasses";
 
         public string MapLabelFieldName { get; set; }
+        public string IconFilename { get { return "icon-" + ClassId + _iconFilenameExtension; } }
 
         private readonly bool _isCommitted = false;
 
+        public MapEntityClass()
+        {
+            _isCommitted = false;
+        }
         public MapEntityClass(IDataRecord data)
             : base(data)
         {
-            MapLabelFieldName = data.GetString(data.GetOrdinal(_mapLabelFieldName));
+            MapLabelFieldName = data.GetString(_mapLabelFieldName);
 
             _isCommitted = true;
         }
-        public MapEntityClass(string className, string classLabel, string mapLabelFieldName, string mapLabelFieldLabel, string mapLabelFieldDescription, string metaConstraints)
-            : base(className, ClassType.ENTITY, classLabel)
+        public MapEntityClass(string className, string classLabel, string mapLabelFieldName)
+            : base(className, MapData.ClassType.ENTITY, classLabel)
         {
             MapLabelFieldName = mapLabelFieldName;
 
             DB.NewSP(_spAddMapEntityClass)
                 .AddParam(_className, ClassName)
                 .AddParam(_classLabel, classLabel)
-                .AddParam(_mapLabelFieldName, MapLabelFieldName)
-                .AddParam("mapLabelFieldLabel", mapLabelFieldLabel)
-                .AddParam("mapLabelFieldDescription", mapLabelFieldDescription)
-                .AddTVParam("mapLabelFieldMetaConstraints", MetaField.GenerateMetaConstraintTable(metaConstraints))
-                .ExecuteNonQuery();
+                .AddParam(_mapLabelFieldName, mapLabelFieldName)
+                .ExecNonQuery();
 
             _isCommitted = true;
+        }
+
+        public static MapEntityClass Create(MapEntityClass mapEntityClass)
+        {
+            return new MapEntityClass(mapEntityClass.ClassName, mapEntityClass.ClassLabel, mapEntityClass.MapLabelFieldName);
+        }
+
+        public static MapEntityClass Update(MapEntityClass mapEntityClass)
+        {
+            var mec = GetMapEntityClass(mapEntityClass.ClassName);
+            if (mec == null) return null;
+
+            mec.ClassLabel = mapEntityClass.ClassLabel;
+            mec.MapLabelFieldName = mapEntityClass.MapLabelFieldName;
+
+            return mec;
         }
 
         public MapEntityClass CommitUpdate()
@@ -76,14 +96,12 @@ namespace Atlassed.Models.MapData
         {
             return DB.NewSP(_spGetMapEntityClasses)
                 .AddParam(_className, className)
-                .AddParam(_classType, ClassType.ENTITY.ToString())
                 .ExecExpectOne(x => new MapEntityClass(x));
         }
 
         public static List<MapEntityClass> GetAllMapEntityClasses()
         {
             return DB.NewSP(_spGetMapEntityClasses)
-                .AddParam(_classType, ClassType.ENTITY.ToString())
                 .ExecExpectMultiple(x => new MapEntityClass(x)).ToList();
         }
     }
