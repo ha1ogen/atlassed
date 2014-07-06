@@ -8,7 +8,7 @@ using System.Web.Http;
 
 namespace Atlassed.Controllers.MapData
 {
-    public class MetaFieldsController : ApiController
+    public class MetaFieldsController : SinglePageAppApiController
     {
         public MetaField Get(int id)
         {
