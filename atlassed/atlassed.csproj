@@ -124,7 +124,6 @@
     <Compile Include="Models\MapData\MetaField.cs" />
     <Compile Include="Models\MapData\MetaObject.cs" />
     <Compile Include="Models\MapData\Coordinate.cs" />
-    <Compile Include="Models\MapData\Point.cs" />
     <Compile Include="Models\MapData\SearchResult.cs" />
     <Compile Include="Models\UserManagement\Credentials.cs" />
     <Compile Include="Models\UserManagement\Session.cs" />

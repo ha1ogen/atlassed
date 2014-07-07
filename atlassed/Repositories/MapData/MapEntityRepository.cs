@@ -11,7 +11,7 @@ namespace Atlassed.Repositories.MapData
     public class MapEntityRepository : MetaObjectRepository, ISearchableRepository<MapEntity, MapEntity, int, int, SearchResult>
     {
         public const string _entityId = "entityId";
-        public const string _entityPoints = "entityPoints";
+        public const string _entityCoordinates = "entityPoints";
 
         private const string _spAddMapEntity = "AddMapEntity";
         private const string _spEditMapEntity = "EditMapEntity";
@@ -36,8 +36,8 @@ namespace Atlassed.Repositories.MapData
             return DB.NewSP(_spAddMapEntity, _connectionFactory)
                     .AddParam(Map._mapId, record.MapId)
                     .AddParam(MetaClassRepository._className, record.ClassName)
-                    .AddParam(_entityPoints, Point.MultiToString(record.EntityPoints))
-                    .AddTVParam(_metaProperties, GenerateMetaFieldTable(record))
+                    .AddParam(_entityCoordinates, Coordinate.MultiToString(record.EntityCoordinates))
+                    .AddTVParam(_metaProperties, GenerateMetaPropertyTable(record))
                     .ExecExpectOne(x => Create(x));
         }
 
@@ -48,7 +48,7 @@ namespace Atlassed.Repositories.MapData
                 EntityId = data.GetInt32(_entityId),
                 ClassName = data.GetString(MetaClassRepository._className),
                 MapId = data.GetInt32(Map._mapId),
-                EntityPoints = Point.ParseMultiPointString(data.GetString(_entityPoints)),
+                EntityCoordinates = Coordinate.ParseMultiCoordinateString(data.GetString(_entityCoordinates)),
                 MapLabel = data.GetString("mapLabel"),
                 MetaProperties = GetMetaProperties(data)
             };
@@ -61,7 +61,7 @@ namespace Atlassed.Repositories.MapData
 
             return DB.NewSP(_spEditMapEntity, _connectionFactory)
                     .AddParam(_entityId, record.EntityId)
-                    .AddTVParam(_metaProperties, GenerateMetaFieldTable(record))
+                    .AddTVParam(_metaProperties, GenerateMetaPropertyTable(record))
                     .ExecExpectOne(x => Create(x), out record)
                     .GetReturnValue<bool>();
         }

@@ -39,7 +39,7 @@ namespace Atlassed.Repositories.MapData
                 .AddParam(MetaClassRepository._className, record.ClassName)
                 .AddParam(_code, record.Code)
                 .AddParam(_description, record.Description)
-                .AddTVParam(_metaProperties, GenerateMetaFieldTable(record))
+                .AddTVParam(_metaProperties, GenerateMetaPropertyTable(record))
                 .ExecExpectOne(x => Create(x));
         }
 
@@ -65,7 +65,7 @@ namespace Atlassed.Repositories.MapData
                     .AddParam(_businessRuleId, record.BusinessRuleId)
                     .AddParam(_code, record.Code)
                     .AddParam(_description, record.Description)
-                    .AddTVParam(_metaProperties, GenerateMetaFieldTable(record))
+                    .AddTVParam(_metaProperties, GenerateMetaPropertyTable(record))
                     .ExecExpectOne(x => Create(x), out record)
                     .GetReturnValue<bool>();
         }

@@ -16,7 +16,7 @@ namespace Atlassed.Models.MapData
 
     public class NewBuilding : Building
     {
-        public List<Point> EntityPoints { get; set; }
+        public List<Coordinate> EntityCoordinates { get; set; }
     }
 
     public class BuildingValidator : IValidator<Building>

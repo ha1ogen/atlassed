@@ -21,7 +21,7 @@ namespace Atlassed.Models.MapData
         public int EntityId { get; set; }
         public string ClassName { get; set; }
         public int MapId { get; set; }
-        public List<Point> EntityPoints { get; set; }
+        public List<Coordinate> EntityCoordinates { get; set; }
         public string MapLabel { get; set; }
     }
 

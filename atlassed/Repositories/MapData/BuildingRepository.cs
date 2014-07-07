@@ -33,8 +33,8 @@ namespace Atlassed.Repositories.MapData
 
             return DB.NewSP(_spAddBuilding, _connectionFactory)
                 .AddParam(CampusRepository._campusMapId, record.CampusMapId)
-                .AddParam(MapEntity._entityPoints, Point.MultiToString(record.EntityPoints))
-                .AddTVParam(_metaProperties, GenerateMetaFieldTable(record))
+                .AddParam(MapEntity._entityPoints, Coordinate.MultiToString(record.EntityCoordinates))
+                .AddTVParam(_metaProperties, GenerateMetaPropertyTable(record))
                 .ExecExpectOne(x => Create(x));
         }
 
@@ -54,7 +54,7 @@ namespace Atlassed.Repositories.MapData
                 return false;
 
             return DB.NewSP(_spEditBuilding, _connectionFactory)
-                    .AddTVParam(_metaProperties, GenerateMetaFieldTable(record))
+                    .AddTVParam(_metaProperties, GenerateMetaPropertyTable(record))
                     .ExecExpectOne(x => Create(x), out record)
                     .GetReturnValue<bool>();
         }

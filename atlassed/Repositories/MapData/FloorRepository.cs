@@ -40,7 +40,7 @@ namespace Atlassed.Repositories.MapData
                 .AddParam(_floorOrdinal, record.FloorOrdinal)
                 .AddParam(_floorCode, record.FloorCode)
                 .AddParam(_floorLabel, record.FloorLabel)
-                .AddTVParam(_metaProperties, GenerateMetaFieldTable(record))
+                .AddTVParam(_metaProperties, GenerateMetaPropertyTable(record))
                 .ExecExpectOne(x => Create(x));
         }
 
@@ -67,7 +67,7 @@ namespace Atlassed.Repositories.MapData
                     .AddParam(_floorOrdinal, record.FloorOrdinal)
                     .AddParam(_floorCode, record.FloorCode)
                     .AddParam(_floorLabel, record.FloorLabel)
-                    .AddTVParam(_metaProperties, GenerateMetaFieldTable(record))
+                    .AddTVParam(_metaProperties, GenerateMetaPropertyTable(record))
                     .ExecExpectOne(x => Create(x), out record)
                     .GetReturnValue<bool>();
         }

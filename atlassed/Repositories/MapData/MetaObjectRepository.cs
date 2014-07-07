@@ -20,7 +20,7 @@ namespace Atlassed.Repositories.MapData
             return data.GetString(_metaProperties);
         }
 
-        protected static IEnumerable<SqlDataRecord> GenerateMetaFieldTable(MetaObject o)
+        protected static IEnumerable<SqlDataRecord> GenerateMetaPropertyTable(MetaObject o)
         {
             var metaFields = new List<SqlDataRecord>();
 
