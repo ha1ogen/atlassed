@@ -95,7 +95,7 @@ function LoadCanvas(filename, spaces, callback) {
 
     var async = 1;
     var timeout = 1800;
-    fabric.Image.fromURL('Images/' + filename, function (imgObj) {
+    fabric.Image.fromURL('Images/Maps/' + filename, function (imgObj) {
         if (imgObj._originalElement == null) {
             async--
             timeout = -1;
