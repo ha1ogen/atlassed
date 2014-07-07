@@ -42,12 +42,4 @@ namespace Atlassed.Models.MapData
             SecondaryText = data.GetString(4);
         }
     }
-
-    public static class SearchResultList
-    {
-        public static List<SearchResult> ToSearchResults(this IEnumerable<ISearchable> list)
-        {
-            return list.Select(result => result.ToSearchResult()).ToList();
-        }
-    }
 }

@@ -1,75 +1,71 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Atlassed.Models.MapData.Building" Collapsed="true">
-    <Position X="2" Y="3.5" Width="1.5" />
+    <Position X="0.5" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>IAQAAABIAQkAAAAAAAQBAAAAAgEAAEAAAAAAAAEgQEQ=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
       <FileName>Models\MapData\Building.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" />
   </Class>
   <Class Name="Atlassed.Models.MapData.BusinessRule" Collapsed="true">
-    <Position X="4.25" Y="3.5" Width="1.5" />
+    <Position X="2.75" Y="2.5" Width="1.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>CAQAAAAIABCgBAAEIEAgIAEAAAEAAEACIAAACAAgAEQ=</HashCode>
+      <HashCode>AAAAAAAAAACgAAAAAAAgAAAAAAAAAAACAAAAAAAAAAQ=</HashCode>
       <FileName>Models\MapData\BusinessRule.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" />
   </Class>
   <Class Name="Atlassed.Models.MapData.BusinessRuleClass" Collapsed="true">
-    <Position X="6" Y="8" Width="1.5" />
+    <Position X="3.5" Y="7" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAQIAEAMAAAAQAAAAAAAAAAAAAEAAEAAAQAAAAAAAEA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Models\MapData\BusinessRuleClass.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" />
   </Class>
   <Class Name="Atlassed.Models.MapData.CampusMap" Collapsed="true">
-    <Position X="7.5" Y="5" Width="1.5" />
+    <Position X="6" Y="4" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAgAAABIBAEAEAgAAAAEAAAAAIUAAAAAAAAAAAAgAMA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
       <FileName>Models\MapData\CampusMap.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" />
   </Class>
   <Class Name="Atlassed.Models.MapData.FloorMap" Collapsed="true">
-    <Position X="5.25" Y="5" Width="1.5" />
+    <Position X="3.75" Y="4" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAwCAAAIAIAAAAAAAAAASAAAAEEGAEAAQAAgAAVAAFA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAQAAAAAAEAAAAQAAAAAEAAAA=</HashCode>
       <FileName>Models\MapData\FloorMap.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" />
   </Class>
   <Class Name="Atlassed.Models.MapData.Map" Collapsed="true">
-    <Position X="6.5" Y="3.5" Width="1.5" />
+    <Position X="5" Y="2.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAASAAAAAAAAAAAAAAAAAAAAAAACAAAAgAA=</HashCode>
       <FileName>Models\MapData\Map.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Atlassed.Models.MapData.MapEntity" Collapsed="true">
-    <Position X="8.75" Y="3.5" Width="1.5" />
+    <Position X="7.25" Y="2.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
-      <HashCode>AAQEAAAMAAKiACACAQgAAAAAAAEAAMAAAAAAAEAggEA=</HashCode>
+      <HashCode>AAAEAAAAAAKCACACAQgAAAAAAAAAAIAAAAAAAEAAgAA=</HashCode>
       <FileName>Models\MapData\MapEntity.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" />
   </Class>
   <Class Name="Atlassed.Models.MapData.MapEntityClass" Collapsed="true">
-    <Position X="3.75" Y="8" Width="1.5" />
+    <Position X="1.25" Y="7" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>EAQAAIAIABAAAIAAAAAAAgBBAAFAAEAAAAAAAAAAgEA=</HashCode>
+      <HashCode>EAAAAAAAABAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Models\MapData\MapEntityClass.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" />
   </Class>
   <Class Name="Atlassed.Models.MapData.MetaClass" Collapsed="true">
-    <Position X="5" Y="6.75" Width="1.5" />
+    <Position X="2.5" Y="5.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>gAAAQAAgAACAAAAAAAABAAAAAAAAAAAAQBBCIAQAgAA=</HashCode>
+      <HashCode>AAAAQAAgAACAAAAAAAABAAAAAAAAAAAAAAACAAAAgAA=</HashCode>
       <FileName>Models\MapData\MetaClass.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
@@ -77,19 +73,18 @@
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Atlassed.Models.MapData.MetaObject" Collapsed="true">
-    <Position X="5" Y="2.25" Width="1.5" />
+    <Position X="3.5" Y="1.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAACAAQAAAAAAAAAAAAAAQAAAAAABAAACAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAACAAAAAAAAA=</HashCode>
       <FileName>Models\MapData\MetaObject.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Atlassed.Models.MapData.MetaField" Collapsed="true">
-    <Position X="8" Y="6.75" Width="1.5" />
+    <Position X="5.5" Y="5.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>QABQIQBIiACIAAICACBQAAAAABGBAAAEgAAAAASAGEA=</HashCode>
+      <HashCode>IAAQAABAiACAAAAAAAAQAAAAAACAABAAAAAAAACAEAA=</HashCode>
       <FileName>Models\MapData\MetaField.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" />
   </Class>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

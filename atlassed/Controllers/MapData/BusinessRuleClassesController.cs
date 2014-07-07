@@ -1,4 +1,7 @@
-﻿using Atlassed.Models.MapData;
+﻿using Atlassed.Models;
+using Atlassed.Models.MapData;
+using Atlassed.Repositories;
+using Atlassed.Repositories.MapData;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,43 +13,46 @@ namespace Atlassed.Controllers.MapData
 {
     public class BusinessRuleClassesController : SinglePageAppApiController
     {
-        public IEnumerable<BusinessRuleClass> Get()
+        private IRepository<BusinessRuleClass, BusinessRuleClass, int, int?> _repository;
+
+        public BusinessRuleClassesController(SqlConnectionFactory f)
         {
-            return BusinessRuleClass.GetAllBusinessRuleClasses();
+            _repository = new BusinessRuleClassRepository(f, new BusinessRuleClassValidator());
         }
 
-        [Route("api/BusinessRuleClasses/{className}")]
-        public BusinessRuleClass Get(string className)
+        public IEnumerable<BusinessRuleClass> Get()
         {
-            var brc = BusinessRuleClass.GetBusinessRuleClass(className);
-            if (brc == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+            return _repository.GetMany();
+        }
+
+        public BusinessRuleClass Get(int id)
+        {
+            var brc = _repository.GetOne(id);
+            if (brc == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
             return brc;
         }
 
         public HttpResponseMessage Post([FromBody]BusinessRuleClass businessRuleClass)
         {
-            var brc = BusinessRuleClass.Create(businessRuleClass);
+            IEnumerable<ValidationError> errors;
+            var brc = _repository.Create(businessRuleClass, out errors);
             return Request.CreateResponse(HttpStatusCode.Created, brc);
         }
 
         public BusinessRuleClass Put([FromBody]BusinessRuleClass businessRuleClass)
         {
-            var brc = BusinessRuleClass.Update(businessRuleClass);
-            if (brc == null) throw new HttpResponseException(HttpStatusCode.NotFound);
-
-            return brc.CommitUpdate();
-        }
-
-        [Route("api/BusinessRuleClasses/{className}")]
-        public bool Delete(string className)
-        {
-            var brc = BusinessRuleClass.GetBusinessRuleClass(className);
-            if (brc == null)
+            IEnumerable<ValidationError> errors;
+            if (!_repository.Update(ref businessRuleClass, out errors))
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            return brc.Delete();
+            return businessRuleClass;
+        }
+
+        public void Delete(int id)
+        {
+            if (!_repository.Delete(id))
+                throw new HttpResponseException(HttpStatusCode.NotFound);
         }
     }
 }

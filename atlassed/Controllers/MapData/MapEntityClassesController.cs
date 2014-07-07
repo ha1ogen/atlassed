@@ -1,4 +1,7 @@
-﻿using Atlassed.Models.MapData;
+﻿using Atlassed.Models;
+using Atlassed.Models.MapData;
+using Atlassed.Repositories;
+using Atlassed.Repositories.MapData;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,14 +13,21 @@ namespace Atlassed.Controllers.MapData
 {
     public class MapEntityClassesController : SinglePageAppApiController
     {
+        private IRepository<MapEntityClass, MapEntityClass, int, int?> _repository;
+
+        public MapEntityClassesController(SqlConnectionFactory f)
+        {
+            _repository = new MapEntityClassRepository(f, new MapEntityClassValidator());
+        }
+
         public IEnumerable<MapEntityClass> Get()
         {
-            return MapEntityClass.GetAllMapEntityClasses();
+            return _repository.GetMany();
         }
 
         public MapEntityClass Get(int id)
         {
-            var mec = MapEntityClass.GetMapEntityClass(id);
+            var mec = _repository.GetOne(id);
             if (mec == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
             return mec;
@@ -25,24 +35,24 @@ namespace Atlassed.Controllers.MapData
 
         public HttpResponseMessage Post([FromBody]MapEntityClass mapEntityClass)
         {
-            var mec = MapEntityClass.Create(mapEntityClass);
+            IEnumerable<ValidationError> errors;
+            var mec = _repository.Create(mapEntityClass, out errors);
             return Request.CreateResponse(HttpStatusCode.Created, mec);
         }
 
-        public MapEntityClass Put([FromBody]MapEntityClass MapEntityClass)
+        public MapEntityClass Put([FromBody]MapEntityClass mapEntityClass)
         {
-            var mec = MapEntityClass.Update(MapEntityClass);
-            if (mec == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+            IEnumerable<ValidationError> errors;
+            if (!_repository.Update(ref mapEntityClass, out errors))
+                throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            return mec.CommitUpdate();
+            return mapEntityClass;
         }
 
-        public bool Delete(int id)
+        public void Delete(int id)
         {
-            var mec = MapEntityClass.GetMapEntityClass(id);
-            if (mec == null) throw new HttpResponseException(HttpStatusCode.NotFound);
-
-            return mec.Delete();
+            if (!_repository.Delete(id))
+                throw new HttpResponseException(HttpStatusCode.NotFound);
         }
     }
 }

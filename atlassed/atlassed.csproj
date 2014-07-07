@@ -104,19 +104,19 @@
     <Compile Include="Controllers\MapData\BusinessRulesController.cs" />
     <Compile Include="Controllers\MapData\FloorsController.cs" />
     <Compile Include="Controllers\MapData\MapEntitiesController.cs" />
+    <Compile Include="Controllers\ServiceActivator.cs" />
     <Compile Include="Controllers\SinglePageAppApiController.cs" />
     <Compile Include="Controllers\UserManagement\SessionController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\DB.cs" />
+    <Compile Include="Models\IValidator.cs" />
     <Compile Include="Models\MapData\Building.cs" />
     <Compile Include="Models\MapData\BusinessRule.cs" />
     <Compile Include="Models\MapData\BusinessRuleClass.cs" />
     <Compile Include="Models\MapData\CampusMap.cs" />
-    <Compile Include="Models\DB.cs" />
     <Compile Include="Models\MapData\FloorMap.cs" />
-    <Compile Include="Models\IDbRow.cs" />
-    <Compile Include="Models\MapData\ISearchable.cs" />
     <Compile Include="Models\MapData\Map.cs" />
     <Compile Include="Models\MapData\MapEntity.cs" />
     <Compile Include="Models\MapData\MapEntityClass.cs" />
@@ -129,6 +129,20 @@
     <Compile Include="Models\UserManagement\Credentials.cs" />
     <Compile Include="Models\UserManagement\Session.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\ConnectionFactory.cs" />
+    <Compile Include="Repositories\IRepository.cs" />
+    <Compile Include="Repositories\ISearchableRepository.cs" />
+    <Compile Include="Repositories\MapData\BuildingRepository.cs" />
+    <Compile Include="Repositories\MapData\BusinessRuleClassRepository.cs" />
+    <Compile Include="Repositories\MapData\BusinessRuleRepository.cs" />
+    <Compile Include="Repositories\MapData\CampusRepository.cs" />
+    <Compile Include="Repositories\MapData\FloorRepository.cs" />
+    <Compile Include="Repositories\MapData\MapEntityClassRepository.cs" />
+    <Compile Include="Repositories\MapData\MapEntityRepository.cs" />
+    <Compile Include="Repositories\MapData\MetaClassRepository.cs" />
+    <Compile Include="Repositories\MapData\MetaFieldRepository.cs" />
+    <Compile Include="Repositories\MapData\MetaObjectRepository.cs" />
+    <Compile Include="Models\ValidationError.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -139,7 +153,8 @@
     <Content Include="Content\Site.less" />
     <Content Include="Content\Tiles.less" />
     <Content Include="Content\Toolbar.less" />
-    <Content Include="Models\MapData\ClassDiagram.cd" />
+    <Content Include="Models\MapData\ModelClassDiagram.cd" />
+    <Content Include="Controllers\ControllerClassDiagram.cd" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

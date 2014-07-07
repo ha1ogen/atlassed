@@ -1,4 +1,7 @@
-﻿using Atlassed.Models.MapData;
+﻿using Atlassed.Models;
+using Atlassed.Models.MapData;
+using Atlassed.Repositories;
+using Atlassed.Repositories.MapData;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,13 +13,26 @@ namespace Atlassed.Controllers.MapData
 {
     public class MapEntitiesController : SinglePageAppApiController
     {
+        private ISearchableRepository<MapEntity, MapEntity, int, int, SearchResult> _repository;
+        private IRepository<CampusMap, CampusMap, int, int?> _campusRepository;
+        private IRepository<FloorMap, FloorMap, int, int> _floorRepository;
+
+        public MapEntitiesController(SqlConnectionFactory f)
+        {
+            _repository = new MapEntityRepository(f, new MapEntityValidator());
+            _campusRepository = new CampusRepository(f, new CampusMapValidator());
+            _floorRepository = new FloorRepository(f, new FloorMapValidator());
+        }
+
         [Route("api/maps/{mapId}/entities")]
         public IEnumerable<MapEntity> GetMapEntities(int mapId, string classNames = "")
         {
-            if (CampusMap.GetCampus(mapId) == null && FloorMap.GetFloor(mapId) == null)
+            if (_campusRepository.GetOne(mapId) == null && _floorRepository.GetOne(mapId) == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            return MapEntity.GetAllMapEntities(mapId, classNames);
+            var classes = classNames.Split(',');
+            return _repository.GetMany(mapId)
+                .Where(x => classes.Contains(x.ClassName));
         }
 
         [HttpGet]
@@ -24,40 +40,50 @@ namespace Atlassed.Controllers.MapData
         {
             if (take <= 0) throw new ArgumentOutOfRangeException("take", take, "take must be a positive integer");
 
-            return MapEntity.Search(q, classNames, mapId, skip, take);
+            IEnumerable<SearchResult> results = _repository.Search(q, skip, take);
+
+            if (mapId != null)
+            {
+                results = results.Where(x => x.SecondaryId == mapId);
+            }
+
+            if (classNames != string.Empty)
+            {
+                var classes = classNames.Split(',');
+                results = results.Where(x => classes.Contains(x.ClassName));
+            }
+
+            return results.ToList();
         }
 
         public MapEntity Get(int id)
         {
-            var e = MapEntity.GetMapEntity(id);
-            if (e == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+            var e = _repository.GetOne(id);
+            if (e == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
             return e;
         }
 
         public HttpResponseMessage Post([FromBody]MapEntity entity)
         {
-            var me = MapEntity.Create(entity);
+            IEnumerable<ValidationError> errors;
+            var me = _repository.Create(entity, out errors);
             return Request.CreateResponse(HttpStatusCode.Created, me);
         }
 
         public MapEntity Put([FromBody]MapEntity entity)
         {
-            var e = MapEntity.Update(entity);
-            if (e == null)
+            IEnumerable<ValidationError> errors;
+            if (!_repository.Update(ref entity, out errors))
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            return e.CommitUpdate();
+            return entity;
         }
 
-        public bool Delete(int id)
+        public void Delete(int id)
         {
-            var e = MapEntity.GetMapEntity(id);
-            if (e == null)
+            if (!_repository.Delete(id))
                 throw new HttpResponseException(HttpStatusCode.NotFound);
-
-            return e.Delete();
         }
     }
 }

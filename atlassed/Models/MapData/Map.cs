@@ -13,20 +13,5 @@ namespace Atlassed.Models.MapData
         private const string _mapFilenameExtension = ".png";
         public int MapId { get; set; }
         public string MapFilename { get { return "map-" + MapId + _mapFilenameExtension; } }
-
-        public Map()
-        {
-            MapId = 0;
-        }
-        public Map(IDataRecord data)
-            : base(data)
-        {
-
-        }
-        public Map(string metaProperties)
-            : base(metaProperties)
-        {
-
-        }
     }
 }

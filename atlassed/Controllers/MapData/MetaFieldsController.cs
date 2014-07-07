@@ -1,6 +1,11 @@
-﻿using Atlassed.Models.MapData;
+﻿using Atlassed.Models;
+using Atlassed.Models.MapData;
+using Atlassed.Repositories;
+using Atlassed.Repositories.MapData;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -10,9 +15,16 @@ namespace Atlassed.Controllers.MapData
 {
     public class MetaFieldsController : SinglePageAppApiController
     {
+        private IRepository<MetaField, NewMetaField, int, string> _repository;
+
+        public MetaFieldsController(SqlConnectionFactory f)
+        {
+            _repository = new MetaFieldRepository(f, new MetaFieldValidator());
+        }
+
         public MetaField Get(int id)
         {
-            var mf = MetaField.GetMetaField(id);
+            var mf = _repository.GetOne(id);
             if (mf == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
             return mf;
@@ -20,29 +32,26 @@ namespace Atlassed.Controllers.MapData
 
         public HttpResponseMessage Post([FromBody]NewMetaField metaField)
         {
-            var mf = MetaField.Create(metaField, metaField.DefaultValue);
+            IEnumerable<ValidationError> errors;
+            var mf = _repository.Create(metaField, out errors);
+            if (mf == null) throw new HttpResponseException(HttpStatusCode.BadRequest);
+
             return Request.CreateResponse(HttpStatusCode.Created, mf);
         }
 
         public MetaField Put([FromBody]MetaField metaField)
         {
-            var mf = MetaField.Update(metaField);
-            if (mf == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+            IEnumerable<ValidationError> errors;
+            if (!_repository.Update(ref metaField, out errors))
+                throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            return mf.CommitUpdate();
+            return metaField;
         }
 
-        public bool Delete(int id)
+        public void Delete(int id)
         {
-            var mf = MetaField.GetMetaField(id);
-            if (mf == null) throw new HttpResponseException(HttpStatusCode.NotFound);
-
-            return mf.Delete();
+            if (!_repository.Delete(id))
+                throw new HttpResponseException(HttpStatusCode.NotFound);
         }
-    }
-
-    public class NewMetaField : MetaField
-    {
-        public string DefaultValue { get; set; }
     }
 }

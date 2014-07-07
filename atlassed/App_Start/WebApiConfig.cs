@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Atlassed.Controllers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using System.Web.Http.Dispatcher;
 
 namespace Atlassed
 {
@@ -19,6 +21,8 @@ namespace Atlassed
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            config.Services.Replace(typeof(IHttpControllerActivator), new ServiceActivator(config));
         }
     }
 }

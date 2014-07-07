@@ -1,4 +1,7 @@
-﻿using Atlassed.Models.MapData;
+﻿using Atlassed.Models;
+using Atlassed.Models.MapData;
+using Atlassed.Repositories;
+using Atlassed.Repositories.MapData;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,15 +13,22 @@ namespace Atlassed.Controllers.MapData
 {
     public class BusinessRulesController : SinglePageAppApiController
     {
-        [Route("api/BusinessRules/{className:regex(^[A-z_].*)}")]
-        public IEnumerable<BusinessRule> Get(string className)
+        private IRepository<BusinessRule, BusinessRule, int, int> _repository;
+
+        public BusinessRulesController(SqlConnectionFactory f)
         {
-            return BusinessRule.GetAllBusinessRules(className);
+            _repository = new BusinessRuleRepository(f, new BusinessRuleValidator());
         }
 
-        public BusinessRule Get(int id)
+        [Route("api/BusinessRuleClasses/{classId}/rules")]
+        public IEnumerable<BusinessRule> Get(int classId)
         {
-            var br = BusinessRule.GetBusinessRule(id);
+            return _repository.GetMany(classId);
+        }
+
+        public BusinessRule GetBusinessRule(int id)
+        {
+            var br = _repository.GetOne(id);
             if (br == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
             return br;
@@ -26,24 +36,24 @@ namespace Atlassed.Controllers.MapData
 
         public HttpResponseMessage Post([FromBody]BusinessRule businessRule)
         {
-            var br = BusinessRule.Create(businessRule);
+            IEnumerable<ValidationError> errors;
+            var br = _repository.Create(businessRule, out errors);
             return Request.CreateResponse(HttpStatusCode.Created, br);
         }
 
         public BusinessRule Put([FromBody]BusinessRule businessRule)
         {
-            var br = BusinessRule.Update(businessRule);
-            if (br == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+            IEnumerable<ValidationError> errors;
+            if (!_repository.Update(ref businessRule, out errors))
+                throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            return br.CommitUpdate();
+            return businessRule;
         }
 
-        public bool Delete(int id)
+        public void Delete(int id)
         {
-            var br = BusinessRule.GetBusinessRule(id);
-            if (br == null) throw new HttpResponseException(HttpStatusCode.NotFound);
-
-            return br.Delete();
+            if (!_repository.Delete(id))
+                throw new HttpResponseException(HttpStatusCode.NotFound);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.SqlServer.Server;
+﻿using Atlassed.Repositories;
+using Microsoft.SqlServer.Server;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,106 +12,21 @@ using System.Diagnostics;
 using System.Linq;
 using System.Web;
 
-namespace Atlassed.Models
+namespace Atlassed.Repositories
 {
 
     public static class DB
     {
-        private const string ReturnParamName = "__RETURN";
+        private const string __returnParamName = "__RETURN";
 
-        public static string ConnectionString = null;
-
-        private static SqlConnection _transactionConnection = null;
-
-        public class FakeTransaction : DbTransaction
+        public static SqlCommand NewText(string query, SqlConnectionFactory f)
         {
-            public override void Commit()
-            {
-            }
-
-            public override void Rollback()
-            {
-            }
-
-            protected override DbConnection DbConnection
-            {
-                get { return _transactionConnection; }
-            }
-
-            public override IsolationLevel IsolationLevel
-            {
-                get { return IsolationLevel.Unspecified; }
-            }
+            return new SqlCommand(query, f.GetConnection());
         }
 
-        public class RealTransation : DbTransaction
+        public static SqlCommand NewSP(string spName, SqlConnectionFactory f)
         {
-            private readonly SqlTransaction _innerTransaction;
-
-            public RealTransation(SqlTransaction innerTransaction)
-            {
-                _innerTransaction = innerTransaction;
-            }
-
-            public override void Commit()
-            {
-                _innerTransaction.Commit();
-                _transactionConnection.Close();
-                _transactionConnection = null;
-            }
-
-            public override void Rollback()
-            {
-                _innerTransaction.Rollback();
-                _transactionConnection.Close();
-                _transactionConnection = null;
-            }
-
-            protected override DbConnection DbConnection
-            {
-                get { return _transactionConnection; }
-            }
-
-            public override IsolationLevel IsolationLevel
-            {
-                get { return _innerTransaction.IsolationLevel; }
-            }
-        }
-
-        public static SqlConnection GetConnection()
-        {
-            if (_transactionConnection != null)
-            {
-                return _transactionConnection;
-            }
-
-            if (ConnectionString == null)
-                ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-
-            var c = new SqlConnection(ConnectionString);
-            c.Open();
-            return c;
-        }
-
-        public static DbTransaction BeginTransaction()
-        {
-            if (_transactionConnection == null)
-            {
-                _transactionConnection = GetConnection();
-                return new RealTransation(_transactionConnection.BeginTransaction());
-            }
-
-            return new FakeTransaction();
-        }
-
-        public static SqlCommand NewText(string query)
-        {
-            return new SqlCommand(query);
-        }
-
-        public static SqlCommand NewSP(string spName)
-        {
-            return new SqlCommand(spName)
+            return new SqlCommand(spName, f.GetConnection())
             {
                 CommandType = CommandType.StoredProcedure
             };
@@ -168,15 +84,33 @@ namespace Atlassed.Models
         {
             query.Parameters.Add(new SqlParameter
             {
-                ParameterName = ReturnParamName,
+                ParameterName = __returnParamName,
                 SqlDbType = type,
                 Direction = ParameterDirection.ReturnValue
             });
 
             return query;
         }
-        
+
         // EXECUTORS
+        public static T ExecExpectReturnValue<T>(this SqlCommand query)
+        {
+            query.Parameters.Add(new SqlParameter
+            {
+                ParameterName = __returnParamName,
+                SqlDbType = SqlDbType.Int,
+                Direction = ParameterDirection.ReturnValue
+            });
+
+            query.ExecNonQuery();
+            return query.GetReturnValue<T>();
+        }
+
+        public static T GetReturnValue<T>(this SqlCommand query)
+        {
+            return (T)query.Parameters[__returnParamName].Value;
+        }
+
         public static T ExecExpectScalarValue<T>(this SqlCommand query)
         {
             return query.ExecExpectOne<T>(x => (T)x.GetValue(0));
@@ -184,9 +118,8 @@ namespace Atlassed.Models
 
         public static int ExecNonQuery(this SqlCommand query)
         {
-            using (var c = GetConnection())
+            using (query.Connection)
             {
-                query.Connection = c;
                 return query.ExecuteNonQuery();
             }
         }
@@ -195,12 +128,8 @@ namespace Atlassed.Models
         {
             try
             {
-                using (var c = GetConnection())
-                {
-                    query.Connection = c;
-                    query.ExecuteNonQuery();
-                    return true;
-                }
+                query.ExecNonQuery();
+                return true;
             }
             catch (SqlException e)
             {
@@ -211,36 +140,32 @@ namespace Atlassed.Models
 
         public static bool ExecNonQueryExpectAffected(this SqlCommand query, int expectedAffectedRows)
         {
-            using (var c = GetConnection())
-            {
-                query.Connection = c;
-                var affected = query.ExecuteNonQuery();
-                Debug.WriteLine(affected + " rows affected.");
-                return affected == expectedAffectedRows;
-            }
+            var affected = query.ExecNonQuery();
+            Debug.WriteLine(affected + " rows affected.");
+            return affected == expectedAffectedRows;
         }
 
         public static bool ExecNonQueryExpectZeroOrOneAffected(this SqlCommand query)
         {
-            using (var c = GetConnection())
-            {
-                query.Connection = c;
-                var affected = query.ExecuteNonQuery();
+            var affected = query.ExecNonQuery();
 
-                return affected == 1 || affected == 0;
-            }
+            return affected == 1 || affected == 0;
         }
 
         public static T ExecExpectOne<T>(this SqlCommand query, Func<IDataRecord, T> convert)
         {
             return query.ExecExpectMultiple(convert).FirstOrDefault();
         }
+        public static SqlCommand ExecExpectOne<T>(this SqlCommand query, Func<IDataRecord, T> convert, out T record)
+        {
+            record = query.ExecExpectMultiple(convert).FirstOrDefault();
+            return query;
+        }
 
         public static Collection<T> ExecExpectMultiple<T>(this SqlCommand query, Func<IDataRecord, T> convert)
         {
-            using (var c = GetConnection())
+            using (query.Connection)
             {
-                query.Connection = c;
                 var result = query.ExecuteReader();
 
                 var collection = new Collection<T>();

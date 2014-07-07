@@ -1,0 +1,66 @@
+The format is:
+[METHOD] [URI (with {parameters} and ?query parameters)] [BodyType] : [ReturnType] (note)
+
+Look at the code for the Types themselves
+
+Campuses:
+GET api/campuses : List<CampusMap>
+GET api/campuses/{id} : CampusMap
+POST api/campuses CampusMap : CampusMap
+PUT api/campuses CampusMap : CampusMap
+DELETE api/campuses/{id} : void
+
+Buildings:
+GET api/buildings : List<Building>
+GET api/campuses/{campusId}/buildings : List<Building>
+GET api/buildings/{id} : Building
+POST api/buildings Building : Building
+PUT api/buildings Building : Building
+DELETE api/buildings/{id} : void
+
+Floors:
+GET api/buildings/{id}/floors : List<FloorMap>
+GET api/floors/{id} : FloorMap
+POST api/floors FloorMap : FloorMap
+PUT api/floors FloorMap : FloorMap
+DELETE api/floors/{id} : void
+
+Map Entities:
+GET api/maps/{mapId}/entities?classNames : List<MapEntity> (all entities on given map, optionally filtered by class name [i.e. load map data])
+GET api/mapEntities?query=___&classNames=___&mapId=__&skip=__&take=__ : List<SearchResult> (search)
+
+GET api/mapEntities/{className} : List<MapEntity> (all the entities of given type)
+GET api/mapEntities/{id} : MapEntity
+POST api/mapEntities MapEntity : MapEntity
+PUT api/mapEntities MapEntity : MapEntity
+DELETE api/mapEntities/{id} : void
+
+Map Entity Classes:
+GET api/mapEntityClasses : List<MapEntityClass>
+GET api/mapEntityClasses/{id} : MapEntityClass
+POST api/mapEntityClasses MapEntityClass : MapEntityClass
+PUT api/mapEntityClasses MapEntityClass : MapEntityClass
+DELETE api/mapEntityClasses/{id} : void
+
+Business Rules:
+GET api/businessRules/{className} : List<BusinessRule>
+GET api/businessRules/{id} : BusinessRule
+POST api/businessRules BusinessRule : BusinessRule
+PUT api/businessRules BusinessRule : BusinessRule
+DELETE api/businessRules/{id} : void
+
+Business Rule Classes:
+GET api/businessRuleClasses : List<BusinessRuleClass>
+GET api/businessRuleClasses/{id} : BusinessRuleClass
+POST api/businessRuleClasses BusinessRuleClass : BusinessRuleClass
+PUT api/businessRuleClasses BusinessRuleClass : BusinessRuleClass
+DELETE api/businessRuleClasses/{id} : void
+
+Meta Fields:
+	(List of meta fields for a class are returned with the class,
+	so use GET api/[businessRuleClasses|mapEntityClasses]/{id} to
+	get a list of fields for that class)
+GET api/metaFields/{id} : MetaField
+POST api/metaFields MetaField : MetaField
+PUT api/metaFields MetaField : MetaField
+DELETE api/metaFields/{id} : void
