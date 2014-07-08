@@ -13,22 +13,28 @@
     <script type="text/javascript" src="Scripts/common.js"></script>
     <script type="text/javascript" src="Scripts/fabric.js"></script>
     <script type="text/javascript" src="Scripts/currentContext.js"></script>
-    <script type="text/javascript" src="Scripts/canvasInteractions.js"></script>
+    <script type="text/javascript" src="Scripts/Search.js"></script>
+    <script type="text/javascript" src="Scripts/Dialog.js"></script>
+    <script type="text/javascript" src="Scripts/DialogBuilder.js"></script>
+    <script type="text/javascript" src="Scripts/Tile.js"></script>
+    <script type="text/javascript" src="Scripts/Login.js"></script>
+    <script type="text/javascript" src="Scripts/Network.js"></script>
+    <script type="text/javascript" src="Scripts/Canvas.js"></script>
     <script type="text/javascript" src="Scripts/main.js"></script>
 </head>
 <body>
     <div id="LoginWrapper">
-        <div id="Logo" class="homepage">Atlassed</div>
-        <input id="username" class="box-shadow" placeholder="Username" type="text"/>
+        <div class="homepage logo">Atlassed</div>
+        <input autofocus id="username" class="box-shadow" placeholder="Username" type="text"></input>
         <br/>
-        <input id="password" class="box-shadow" placeholder="Password" type="password"/>
+        <input id="password" class="box-shadow" placeholder="Password" type="password"></input>
         <br/>
         <button id="login">Login</button>
     </div>
     <div id="AppWrapper">
         <!--Search Area-->
         <div id="Search" class="floating-container homepage" tabindex="1">
-            <div id="Logo" class="homepage">Atlassed</div>
+            <div id="Logo" class="homepage logo">Atlassed</div>
             <div id="Instructions" class="homepage-only">Search for people, rooms and buildings...</div>
             <div id="SearchBox">
                 <input autofocus class="search-icon" />
@@ -56,98 +62,117 @@
         </div>
     
         <!--Toolbar-->
-        <div id="Toolbar" class="floating-container">
-            <div id="MouseModes" class="toolbar-button-group">
-                <button id="T_SELECT" class="toolbar-button toggle-button selected">Select</button>
-                <button id="T_ERASE" class="toolbar-button toggle-button">Erase</button>
-                <!--<button id="T_DRAW_RECT" class="toolbar-button toggle-button">Define Room</button>-->
-                <!--<button id="T_DRAW_POLY" class="toolbar-button toggle-button">Draw Polygon</button>-->
-                <button id="T_TAG_WORKSTATION" class="toolbar-button toggle-button">Tag Location</button>
-            </div>
-            <div id="DataActions" class="toolbar-button-group">
-                <button id="T_BUILDINGS" class="toolbar-button">Add Building</button>
-                <button id="T_PEOPLE" class="toolbar-button">Add Person</button>
-            </div>
-        </div>
-        <!--Tiles-->
-        <div id="UpperRightTiles" class="floating-container">
-            <select id="Buildings" class="tile-select"></select>
-            <select id="Floors" class="tile-select disabled" disabled="1">
-                <option>Floor...</option>
-            </select>
-        </div>
-        <div id="LowerLeftTiles" class="floating-container">
-            <div id="MapLink" class="tile-link-medium">
-                <div>Map</div>
-            </div>
-        </div>
-        <div id="ZoomTiles" class="floating-container">
-            <div>
-                <button id="ZoomIn">+</button>
-            </div>
-            <div>
-                <button id="ZoomOut">&minus;</button>
-            </div>
-        </div>
-        <div id="CenterTiles" class="floating-container"></div>
-
-        <!--Canvas-->
-        <div id="canvasWrapper" style="display: none;">
-            <canvas id="mainCanvas">Your browser does not support this.</canvas>
-        </div>
-        <!--<div id="Watermark"></div>-->
-            
-        <img id="PinImage" src="Images/pin.png" style="display: none;" alt=""/>
-
-        <!--Dialogs-->
-        <div style="display: none;">
-            <div id="PersonDialog">
-                <div id="PersonInputs">
-                    <label>Name:</label>
-                    <input class="person-name" />
-                    <br />
-                    <label>Extension:</label>
-                    <input class="person-extension" size="6" />
+        <div id="HideAdminToolbar" runat="server">
+            <div id="Toolbar" class="floating-container">
+                <div id="MouseModes" class="toolbar-button-group">
+                    <button id="T_SELECT" class="toolbar-button toggle-button selected">Select</button>
+                    <button id="T_ERASE" class="toolbar-button toggle-button">Erase</button>
+                    <!--<button id="T_DRAW_RECT" class="toolbar-button toggle-button">Define Room</button>-->
+                    <!--<button id="T_DRAW_POLY" class="toolbar-button toggle-button">Draw Polygon</button>-->
+                    <button id="T_TAG_WORKSTATION" class="toolbar-button toggle-button">Tag Location</button>
+                </div>
+                <div id="DataActions" class="toolbar-button-group">
+                    <button id="T_BUILDINGS" class="toolbar-button">Add Building</button>
+                    <button id="T_PEOPLE" class="toolbar-button">Add Person</button>
                 </div>
             </div>
-            <div id="WorkstationDialog">
-                <label>Number:</label>
-                <input id="WorkstationNumber" />
-                <br />
-                <label>Port:</label>
-                <input id="WorkstationPort" />
-                <br />
-                <label>Assigned To:</label>
-                <select id="AssignWorkstation"></select>
+            <!--Tiles-->
+            <div id="UpperRightTiles" class="floating-container">
+                <select id="Buildings" class="tile-select"></select>
+                <select id="Floors" class="tile-select disabled" disabled>
+                    <option>Floor...</option>
+                </select>
+                <button id="logout" class="toolbar-button">Logout</button>
             </div>
-            <div id="BuildingDialog">
-                <div id="BuildingInputs">
+            <div id="LowerLeftTiles" class="floating-container">
+                <div id="MapLink" class="tile-link-medium">
+                    <div>Map</div>
+                </div>
+            </div>
+            <div id="ZoomTiles" class="floating-container">
+                <div>
+                    <button id="ZoomIn">+</button>
+                </div>
+                <div>
+                    <button id="ZoomOut">&minus;</button>
+                </div>
+            </div>
+            <div id="CenterTiles" class="floating-container"></div>
+
+            <!--Canvas-->
+            <div id="canvasWrapper" style="display: none;">
+                <canvas id="mainCanvas">Your browser does not support this.</canvas>
+            </div>
+            <!--<div id="Watermark"></div>-->
+            
+            <img id="PinImage" src="Images/pin.png" style="display: none;" alt=""/>
+
+            <!--Dialogs-->
+            <div style="display: none;">
+                <div id="PersonDialog">
+                    <div id="PersonInputs">
+                        <label>Name:</label>
+                        <input class="person-name" />
+                        <br />
+                        <label>Extension:</label>
+                        <input class="person-extension" size="6" />
+                    </div>
+                </div>
+                <div id="WorkstationDialog">
                     <label>Name:</label>
-                    <input class="building-name" />
+                    <br/>
+                    <input id="WorkstationNumber" />
                     <br />
-                    <label>Address:</label>
-                    <input class="building-address" />
+                    <label>Description:</label>
+                    <input id="WorkstationPort" />
                     <br />
+                    <label>Type:</label>
+                    <select id="LocationType">
+                        <option>Classroom</option>
+                        <option>Office</option>
+                        <option>Under Construction/Maintenance</option>
+                        <option>Undefined</option>
+                    </select>
                     <br />
-                    <div id="FloorList" style="border: 1px solid black;">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Floor Number</th>
-                                    <th>File</th>
-                                    <th></th>
-                                </tr>
-                                <tr class="template" data-floor-id="0">
-                                    <td>
-                                        <input class="floor-number" size="2" maxlength="3" /></td>
-                                    <td>
-                                        <input class="floor-filename" size="20" /></td>
-                                    <td><a class="floor-remove">X</a></td>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                        <a class="add-floor">Add Floor</a>
+                    <label>Assigned To:</label>
+                    <select id="AssignWorkstation"></select>
+                </div>
+                <div id="SpaceDialog">
+                    <label>Number:</label>
+                    <input id="SpaceNumber" />
+                    <br />
+                    <label>Name:</label>
+                    <input id="SpaceName" />
+                </div>
+                <div id="BuildingDialog">
+                    <div id="BuildingInputs">
+                        <label>Name:</label>
+                        <input class="building-name" />
+                        <br />
+                        <label>Address:</label>
+                        <input class="building-address" />
+                        <br />
+                        <br />
+                        <div id="FloorList" style="border: 1px solid black;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Floor Number</th>
+                                        <th>File</th>
+                                        <th></th>
+                                    </tr>
+                                    <tr class="template" data-floor-id="0">
+                                        <td>
+                                            <input class="floor-number" size="2" maxlength="3" /></td>
+                                        <td>
+                                            <input class="floor-filename" size="20" /></td>
+                                        <td><a class="floor-remove">X</a></td>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                            <a class="add-floor">Add Floor</a>
+                        </div>
                     </div>
                 </div>
             </div>
