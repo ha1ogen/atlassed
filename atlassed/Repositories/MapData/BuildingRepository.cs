@@ -33,7 +33,7 @@ namespace Atlassed.Repositories.MapData
 
             return DB.NewSP(_spAddBuilding, _connectionFactory)
                 .AddParam(CampusRepository._campusMapId, record.CampusMapId)
-                .AddParam(MapEntity._entityPoints, Coordinate.MultiToString(record.EntityCoordinates))
+                .AddParam(MapEntityRepository._entityCoordinates, Coordinate.MultiToString(record.EntityCoordinates))
                 .AddTVParam(_metaProperties, GenerateMetaPropertyTable(record))
                 .ExecExpectOne(x => Create(x));
         }

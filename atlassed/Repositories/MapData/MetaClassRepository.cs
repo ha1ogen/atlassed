@@ -8,7 +8,7 @@ using System.Web;
 
 namespace Atlassed.Repositories.MapData
 {
-    public class MetaClassRepository
+    public abstract class MetaClassRepository
     {
         public const string _classId = "classId";
         public const string _className = "className";
