@@ -14,7 +14,6 @@
 function ajax(options) {
     var defaultOptions = {
         webservice: 'site',
-        func: undefined,
         async: true,
         params: {},
         success: undefined,
@@ -34,9 +33,6 @@ function ajax(options) {
     if (typeof internalOptions.webservice !== 'string') {
         throw 'ajax: webservice must be a string';
     }
-    if (typeof internalOptions.func !== 'string') {
-        throw 'ajax: func must be a string';
-    }
     if (typeof internalOptions.params !== 'object') {
         throw 'ajax: params must be an object';
     }
@@ -50,18 +46,18 @@ function ajax(options) {
         throw 'ajax: failure must be a function';
     }
 
-    // var a = $.ajax({
-    //     url: '' + internalOptions.webservice + 'WebService.asmx/' + internalOptions.func,
-    //     data: JSON.stringify(internalOptions.params || {}),
-    //     contentType: 'application/json; charset=utf-8',
-    //     type: 'post',
-    //     dataType: 'json',
-    //     async: internalOptions.async,
-    //     success: function (data) {
-    //         internalOptions.success(data.d);
-    //     },
-    //     failure: internalOptions.failure,
-    //     error: internalOptions.error
-    // });
-    return null;
+    var a = $.ajax({
+        url: '' + internalOptions.webservice,
+        data: JSON.stringify(internalOptions.params || {}),
+        contentType: 'application/json; charset=utf-8',
+        type: 'get',
+        dataType: 'json',
+        async: internalOptions.async,
+        success: function (data) {
+            internalOptions.success(data);
+        },
+        failure: internalOptions.failure,
+        error: internalOptions.error
+    });
+    return a;
 }
