@@ -158,7 +158,7 @@ function initSearch() {
             }
 
             var results = CurrentContext.search(query);
-            FormatSearchResults(results);
+            Main.FormatSearchResults(results);
             // ajax({
             //     webservice: 'Main',
             //     func: 'Search',

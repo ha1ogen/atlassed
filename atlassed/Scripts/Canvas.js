@@ -110,7 +110,7 @@ function LoadCanvas(filename, spaces, callback) {
             Canvas.setHeight(imgObj.getHeight() + IMAGE_MARGIN * 2);
             Canvas.setWidth(imgObj.getWidth() + IMAGE_MARGIN * 2);
 
-            ResizeCanvasWrapper();
+            Main.ResizeCanvasWrapper();
         };
         ResizeCanvas();
 
@@ -334,11 +334,11 @@ function mouseup(e) {
                     obj.sendToBack();
                     obj.text.sendToBack();
                     ImageObj.sendToBack();
-                    ShowDetails('Space', obj.w.LocationId);
+                    Main.ShowDetails('Space', obj.w.LocationId);
                 } else */
                 if (obj.type == 'circle') {
                     obj.bringToFront();
-                    ShowDetails('Workstation', obj.locationObj.id);
+                    Main.ShowDetails('Workstation', obj.locationObj.id);
                 }
             }
             break;
