@@ -40,11 +40,16 @@
                 <input autofocus class="search-icon" />
                 <!--<button id="SearchButton" onclick="return false;"></button>-->
             </div>
-            <div id="SearchResultSummary" style="display: none;"><span></span><a id="ClearSearch" style="margin-left: 5px">Clear Search</a></div>
+            <div id="SearchResultSummary" style="display: none;">
+                <span style="float:left;"></span>
+                <a id="ClearSearch" style="margin-left: 5px;float:right;">Clear Search</a>
+                <div style="clear: both;"></div>
+            </div>
             <div id="SearchResults">
                 <div id="DetailsCard" style="display: none;">
-                    <a id="BackToResults">&larr; Back to results</a>
-                    <div id="DetailsCardTitle"></div>
+                    <div id="DetailsCardTitle" style="float:left;"></div>
+                    <a id="CloseCard" style="float:right;">&larr; Back</a>
+                    <div style="clear: both;"></div>
                     <table id="DetailsCardTable">
                     </table>
                     <div class="admin-only data"><a class="remove">Remove</a> <a class="edit">Edit</a></div>

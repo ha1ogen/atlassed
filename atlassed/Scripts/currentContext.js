@@ -503,8 +503,11 @@ window.CurrentContext = new (function () {
         for (var i = 0 ; i < _buildings.length; i++) {
             var buildingName = _buildings[i].BuildingName.toLowerCase();
             if (buildingName.search(query) >= 0) {
-                results.push({PrimaryText:_buildings[i].BuildingName, 
-                    SecondaryText:"Building"})
+                results.push({
+                    Type:'Building',
+                    PrimaryText : _buildings[i].BuildingName, 
+                    SecondaryText : _buildings[i].BuildingAddress,
+                    PrimaryId : _buildings[i].BuildingId})
             }
         }
         return results;

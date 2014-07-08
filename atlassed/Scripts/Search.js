@@ -3,9 +3,7 @@
     SearchResultContainer,
     SearchResultSummary,
     SearchResultsDetailsCard,
-    SearchResultList,
-    SearchResultTemplate,
-    SearchResultDetail;
+    SearchResultList;
 
 function initSearch() {
 	SearchContainer = $('#Search');
@@ -14,10 +12,9 @@ function initSearch() {
     SearchResultSummary = $('#SearchResultSummary');
     SearchResultsDetailsCard = $('#DetailsCard');
     SearchResultList = $('#SearchResultList');
-    SearchResultTemplate = $('#SearchResultTemplate');
-    SearchResultDetail = $('#SearchResultDetail');
 
    SearchContainer.closeAll = function () {
+   		HidePin();
         SearchResultSummary.close();
         SearchResultContainer.close();
     };
@@ -89,7 +86,12 @@ function initSearch() {
     SearchResultsDetailsCard.currentId = 0;
     SearchResultsDetailsCard.fillAndShow = function (type, id, title, details, callback) {
         // toggle "Back to Results" link
-        SearchResultList.isEmpty() ? $('#BackToResults').hide() : $('#BackToResults').show();
+        if (SearchResultList.isEmpty()) {
+        	$('#CloseCard').text("Close");
+        }
+        else {
+        	$('#CloseCard').text("Back");
+        }
 
         $('#DetailsCardTitle').text(title);
         // fill details table
@@ -110,7 +112,6 @@ function initSearch() {
     SearchResultsDetailsCard.close = function (direction, callback) {
         if (SearchResultsDetailsCard.is(':visible')) {
             SearchResultsDetailsCard.hide('slide', { direction: direction }, 200, callback);
-            SearchResultContainer.close();
         } else {
             SearchResultsDetailsCard.hide();
             tryCall(callback);
@@ -122,7 +123,7 @@ function initSearch() {
         var table = $('#DetailsCardTable');
         table.empty();
 
-        SearchResultsDetailsCard.close('up');
+        SearchResultContainer.close('up');
     }
 
     
@@ -156,21 +157,23 @@ function initSearch() {
                 SearchContainer.closeAll();
                 return;
             }
-
-            var results = CurrentContext.search(query);
-            FormatSearchResults(results);
-            // ajax({
-            //     webservice: 'Main',
-            //     func: 'Search',
-            //     params: { query: query },
-            //     success: FormatSearchResults
-            // });
+ 
+            ajax({
+                webservice: 'api/buildings',
+                params: { query: query },
+                success: FormatSearchResults,
+                failure : function () {
+                	var results = CurrentContext.search(query);
+            		FormatSearchResults(results);	
+                },
+                error : function () {
+                	var results = CurrentContext.search(query);
+            		FormatSearchResults(results);	
+                }
+            });
         })
         .focus(function () {
             OnFocus_SearchArea();
-        })
-        .blur(function (e) {
-            SearchContainer.closeAll();
         });
 
     $('#ClearSearch').click(function () {
@@ -181,8 +184,13 @@ function initSearch() {
         SearchInput.val('');
     });
 
-    SearchResultsDetailsCard.find('#BackToResults').click(function () {
-        SearchResultContainer.switchPane('list');
+    SearchResultsDetailsCard.find('#CloseCard').click(function () {
+        if (SearchResultList.isEmpty()) {
+        	SearchResultsDetailsCard.clear();
+        }
+        else {
+        	SearchResultContainer.switchPane('list');
+        }
     });
 }
 
@@ -194,7 +202,7 @@ function FormatSearchResults (results) {
 
     if (results.length > 0) {
         $.each(results, function (i, e) {
-            AppendSearchResult(e);
+            AppendSearchResult(i, e);
         });
     }
 
@@ -271,15 +279,15 @@ function FormatSearchResults (results) {
     });
 }
 
-function AppendSearchResult(resultData) {
-    var result = SearchResultTemplate.clone();
+function AppendSearchResult(i, resultData) {
+    var result = $('#SearchResultTemplate').clone();
     // reset template
-    result.removeAttr('id');
+    result.attr('id', 'result' + i);
     result.css('display', '');
     // properties
-    // result.attr('data-result-id', resultData.PrimaryId);
-    // result.attr('data-result-type', resultData.Type);
-    // result.attr('data-result-secondaryid', resultData.SecondaryId);
+    result.attr('data-result-id', resultData.PrimaryId);
+    result.attr('data-result-type', resultData.Type);
+    //result.attr('data-result-secondaryid', resultData.SecondaryId);
     if (resultData.Point !== undefined) {
         result.attr('data-result-point', resultData.Point.X + ',' + resultData.Point.Y);
     }

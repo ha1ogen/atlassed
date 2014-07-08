@@ -44,6 +44,8 @@
 	            Tile.CenterTiles.show('fade');
 	        }
     	};
+
+        Tile.MapLink.click(Main.GoogleMapContainer.open);
 	}
 };
 

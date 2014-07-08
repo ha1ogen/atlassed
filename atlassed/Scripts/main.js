@@ -60,8 +60,6 @@
             Main.MAP_SHOWING = false;
         }
 
-        Tile.MapLink.click(Main.GoogleMapContainer.open);
-
         $(document).keydown(function (e) {
             // ESC MAP
             if (e.which === 27 && Main.MAP_SHOWING) {
