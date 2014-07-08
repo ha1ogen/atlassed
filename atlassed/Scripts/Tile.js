@@ -4,44 +4,44 @@
     CenterTiles : null,
     ZoomTiles : null,
     MapLink : null,
-    initTiles : function () {
-	    SelectBuilding = $('#Buildings');
-		SelectFloor = $('#Floors');
-		CenterTiles = $('#CenterTiles');
-		ZoomTiles = $('#ZoomTiles');
-		MapLink = $('#MapLink');
+    init : function () {
+	    Tile.SelectBuilding = $('#Buildings');
+		Tile.SelectFloor = $('#Floors');
+		Tile.CenterTiles = $('#CenterTiles');
+		Tile.ZoomTiles = $('#ZoomTiles');
+		Tile.MapLink = $('#MapLink');
 
-		SelectBuilding.change(function (evt) {
+		Tile.SelectBuilding.change(function (evt) {
 	        if (isNaN($(this).val()))
 	            return;
 
 	        CurrentContext.CurrentBuildingId = $(this).val();
-	        $(this).find('.' + NullOptionClass).remove();
+	        $(this).find('.' + Main.NullOptionClass).remove();
 	        Main.GoToBuilding(CurrentContext.CurrentBuildingId);
 	    });
 
-	    SelectFloor.change(function (evt) {
-	        if (isNaN($(this).val()) || LOADING_FLOORS)
+	    Tile.SelectFloor.change(function (evt) {
+	        if (isNaN($(this).val()) || Main.LOADING_FLOORS)
 	            return;
 
-	        $(this).find('.' + NullOptionClass).remove();
+	        $(this).find('.' + Main.NullOptionClass).remove();
 	        Main.GoToFloor($(this).val());
 	    });
 
-	    CenterTiles.close = function () {
-	        if (CenterTiles.is(':visible')) {
-	            CenterTiles.hide('fade');
+	    Tile.CenterTiles.close = function () {
+	        if (Tile.CenterTiles.is(':visible')) {
+	            Tile.CenterTiles.hide('fade');
 	        } else {
-	            CenterTiles.hide();
+	            Tile.CenterTiles.hide();
 	        }
 	    };
-	    CenterTiles.open = function () {
-	        CenterTiles.css({
-	            left: centerX(CenterTiles),
-	            top: centerY(CenterTiles)
+	    Tile.CenterTiles.open = function () {
+	        Tile.CenterTiles.css({
+	            left: centerX(Tile.CenterTiles),
+	            top: centerY(Tile.CenterTiles)
 	        });
-	        if (!CenterTiles.is(':visible')) {
-	            CenterTiles.show('fade');
+	        if (!Tile.CenterTiles.is(':visible')) {
+	            Tile.CenterTiles.show('fade');
 	        }
     	};
 	}

@@ -2,11 +2,6 @@
     Logo : null,
     Instructions : null,
     Watermark : null,
-    SelectBuilding : null,
-    SelectFloor : null,
-    CenterTiles : null,
-    ZoomTiles : null,
-    MapLink : null,
     GoogleMapContainer : null,
     GoogleMapFrame : null,
     MapDiv : null,
@@ -31,49 +26,10 @@
         Main.Toolbar.MouseModes = Main.Toolbar.find('#MouseModes');
         Main.Toolbar.DataActions = Main.Toolbar.find('#DataActions');
 
-        Main.SelectBuilding = $('#Buildings');
-        Main.SelectFloor = $('#Floors');
-        Main.CenterTiles = $('#CenterTiles');
-        Main.ZoomTiles = $('#ZoomTiles');
-        Main.MapLink = $('#MapLink');
-
         Dialog.init();
         initSearch();
         Login.init();
-
-        Main.SelectBuilding.change(function (evt) {
-            if (isNaN($(this).val()))
-                return;
-
-            CurrentContext.CurrentBuildingId = $(this).val();
-            $(this).find('.' + Main.NullOptionClass).remove();
-            Main.GoToBuilding(CurrentContext.CurrentBuildingId);
-        });
-
-        Main.SelectFloor.change(function (evt) {
-            if (isNaN($(this).val()) || Main.LOADING_FLOORS)
-                return;
-
-            $(this).find('.' + Main.NullOptionClass).remove();
-            Main.GoToFloor($(this).val());
-        });
-
-        Main.CenterTiles.close = function () {
-            if (Main.CenterTiles.is(':visible')) {
-                Main.CenterTiles.hide('fade');
-            } else {
-                Main.CenterTiles.hide();
-            }
-        };
-        Main.CenterTiles.open = function () {
-            Main.CenterTiles.css({
-                left: centerX(Main.CenterTiles),
-                top: centerY(Main.CenterTiles)
-            });
-            if (!Main.CenterTiles.is(':visible')) {
-                Main.CenterTiles.show('fade');
-            }
-        };
+        Tile.init();
         
         // END INITIATE ELEMENT HANDLES
 
@@ -96,7 +52,7 @@
             Main.MAP_SHOWING = false;
         }
 
-        Main.MapLink.click(Main.GoogleMapContainer.open);
+        Tile.MapLink.click(Main.GoogleMapContainer.open);
 
         $(document).keydown(function (e) {
             // ESC MAP
@@ -245,7 +201,7 @@
 
         Main.ResizeCanvasWrapper();
 
-        Main.CenterTiles.css('max-width', window.innerWidth - 20);
+        Tile.CenterTiles.css('max-width', window.innerWidth - 20);
 
         if (Main.HOME_PAGE) {
             CenterSearch();
@@ -254,27 +210,27 @@
     LoadBuildings : function () {
         var data = CurrentContext.GetAllBuildings();
 
-        Main.SelectBuilding.empty();
+        Tile.SelectBuilding.empty();
 
         var option = $('<option/>');
         option.text('Building...');
         option.addClass(Main.NullOptionClass);
-        Main.SelectBuilding.append(option);
+        Tile.SelectBuilding.append(option);
 
         $.each(data, function (i, e) {
             option = $('<option/>');
             option.val(e.BuildingId);
             option.text(e.BuildingName);
-            Main.SelectBuilding.append(option);
+            Tile.SelectBuilding.append(option);
         });
 
-        Main.SelectBuilding.change();
+        Tile.SelectBuilding.change();
     },
     TransformToHomepage : function () {
         Main.Toolbar.MouseModes.hide();
-        Main.SelectFloor.hide();
-        Main.ZoomTiles.hide();
-        Main.MapLink.hide();
+        Tile.SelectFloor.hide();
+        Tile.ZoomTiles.hide();
+        Tile.MapLink.hide();
 
         var searchLeft = SearchContainer.css('left'),
             searchTop = SearchContainer.css('top');
@@ -294,8 +250,8 @@
                 top: searchTop
             });
 
-            Main.MapLink.show('fade');
-            Main.SelectFloor.show('fade');
+            Tile.MapLink.show('fade');
+            Tile.SelectFloor.show('fade');
 
             $('.homepage').removeClass('homepage');
 
@@ -303,92 +259,7 @@
         };
 
         SearchInput.bind('input', transformFromHomepage);
-        Main.SelectFloor.change(transformFromHomepage);
-    },
-    FormatSearchResults : function (results) {
-
-        CurrentContext.setSearchResults(results);
-
-
-        SearchResultList.empty();
-
-        if (results.length > 0) {
-            $.each(results, function (i, e) {
-                Main.AppendSearchResult(e);
-            });
-        }
-
-        SearchResultSummary.setMatches(results.length);
-        SearchResultSummary.open();
-        SearchResultContainer.switchPane('list', SearchResultContainer.open);
-
-        $('.search-result').click(function (e) {
-            var self = this;
-            clickResult.call(this, e, function () {
-                var result = $(self).closest('.search-result'),
-                    id = result.data('result-id'),
-                    type = result.data('result-type');
-
-                Main.ShowDetails(type, id);
-            });
-            return false;
-        });
-
-        function clickResult(e, callback) {
-            var innerCallback = function (success) {
-                if (callback != undefined) {
-                    callback(success);
-                }
-            };
-            var result = $(this).closest('.search-result'),
-                id = result.data('result-id'),
-                type = result.data('result-type'),
-                secondaryId = result.data('result-secondaryid');
-
-            switch (type) {
-                case 'Building':
-                    Main.GoToBuilding(id);
-                    innerCallback(true);
-                    break;
-                case 'Person':
-                    if (secondaryId == 0) return;
-                case 'Space':
-                case 'Workstation':
-                    Main.GoToFloor(secondaryId, function (success) {
-                        if (success) {
-                            selectObjectByLocationId(id);
-                        }
-                        innerCallback(success);
-                    });
-                    break;
-            }
-        }
-
-        $('.search-result .remove').click(function (e) {
-            var self = this;
-            clickResult.call(this, e, function () {
-                var result = $(self).closest('.data'),
-                    id = result.data('result-id'),
-                    type = result.data('result-type');
-
-                Main.RemoveEntity(type, id);
-            });
-
-            return false;
-        });
-
-        $('.search-result .edit').click(function (e) {
-            var self = this;
-            clickResult.call(this, e, function () {
-                var result = $(self).closest('.search-result'),
-                    id = result.data('result-id'),
-                    type = result.data('result-type');
-
-                Main.EditEntity(type, id);
-            });
-
-            return false;
-        });
+        Tile.SelectFloor.change(transformFromHomepage);
     },
     EditEntity: function (type, id) {
         switch (type) {
@@ -444,25 +315,6 @@
                 throw 'invalid type';
         }
     },
-    AppendSearchResult : function (resultData) {
-        var result = SearchResultTemplate.clone();
-        // reset template
-        result.removeAttr('id');
-        result.css('display', '');
-        // properties
-        // result.attr('data-result-id', resultData.PrimaryId);
-        // result.attr('data-result-type', resultData.Type);
-        // result.attr('data-result-secondaryid', resultData.SecondaryId);
-        if (resultData.Point !== undefined) {
-            result.attr('data-result-point', resultData.Point.X + ',' + resultData.Point.Y);
-        }
-        // set visible elements
-        result.find('.primary-text').text(resultData.PrimaryText);
-        result.find('.secondary-text').text(resultData.SecondaryText);
-        // result.find('.right').text(resultData.right);
-
-        SearchResultList.append(result);
-    },
     GoToBuilding : function (buildingId) {
         Main.LOADING_FLOORS = true;
 
@@ -470,13 +322,13 @@
 
         var floors = CurrentContext.GetFloors(buildingId);
 
-        Main.SelectFloor.empty();
-        Main.CenterTiles.empty();
+        Tile.SelectFloor.empty();
+        Tile.CenterTiles.empty();
 
         var option = $('<option/>');
         option.text('Floor...');
         option.addClass(Main.NullOptionClass);
-        Main.SelectFloor.append(option);
+        Tile.SelectFloor.append(option);
 
         $.each(floors, function (i, e) {
             // add option to floor selector
@@ -485,29 +337,29 @@
             option = $('<option/>');
             option.val(e.FloorId);
             option.text(label);
-            Main.SelectFloor.append(option);
+            Tile.SelectFloor.append(option);
 
             // add center tile
-            Main.CenterTiles.append(CreateTileLink(label, function () {
-                Main.SelectFloor.val(e.FloorId).change();
+            Tile.CenterTiles.append(CreateTileLink(label, function () {
+                Tile.SelectFloor.val(e.FloorId).change();
             }, 'large'));
         });
 
-        Main.SelectFloor.change();
-        Main.SelectFloor.removeClass('disabled').removeProp('disabled');
+        Tile.SelectFloor.change();
+        Tile.SelectFloor.removeClass('disabled').removeProp('disabled');
 
         Main.MapDiv.hide('fade');
         Main.Toolbar.MouseModes.hide('fade');
-        Main.ZoomTiles.hide('fade');
+        Tile.ZoomTiles.hide('fade');
 
         if (floors.length == 1) {
             var id = floors[0].FloorId;
-            Main.SelectFloor.val(id).change();
+            Tile.SelectFloor.val(id).change();
             Main.GoToFloor(id);
         }
         else {
             Main.Watermark.show('fade');
-            Main.CenterTiles.open();
+            Tile.CenterTiles.open();
         }
 
         Main.LOADING_FLOORS = false;
@@ -516,10 +368,10 @@
         Main.MapDiv.hide('fade', 200, function () {
             CurrentContext.LoadFloor(floorId, function (success) {
                 if (success) {
-                    Main.CenterTiles.close();
+                    Tile.CenterTiles.close();
                     Main.Watermark.hide('fade');
                     Main.Toolbar.MouseModes.show('fade');
-                    Main.ZoomTiles.show('fade');
+                    Tile.ZoomTiles.show('fade');
                     Main.MapDiv.show('fade', 200);
                     Main.ResizeElements();
                 } else {

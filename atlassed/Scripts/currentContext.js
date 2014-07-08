@@ -163,7 +163,7 @@ window.CurrentContext = new (function () {
         });
 
         if (success) {
-            Main.SelectBuilding.find('option[value=' + buildingId + ']').remove();
+            Tile.SelectBuilding.find('option[value=' + buildingId + ']').remove();
         }
 
         return success;
@@ -189,8 +189,8 @@ window.CurrentContext = new (function () {
         var internalCallback = function (success) { if (callback != undefined) callback(success); };
         var f = getFloor(floorId);
         //self.CurrentBuildingId = f.BuildingId;
-        if (Main.SelectBuilding.val() != f.BuildingId) {
-            Main.SelectBuilding.val(f.BuildingId).change();
+        if (Tile.SelectBuilding.val() != f.BuildingId) {
+            Tile.SelectBuilding.val(f.BuildingId).change();
         }
         /*ajax({
             webservice: 'Main',

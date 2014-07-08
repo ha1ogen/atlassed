@@ -158,7 +158,7 @@ function initSearch() {
             }
 
             var results = CurrentContext.search(query);
-            Main.FormatSearchResults(results);
+            FormatSearchResults(results);
             // ajax({
             //     webservice: 'Main',
             //     func: 'Search',
@@ -184,6 +184,111 @@ function initSearch() {
     SearchResultsDetailsCard.find('#BackToResults').click(function () {
         SearchResultContainer.switchPane('list');
     });
+}
+
+function FormatSearchResults (results) {
+
+    CurrentContext.setSearchResults(results);
+
+    SearchResultList.empty();
+
+    if (results.length > 0) {
+        $.each(results, function (i, e) {
+            AppendSearchResult(e);
+        });
+    }
+
+    SearchResultSummary.setMatches(results.length);
+    SearchResultSummary.open();
+    SearchResultContainer.switchPane('list', SearchResultContainer.open);
+
+    $('.search-result').click(function (e) {
+        var self = this;
+        clickResult.call(this, e, function () {
+            var result = $(self).closest('.search-result'),
+                id = result.data('result-id'),
+                type = result.data('result-type');
+
+            Main.ShowDetails(type, id);
+        });
+        return false;
+    });
+
+    function clickResult(e, callback) {
+        var innerCallback = function (success) {
+            if (callback != undefined) {
+                callback(success);
+            }
+        };
+        var result = $(this).closest('.search-result'),
+            id = result.data('result-id'),
+            type = result.data('result-type'),
+            secondaryId = result.data('result-secondaryid');
+
+        switch (type) {
+            case 'Building':
+                Main.GoToBuilding(id);
+                innerCallback(true);
+                break;
+            case 'Person':
+                if (secondaryId == 0) return;
+            case 'Space':
+            case 'Workstation':
+                Main.GoToFloor(secondaryId, function (success) {
+                    if (success) {
+                        selectObjectByLocationId(id);
+                    }
+                    innerCallback(success);
+                });
+                break;
+        }
+    }
+
+    $('.search-result .remove').click(function (e) {
+        var self = this;
+        clickResult.call(this, e, function () {
+            var result = $(self).closest('.data'),
+                id = result.data('result-id'),
+                type = result.data('result-type');
+
+            Main.RemoveEntity(type, id);
+        });
+
+        return false;
+    });
+
+    $('.search-result .edit').click(function (e) {
+        var self = this;
+        clickResult.call(this, e, function () {
+            var result = $(self).closest('.search-result'),
+                id = result.data('result-id'),
+                type = result.data('result-type');
+
+            Main.EditEntity(type, id);
+        });
+
+        return false;
+    });
+}
+
+function AppendSearchResult(resultData) {
+    var result = SearchResultTemplate.clone();
+    // reset template
+    result.removeAttr('id');
+    result.css('display', '');
+    // properties
+    // result.attr('data-result-id', resultData.PrimaryId);
+    // result.attr('data-result-type', resultData.Type);
+    // result.attr('data-result-secondaryid', resultData.SecondaryId);
+    if (resultData.Point !== undefined) {
+        result.attr('data-result-point', resultData.Point.X + ',' + resultData.Point.Y);
+    }
+    // set visible elements
+    result.find('.primary-text').text(resultData.PrimaryText);
+    result.find('.secondary-text').text(resultData.SecondaryText);
+    // result.find('.right').text(resultData.right);
+
+    SearchResultList.append(result);
 }
 
 function OnFocus_SearchArea() {
