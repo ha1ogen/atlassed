@@ -43,7 +43,15 @@
 
         // GOOGLE MAP
         Main.GoogleMapContainer.open = function () {
-            Main.GoogleMapFrame.attr('src', 'http://maps.google.com/?output=embed&q=' + CurrentContext.GetBuilding(CurrentContext.CurrentBuildingId).BuildingAddress);
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(Position);
+                function Position(position){
+                    Main.GoogleMapFrame.attr('src', 'https://www.google.com/maps/embed/v1/directions?key=AIzaSyCpJLHAqXrv-p8a38SWDdd5VYuASFdrqR4&destination=' + CurrentContext.GetBuilding(CurrentContext.CurrentBuildingId).BuildingAddress + '&origin=' + position.coords.latitude + ',' + position.coords.longitude);
+                }
+            } else { 
+                //Geolocation not supported by browser, use normal one point position
+                Main.GoogleMapFrame.attr('src', 'https://www.google.com/maps/embed/v1/place?key=AIzaSyCpJLHAqXrv-p8a38SWDdd5VYuASFdrqR4&q=' + CurrentContext.GetBuilding(CurrentContext.CurrentBuildingId).BuildingAddress);
+            }
             Main.GoogleMapContainer.show('fade');
             Main.MAP_SHOWING = true;
         }
