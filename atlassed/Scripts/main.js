@@ -45,6 +45,7 @@ $().ready(function () {
     MapLink = $('#MapLink');
 
     initSearch();
+    Login.init();
 
     SelectBuilding.change(function (evt) {
         if (isNaN($(this).val()))
@@ -113,7 +114,7 @@ $().ready(function () {
             GoogleMapContainer.close();
         }
         else if (e.which === 13 && $('#LoginWrapper').is(':visible')) {
-            login();
+            Login.login();
         }
 
         if (SearchInput.is(':focus')) {
@@ -145,13 +146,7 @@ $().ready(function () {
         Scrolling = -1;
         zoom(-2);
     });
-    $('#login').click(function () {
-        login();    
-    });
-    $('#logout').click(function () {
-        logout();    
-    });
-
+    
     Toolbar.find('#T_BUILDINGS').click(function () {
         BuildingDialog.open();
         PersonDialog.close();
@@ -179,21 +174,6 @@ $().ready(function () {
     }
 });
 
-function login() {
-    $('#LoginWrapper').css('visibility','hidden');
-    $('#AppWrapper').css('visibility','visible');
-    if ($('#username').val() == 'admin'){
-        admin = true;
-    }
-    else{
-        admin = false;
-        $('#Toolbar').css('visibility','hidden');
-    }    
-}
-
-function logout() {
-    location.reload();  
-}
 
 function ShowDetails(type, id, callback) {
     var title = "",
