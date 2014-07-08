@@ -49,7 +49,7 @@
         <Point X="10" Y="7" />
       </Path>
       <MemberNameLabel ManuallyPlaced="true">
-        <Position X="2.239" Y="2.118" />
+        <Position X="2.614" Y="2.087" />
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
@@ -89,7 +89,7 @@
         <Point X="10" Y="6.75" />
       </Path>
       <MemberNameLabel ManuallyPlaced="true">
-        <Position X="-0.074" Y="1.875" />
+        <Position X="-0.157" Y="1.823" />
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
@@ -106,10 +106,10 @@
       <Path>
         <Point X="14.625" Y="4.441" />
         <Point X="14.625" Y="7.875" />
-        <Point X="10.75" Y="7.875" />
+        <Point X="10.25" Y="7.875" />
       </Path>
       <MemberNameLabel ManuallyPlaced="true">
-        <Position X="3.56" Y="2.962" />
+        <Position X="3.831" Y="2.962" />
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
@@ -149,7 +149,7 @@
         <Point X="10" Y="6.875" />
       </Path>
       <MemberNameLabel ManuallyPlaced="true">
-        <Position X="1.053" Y="2.042" />
+        <Position X="1.376" Y="1.979" />
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
@@ -161,14 +161,14 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="Atlassed.Controllers.SinglePageAppApiController" Collapsed="true">
-    <Position X="8.5" Y="1.5" Width="1.5" />
+    <Position X="8.25" Y="1.5" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAABAAAAAAAAAIAACAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Controllers\SinglePageAppApiController.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Atlassed.Repositories.MapData.BuildingRepository" Collapsed="true">
-    <Position X="2" Y="10.75" Width="1.5" />
+    <Position X="1.75" Y="10.75" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAQAAAAAAAkgAAAAAAABACAAAgEAAEAAAAAAAAAgYAA=</HashCode>
       <FileName>Repositories\MapData\BuildingRepository.cs</FileName>
@@ -176,7 +176,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Atlassed.Repositories.MapData.BusinessRuleClassRepository" Collapsed="true">
-    <Position X="11" Y="9.75" Width="1.5" />
+    <Position X="11" Y="9.75" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAQIACAEAAAgQAAAAAAAACAAAAEAAEAAAAAAAAAgIAA=</HashCode>
       <FileName>Repositories\MapData\BusinessRuleClassRepository.cs</FileName>
@@ -184,7 +184,10 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Atlassed.Repositories.MapData.BusinessRuleRepository" Collapsed="true">
-    <Position X="4.75" Y="10.75" Width="1.5" />
+    <Position X="4.5" Y="10.75" Width="2" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
       <HashCode>AAQAAAAAABAgBAAEAEAAICEAAAEAAEAAIAAACAAgIAA=</HashCode>
       <FileName>Repositories\MapData\BusinessRuleRepository.cs</FileName>
@@ -192,7 +195,10 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Atlassed.Repositories.MapData.CampusRepository" Collapsed="true">
-    <Position X="7.75" Y="10.75" Width="1.5" />
+    <Position X="7.75" Y="10.75" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
       <HashCode>AEQAAAAABAEgAAAAAAAEACAAAIUAAEAAAAAAAAAgIIA=</HashCode>
       <FileName>Repositories\MapData\CampusRepository.cs</FileName>
@@ -208,7 +214,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Atlassed.Repositories.MapData.MapEntityClassRepository" Collapsed="true">
-    <Position X="14.5" Y="9.75" Width="1.5" />
+    <Position X="14.5" Y="9.75" Width="2" />
     <TypeIdentifier>
       <HashCode>AAQAAAAAAAAgAAAAAAAAAiBBAAFAAEAAAAAAAAAgIAA=</HashCode>
       <FileName>Repositories\MapData\MapEntityClassRepository.cs</FileName>
@@ -216,22 +222,22 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Atlassed.Repositories.MapData.MapEntityRepository" Collapsed="true">
-    <Position X="5.75" Y="9.75" Width="1.5" />
+    <Position X="5.75" Y="9.75" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAQAAAAAAAAgAAACAQgAACAAAAEAAMAAAAAAAEAgoAA=</HashCode>
+      <HashCode>AAQAAAAAAAAgAAACAQgAACAAAAEAAMAAAAAAAFAgoAA=</HashCode>
       <FileName>Repositories\MapData\MapEntityRepository.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Atlassed.Repositories.MapData.MetaClassRepository" Collapsed="true">
-    <Position X="12.75" Y="8.5" Width="1.5" />
+    <Position X="13" Y="8.5" Width="1.75" />
     <TypeIdentifier>
       <HashCode>gAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQBBAIAQAAAA=</HashCode>
       <FileName>Repositories\MapData\MetaClassRepository.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Atlassed.Repositories.MapData.MetaFieldRepository" Collapsed="true">
-    <Position X="8.5" Y="8.5" Width="1.5" />
+    <Position X="8.5" Y="8.5" Width="1.75" />
     <TypeIdentifier>
       <HashCode>QARAIAAAAAAoAAICACAAACAAABEBEEAEgAAAAAQgOAA=</HashCode>
       <FileName>Repositories\MapData\MetaFieldRepository.cs</FileName>
@@ -239,9 +245,9 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Atlassed.Repositories.MapData.MetaObjectRepository" Collapsed="true">
-    <Position X="4.75" Y="8.5" Width="1.5" />
+    <Position X="4.75" Y="8.5" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAACAAQAAAAAAAAAAAAAAQAAAABAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAACAAAAAAAAAAAAAAAAAQAAAABAAAAAIAAAAAAAAA=</HashCode>
       <FileName>Repositories\MapData\MetaObjectRepository.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -253,7 +259,7 @@
     </TypeIdentifier>
   </Interface>
   <Interface Name="Atlassed.Repositories.ISearchableRepository&lt;T, NT, ID, PID, ST&gt;" Collapsed="true">
-    <Position X="7.75" Y="7.5" Width="3" />
+    <Position X="8.25" Y="7.5" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAA=</HashCode>
       <FileName>Repositories\ISearchableRepository.cs</FileName>

@@ -40,7 +40,7 @@ namespace Atlassed.Repositories.MapData
                     .ExecExpectOne(x => Create(x));
         }
 
-        public CampusMap Create(IDataRecord data)
+        private CampusMap Create(IDataRecord data)
         {
             return new CampusMap()
             {
