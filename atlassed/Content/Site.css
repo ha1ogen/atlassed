@@ -273,8 +273,6 @@
   vertical-align: middle;
   display: inline-block;
   cursor: pointer;
-  width: 80px;
-  height: 80px;
 }
 .tile-select:focus {
   outline: 1px dotted black;
@@ -290,6 +288,9 @@
   outline: none;
   color: lightgray;
   outline-color: lightgray;
+}
+.select2-chosen {
+  text-overflow:ellipsis;
 }
 .tile-select.disabled .select2-chosen {
   color: gray;
@@ -673,4 +674,15 @@ footer > div {
 }
 .ui-widget-overlay {
   background: black;
+}
+#s2id_Buildings {
+  width:160px;
+  height:40px;
+  padding:2px;
+  overflow:hidden;
+}
+#s2id_Floors {
+  width:80px;
+  height:40px;
+  padding:2px;
 }
