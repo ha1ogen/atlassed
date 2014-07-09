@@ -40,10 +40,15 @@ namespace Atlassed.Repositories.MapData
 
         private MapEntityClass Create(IDataRecord data)
         {
-            var mec = (MapEntityClass)CreateMetaClass(data);
-            mec.MapLabelFieldName = data.GetString(_mapLabelFieldName);
-
-            return mec;
+            return new MapEntityClass()
+            {
+                ClassId = data.GetInt32(_classId),
+                ClassName = data.GetString(_className),
+                ClassType = data.GetString(_classType),
+                ClassTypeDescription = data.GetString(_classTypeDescription),
+                ClassLabel = data.GetString(_classLabel),
+                MapLabelFieldName = data.GetString(_mapLabelFieldName)
+            };
         }
 
         public bool Update(ref MapEntityClass record, out IEnumerable<ValidationError> errors)

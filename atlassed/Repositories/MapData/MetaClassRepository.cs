@@ -17,17 +17,5 @@ namespace Atlassed.Repositories.MapData
         protected const string _classLabel = "classLabel";
 
         protected const string _spGetMetaClasses = "GetMetaClasses";
-
-        protected MetaClass CreateMetaClass(IDataRecord data)
-        {
-            return new MetaClass()
-            {
-                ClassId = data.GetInt32(_classId),
-                ClassName = data.GetString(_className),
-                ClassType = data.GetString(_classType),
-                ClassTypeDescription = data.GetString(_classTypeDescription),
-                ClassLabel = data.GetString(_classLabel)
-            };
-        }
     }
 }

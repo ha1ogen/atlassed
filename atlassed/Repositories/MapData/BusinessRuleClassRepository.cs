@@ -37,7 +37,14 @@ namespace Atlassed.Repositories.MapData
 
         private BusinessRuleClass Create(IDataRecord data)
         {
-            return (BusinessRuleClass)CreateMetaClass(data);
+            return new BusinessRuleClass()
+            {
+                ClassId = data.GetInt32(_classId),
+                ClassName = data.GetString(_className),
+                ClassType = data.GetString(_classType),
+                ClassTypeDescription = data.GetString(_classTypeDescription),
+                ClassLabel = data.GetString(_classLabel)
+            };
         }
 
         public bool Update(ref BusinessRuleClass record, out IEnumerable<ValidationError> errors)
