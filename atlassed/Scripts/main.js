@@ -134,7 +134,9 @@
                 var b = CurrentContext.GetBuilding(id);
                 title = b.BuildingName;
                 details = {
-                    "": b.BuildingAddress
+                    "Name:": b.MetaProperties.BuildingName.Value,
+                    "Code:": b.MetaProperties.BuildingCode.Value,
+                    "Faculty:": b.MetaProperties.BuildingFaculty.Value
                 };
                 break;
             case 'Space':

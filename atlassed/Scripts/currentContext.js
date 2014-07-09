@@ -82,13 +82,11 @@ window.CurrentContext = new (function () {
     }
 
     this.GetBuilding = function (buildingId) {
-        var buildings = this.GetAllBuildings();
-        for (var i = 0; i < buildings.length; i++) {
-            if (buildings[i].BuildingId == buildingId) {
-                return buildings[i];
+        for (var i = 0; i < _buildings.length; i++) {
+            if (_buildings[i].BuildingId == buildingId) {
+                return _buildings[i];
             }
         }
-
         return null;
     }
 

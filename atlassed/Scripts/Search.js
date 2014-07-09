@@ -98,6 +98,7 @@ function initSearch() {
         var table = $('#DetailsCardTable');
         table.empty();
         $.each(details || [], function (label, value) {
+        	if (value === "NULL") value = "n/a";
             table.append('<tr><td>' + label + '</td><td>' + value + '</td></tr>');
         });
         SearchResultsDetailsCard.find('.remove').off().click(function () {
@@ -241,6 +242,7 @@ function FormatSearchResults (results) {
             case 'Person':
                 if (secondaryId == 0) return;
             case 'Space':
+            case 'Classroom':
             case 'Workstation':
                 Main.GoToFloor(secondaryId, function (success) {
                     if (success) {
