@@ -137,7 +137,7 @@ function LoadCanvas(filename, spaces, callback) {
         Canvas.observe('mouse:up', function (e) { mouseup(e); });
         Canvas.selection = false;
 
-        Canvas.on('mouse:over', function (options) {
+        /*Canvas.on('mouse:over', function (options) {
             if (options.target) {
                 // we dont care about hovering over the image
                 if (options.target.type != 'image') {
@@ -153,7 +153,7 @@ function LoadCanvas(filename, spaces, callback) {
                     mouseout(options.target);
                 }
             }
-        });
+        });*/
 
         async--;
     });
@@ -195,6 +195,7 @@ function RenderObjects(spaces) {
     T_TAG_WORKSTATION = 3,
     T_ERASE = 4;*/
 var startedDrag = false;
+var startedPanning = false;
 var x = 0;
 var y = 0;
 var originalX = 0;
@@ -283,6 +284,11 @@ function mousedown(e) {
             //    alert("Workstations can only be placed within marked spaces. Please define the room before attempting to add the workstation.");
             //}
             break;
+        case T_SELECT:
+            startedPanning = true;
+            originalX = mouse.x;
+            originalY = mouse.y;
+            break;
     }
 }
 
@@ -323,6 +329,18 @@ function mousemove(e) {
         square.set('width', w).set('height', h);
         Canvas.renderAll();
     }
+    else if (CurrentContext.CurrentTool() == T_SELECT){
+        if (!startedPanning){
+            return false;//can ignore because just moving mouse without a mousedown first
+        }
+        var mouse = Canvas.getPointer(e.e);
+        var deltaX, deltaY;
+        deltaX = originalX - mouse.x;
+        deltaY = originalY - mouse.y;
+        originalX = mouse.x;
+        originalY = mouse.y;
+        shiftMap(deltaX, deltaY);
+    }
 }
 
 /* Mouseup */
@@ -332,7 +350,10 @@ function mouseup(e) {
     var obj = e.target;
     switch (CurrentContext.CurrentTool()) {
         case T_SELECT:
-            if (obj !== undefined && obj !== null) {
+            if (startedPanning){
+                startedPanning = false;
+            }
+            else if (obj !== undefined && obj !== null) {
                 /*if (obj.type == 'rect') {
                     obj.sendToBack();
                     obj.text.sendToBack();
@@ -534,4 +555,13 @@ function getObjectsByParentId(parentId) {
         }
     }
     return output;
+}
+
+function shiftMap(deltaX, deltaY){
+    var objects = Canvas.getObjects();
+    for (var i in objects) {
+        objects[i].left = objects[i].left - deltaX;
+        objects[i].top = objects[i].top - deltaY;
+    }
+    Canvas.renderAll();
 }
