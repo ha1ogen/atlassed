@@ -226,7 +226,7 @@
         $.each(data, function (i, e) {
             option = $('<option/>');
             option.val(e.BuildingId);
-            option.text(e.BuildingName);
+            option.text(e.MetaProperties.BuildingName.Value);
             Tile.SelectBuilding.append(option);
         });
 
@@ -338,16 +338,16 @@
 
         $.each(floors, function (i, e) {
             // add option to floor selector
-            var label = 'Floor ' + e.FloorNumber;
+            //var label = 'Floor ' + e.FloorNumber;
 
             option = $('<option/>');
-            option.val(e.FloorId);
-            option.text(label);
+            option.val(e.FloorCode);
+            option.text(e.FloorLabel);
             Tile.SelectFloor.append(option);
 
             // add center tile
-            Tile.CenterTiles.append(CreateTileLink(label, function () {
-                Tile.SelectFloor.val(e.FloorId).change();
+            Tile.CenterTiles.append(CreateTileLink(e.FloorLabel, function () {
+                Tile.SelectFloor.val(e.FloorCode).change();
             }, 'large'));
         });
 
@@ -359,7 +359,7 @@
         Tile.ZoomTiles.hide('fade');
 
         if (floors.length == 1) {
-            var id = floors[0].FloorId;
+            var id = floors[0].FloorCode;
             Tile.SelectFloor.val(id).change();
             Main.GoToFloor(id);
         }

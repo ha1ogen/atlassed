@@ -73,6 +73,13 @@ window.CurrentContext = new (function () {
                 }
             });
         }*/
+        ajax({
+            webservice: 'api/buildings',
+            async: false,
+            success: function (data){
+                _buildings = data;
+            }
+        });
         return _buildings;
     }
 
@@ -210,23 +217,42 @@ window.CurrentContext = new (function () {
                 internalCallback(false);
             }
         });*/
-        if (floorId == '13'){
+
+        ajax({
+            webservice: 'api/maps/' + floorId + '/entities',
+            async: false,
+            success: function (data){
+                LoadCanvas(floorId + '.png', data, internalCallback);
+            }
+        });
+        return _floors;
+
+        /*if (floorId == '13'){
             data = [{locationObj: {id: '1', Number:'1', Name:'Room 307', Type:'Classroom', Description: 'Max Occupancy 150' ,AssignedPerson: null}, X: '285', Y:'425'},
             {locationObj: {id: '2', Number:'1', Name:'Room 301', Type:'Classroom', Description: 'Max Occupancy 175' ,AssignedPerson: null}, X: '886', Y:'392'},
             {locationObj: {id: '3', Number:'1', Name:'Room 305', Type:'Classroom', Description: 'Max Occupancy 150' ,AssignedPerson: null}, X: '508', Y:'643'}];
         }else{
             data = [{locationObj: {id: '1', Number:'1', Name:'Room', Description: 'Room' ,AssignedPerson: null}, X: '500', Y:'130'}];
-        }
+        }*/
         //Stubbing
-        LoadCanvas(f.Filename, data, internalCallback);
+        //LoadCanvas(f.Filename, data, internalCallback);
     };
 
     this.GetFloors = function (buildingId) {
-        var building = this.GetBuilding(buildingId);
+        /*var building = this.GetBuilding(buildingId);
         if (building === null) {
             return null;
         }
-        return building.Floors;
+        return building.Floors;*/
+
+        ajax({
+            webservice: 'api/buildings/' + buildingId + '/floors',
+            async: false,
+            success: function (data){
+                _floors = data;
+            }
+        });
+        return _floors;
     }
 
     // Workstation
