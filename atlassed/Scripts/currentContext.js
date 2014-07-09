@@ -10,8 +10,6 @@ window.CurrentContext = new (function () {
         //var admin = $('[id$=_ADMIN]').val() == 1;
         //$('[id$=_ADMIN]').remove();
         self.IsAdmin = function () { return admin; };
-
-        self.GetAllBuildings();
     });
 
     // Building
