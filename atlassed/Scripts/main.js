@@ -341,13 +341,13 @@
             //var label = 'Floor ' + e.FloorNumber;
 
             option = $('<option/>');
-            option.val(e.FloorCode);
+            option.val(e.MapId);
             option.text(e.FloorLabel);
             Tile.SelectFloor.append(option);
 
             // add center tile
             Tile.CenterTiles.append(CreateTileLink(e.FloorLabel, function () {
-                Tile.SelectFloor.val(e.FloorCode).change();
+                Tile.SelectFloor.val(e.MapId).change();
             }, 'large'));
         });
 
@@ -359,7 +359,7 @@
         Tile.ZoomTiles.hide('fade');
 
         if (floors.length == 1) {
-            var id = floors[0].FloorCode;
+            var id = floors[0].MapId;
             Tile.SelectFloor.val(id).change();
             Main.GoToFloor(id);
         }
