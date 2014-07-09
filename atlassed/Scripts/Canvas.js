@@ -51,7 +51,10 @@ function ZoomPin() {
 }
 function HidePin() {
     if (Pin !== null)
+    {
         Pin.opacity = 0;
+        Canvas.renderAll();
+    }
 };
 
 var AddingObject = false;
