@@ -159,8 +159,8 @@ function initSearch() {
             }
  
             ajax({
-                webservice: 'api/buildings',
-                params: { query: query },
+                webservice: 'api/mapEntities',
+                params: { q: query },
                 success: FormatSearchResults,
                 failure : function () {
                 	var results = CurrentContext.search(query);

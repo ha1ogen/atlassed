@@ -17,6 +17,7 @@ function ajax(options) {
         async: true,
         params: {},
         success: undefined,
+        type: 'get',
         failure: function (data) {
             alert(data);
         },
@@ -45,12 +46,19 @@ function ajax(options) {
     if (typeof internalOptions.failure !== 'function' && typeof internalOptions.failure !== 'undefined') {
         throw 'ajax: failure must be a function';
     }
+    if (internalOptions.type !== 'get' && internalOptions.type !== 'post') {
+        throw 'ajax: type is not valid';
+    }
+
+    if (internalOptions.type === 'get') {
+        internalOptions.params = $.param( internalOptions.params );
+    }
 
     var a = $.ajax({
-        url: '' + internalOptions.webservice,
-        data: JSON.stringify(internalOptions.params || {}),
+        url: internalOptions.webservice,
+        data: internalOptions.params,
         contentType: 'application/json; charset=utf-8',
-        type: 'get',
+        type: internalOptions.type,
         dataType: 'json',
         async: internalOptions.async,
         success: function (data) {
@@ -59,5 +67,6 @@ function ajax(options) {
         failure: internalOptions.failure,
         error: internalOptions.error
     });
+
     return a;
 }
