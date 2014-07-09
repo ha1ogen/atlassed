@@ -669,3 +669,6 @@ footer > div {
 #logout {
   padding:10px;
 }
+.ui-widget-overlay {
+  background: black;
+}
