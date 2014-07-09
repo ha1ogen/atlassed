@@ -192,10 +192,12 @@
 #Search #SearchResults #SearchResultList .search-result {
   margin-bottom: 5px;
   padding: 5px;
-  min-height: 60px;
   cursor: pointer;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3), 0 4px 15px -5px rgba(0, 0, 0, 0.3);
   border: 1px solid #a9a9a9;
+}
+#Search #SearchResults #SearchResultList .search-result:hover {
+  background-color:#7bb931;
 }
 #Search #SearchResults #SearchResultList .search-result .left {
   display: inline-block;

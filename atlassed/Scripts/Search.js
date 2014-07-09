@@ -282,19 +282,22 @@ function FormatSearchResults (results) {
 function AppendSearchResult(i, resultData) {
     var result = $('#SearchResultTemplate').clone();
     // reset template
-    result.attr('id', 'result' + i);
     result.css('display', '');
     // properties
     result.attr('data-result-id', resultData.PrimaryId);
-    result.attr('data-result-type', resultData.Type);
-    //result.attr('data-result-secondaryid', resultData.SecondaryId);
+    result.attr('data-result-type', resultData.ClassName);
+    result.attr('data-result-secondaryid', resultData.SecondaryId);
     if (resultData.Point !== undefined) {
         result.attr('data-result-point', resultData.Point.X + ',' + resultData.Point.Y);
     }
     // set visible elements
     result.find('.primary-text').text(resultData.PrimaryText);
-    result.find('.secondary-text').text(resultData.SecondaryText);
-    // result.find('.right').text(resultData.right);
+    if (resultData.ClassName === "Classroom" && resultData.SecondaryText === "") {
+    	result.find('.secondary-text').text("Classroom");
+    }
+    else {
+    	result.find('.secondary-text').text(resultData.SecondaryText);
+    }
 
     SearchResultList.append(result);
 }
