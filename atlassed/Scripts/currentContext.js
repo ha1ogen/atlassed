@@ -315,7 +315,18 @@ window.CurrentContext = new (function () {
         }
 
         var success = false;
+
+
         ajax({
+            webservice: 'api/mapEntities/' + workstationId,
+            async: false,
+            type: 'delete',
+            success: function (data){
+                success = data;
+            }
+        });
+
+        /*ajax({
             webservice: 'Admin',
             func: 'DeleteWorkstation',
             async: false,
@@ -323,7 +334,7 @@ window.CurrentContext = new (function () {
             success: function (data) {
                 success = data;
             }
-        });
+        });*/
 
         return success;
     }

@@ -46,7 +46,7 @@ function ajax(options) {
     if (typeof internalOptions.failure !== 'function' && typeof internalOptions.failure !== 'undefined') {
         throw 'ajax: failure must be a function';
     }
-    if (internalOptions.type !== 'get' && internalOptions.type !== 'post') {
+    if (internalOptions.type !== 'get' && internalOptions.type !== 'post' && internalOptions.type !== 'put' && internalOptions.type !== 'delete') {
         throw 'ajax: type is not valid';
     }
 
