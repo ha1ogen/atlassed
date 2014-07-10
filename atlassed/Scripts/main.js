@@ -33,16 +33,17 @@
         
         // END INITIATE ELEMENT HANDLES
 
+        Main.LoadBuildings();
+
+
         // ATTACH EVENT HANDLERS
         $('.tile-select').select2({
             containerCssClass: 'tile-select',
             dropdownCssClass: 'tile-select2-dropdown'
         });
 
-        Main.LoadBuildings();
-
         // GOOGLE MAP
-        Main.GoogleMapContainer.open = function () {
+        Tile.MapLink.click(function () {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(Position);
                 function Position(position){
@@ -54,11 +55,12 @@
             }
             Main.GoogleMapContainer.show('fade');
             Main.MAP_SHOWING = true;
-        }
-        Main.GoogleMapContainer.close = function () {
+        });
+        Main.GoogleMapContainer.click(function () {
             Main.GoogleMapContainer.hide('fade');
             Main.MAP_SHOWING = false;
-        }
+        });
+        // END GOOGLE MAP
 
         $(document).keydown(function (e) {
             // ESC MAP
@@ -79,8 +81,6 @@
             }
         });
 
-        Main.GoogleMapContainer.click(Main.GoogleMapContainer.close);
-        // END GOOGLE MAP
 
         
 
