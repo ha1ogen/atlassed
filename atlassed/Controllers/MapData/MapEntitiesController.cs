@@ -30,8 +30,6 @@ namespace Atlassed.Controllers.MapData
             if (_campusRepository.GetOne(mapId) == null && _floorRepository.GetOne(mapId) == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
-
-            
             var results = _repository.GetMany(mapId);
 
             if (classNames != string.Empty)
@@ -74,16 +72,18 @@ namespace Atlassed.Controllers.MapData
 
         public HttpResponseMessage Post([FromBody]MapEntity entity)
         {
-            IEnumerable<ValidationError> errors;
+            ICollection<ValidationError> errors;
             var me = _repository.Create(entity, out errors);
             return Request.CreateResponse(HttpStatusCode.Created, me);
         }
 
         public MapEntity Put([FromBody]MapEntity entity)
         {
-            IEnumerable<ValidationError> errors;
+            ICollection<ValidationError> errors;
             if (!_repository.Update(ref entity, out errors))
+            {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
 
             return entity;
         }

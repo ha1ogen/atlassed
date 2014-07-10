@@ -9,8 +9,8 @@ namespace Atlassed.Repositories
 {
     interface IRepository<T, NT, ID, PID>
     {
-        T Create(NT record, out IEnumerable<ValidationError> errors);
-        bool Update(ref T record, out IEnumerable<ValidationError> errors);
+        T Create(NT record, out ICollection<ValidationError> errors);
+        bool Update(ref T record, out ICollection<ValidationError> errors);
         bool Delete(ID recordId);
         T GetOne(ID recordId);
         IEnumerable<T> GetMany(PID parentId = default(PID));

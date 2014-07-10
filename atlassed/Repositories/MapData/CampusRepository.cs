@@ -28,7 +28,7 @@ namespace Atlassed.Repositories.MapData
             _validator = v;
         }
 
-        public CampusMap Create(CampusMap record, out IEnumerable<ValidationError> errors)
+        public CampusMap Create(CampusMap record, out ICollection<ValidationError> errors)
         {
             if (!_validator.Validate(record, out errors))
                 return null;
@@ -51,7 +51,7 @@ namespace Atlassed.Repositories.MapData
             };
         }
 
-        public bool Update(ref CampusMap record, out IEnumerable<ValidationError> errors)
+        public bool Update(ref CampusMap record, out ICollection<ValidationError> errors)
         {
             if (!_validator.Validate(record, out errors))
                 return false;

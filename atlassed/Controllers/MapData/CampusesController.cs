@@ -35,7 +35,7 @@ namespace Atlassed.Controllers.MapData
 
         public HttpResponseMessage Post([FromBody]CampusMap campus)
         {
-            IEnumerable<ValidationError> errors;
+            ICollection<ValidationError> errors;
             var c = _repository.Create(campus, out errors);
             if (c == null) throw new HttpResponseException(HttpStatusCode.BadRequest);
 
@@ -44,7 +44,7 @@ namespace Atlassed.Controllers.MapData
 
         public CampusMap Put([FromBody]CampusMap campus)
         {
-            IEnumerable<ValidationError> errors;
+            ICollection<ValidationError> errors;
             if (!_repository.Update(ref campus, out errors))
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 

@@ -18,7 +18,7 @@ namespace Atlassed.Models.MapData
 
     public class MapEntityClassValidator : IValidator<MapEntityClass>
     {
-        public bool Validate(MapEntityClass record, out IEnumerable<ValidationError> errors)
+        public bool Validate(MapEntityClass record, out ICollection<ValidationError> errors)
         {
             errors = new List<ValidationError>();
             return true;

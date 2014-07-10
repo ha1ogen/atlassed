@@ -30,7 +30,7 @@ namespace Atlassed.Repositories.MapData
             _validator = v;
         }
 
-        public BusinessRule Create(BusinessRule record, out IEnumerable<ValidationError> errors)
+        public BusinessRule Create(BusinessRule record, out ICollection<ValidationError> errors)
         {
             if (!_validator.Validate(record, out errors))
                 return null;
@@ -56,7 +56,7 @@ namespace Atlassed.Repositories.MapData
             };
         }
 
-        public bool Update(ref BusinessRule record, out IEnumerable<ValidationError> errors)
+        public bool Update(ref BusinessRule record, out ICollection<ValidationError> errors)
         {
             if (!_validator.Validate(record, out errors))
                 return false;

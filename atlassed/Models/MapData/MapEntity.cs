@@ -18,10 +18,16 @@ namespace Atlassed.Models.MapData
 
     public class MapEntityValidator : IValidator<MapEntity>
     {
-        public bool Validate(MapEntity record, out IEnumerable<ValidationError> errors)
+        public bool Validate(MapEntity record, out ICollection<ValidationError> errors)
         {
             errors = new List<ValidationError>();
-            return true;
+
+            if (record.EntityCoordinates.Count == 0)
+            {
+                errors.Add(new ValidationError("At least one entity coordinate must be supplied"));
+            }
+
+            return errors.Count == 0;
         }
     }
 }

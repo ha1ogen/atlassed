@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Atlassed.Repositories.MapData;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -13,6 +14,6 @@ namespace Atlassed.Models.MapData
         public string ClassType { get; set; }
         public string ClassTypeDescription { get; set; }
         public string ClassLabel { get; set; }
-        public List<MetaField> MetaFields { get { return new List<MetaField>(); } }
+        public List<MetaField> MetaFields { get; set; }
     }
 }

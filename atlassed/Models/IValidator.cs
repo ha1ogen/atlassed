@@ -9,6 +9,6 @@ namespace Atlassed.Models
 {
     public interface IValidator<T>
     {
-        bool Validate(T record, out IEnumerable<ValidationError> errors);
+        bool Validate(T record, out ICollection<ValidationError> errors);
     }
 }

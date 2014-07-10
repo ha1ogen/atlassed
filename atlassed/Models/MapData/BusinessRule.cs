@@ -20,7 +20,7 @@ namespace Atlassed.Models.MapData
 
     public class BusinessRuleValidator : IValidator<BusinessRule>
     {
-        public bool Validate(BusinessRule record, out IEnumerable<ValidationError> errors)
+        public bool Validate(BusinessRule record, out ICollection<ValidationError> errors)
         {
             errors = new List<ValidationError>();
             return true;

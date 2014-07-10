@@ -35,14 +35,14 @@ namespace Atlassed.Controllers.MapData
 
         public HttpResponseMessage Post([FromBody]MapEntityClass mapEntityClass)
         {
-            IEnumerable<ValidationError> errors;
+            ICollection<ValidationError> errors;
             var mec = _repository.Create(mapEntityClass, out errors);
             return Request.CreateResponse(HttpStatusCode.Created, mec);
         }
 
         public MapEntityClass Put([FromBody]MapEntityClass mapEntityClass)
         {
-            IEnumerable<ValidationError> errors;
+            ICollection<ValidationError> errors;
             if (!_repository.Update(ref mapEntityClass, out errors))
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 

@@ -18,7 +18,7 @@ namespace Atlassed.Models.MapData
 
     public class FloorMapValidator : IValidator<FloorMap>
     {
-        public bool Validate(FloorMap record, out IEnumerable<ValidationError> errors)
+        public bool Validate(FloorMap record, out ICollection<ValidationError> errors)
         {
             errors = new List<ValidationError>();
             return true;

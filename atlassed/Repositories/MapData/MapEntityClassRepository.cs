@@ -26,7 +26,7 @@ namespace Atlassed.Repositories.MapData
             _validator = v;
         }
 
-        public MapEntityClass Create(MapEntityClass record, out IEnumerable<ValidationError> errors)
+        public MapEntityClass Create(MapEntityClass record, out ICollection<ValidationError> errors)
         {
             if (!_validator.Validate(record, out errors))
                 return null;
@@ -51,7 +51,7 @@ namespace Atlassed.Repositories.MapData
             };
         }
 
-        public bool Update(ref MapEntityClass record, out IEnumerable<ValidationError> errors)
+        public bool Update(ref MapEntityClass record, out ICollection<ValidationError> errors)
         {
             if (!_validator.Validate(record, out errors))
                 return false;

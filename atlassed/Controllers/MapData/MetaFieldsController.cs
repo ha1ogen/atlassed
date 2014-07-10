@@ -22,6 +22,12 @@ namespace Atlassed.Controllers.MapData
             _repository = new MetaFieldRepository(f, new MetaFieldValidator());
         }
 
+        [Route("api/metaclasses/{className}/fields")]
+        public IEnumerable<MetaField> GetAll(string className)
+        {
+            return _repository.GetMany(className);
+        }
+
         public MetaField Get(int id)
         {
             var mf = _repository.GetOne(id);
@@ -32,7 +38,7 @@ namespace Atlassed.Controllers.MapData
 
         public HttpResponseMessage Post([FromBody]NewMetaField metaField)
         {
-            IEnumerable<ValidationError> errors;
+            ICollection<ValidationError> errors;
             var mf = _repository.Create(metaField, out errors);
             if (mf == null) throw new HttpResponseException(HttpStatusCode.BadRequest);
 
@@ -41,7 +47,7 @@ namespace Atlassed.Controllers.MapData
 
         public MetaField Put([FromBody]MetaField metaField)
         {
-            IEnumerable<ValidationError> errors;
+            ICollection<ValidationError> errors;
             if (!_repository.Update(ref metaField, out errors))
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 

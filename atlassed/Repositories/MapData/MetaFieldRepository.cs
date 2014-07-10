@@ -39,7 +39,7 @@ namespace Atlassed.Repositories.MapData
             _validator = v;
         }
 
-        public MetaField Create(NewMetaField record, out IEnumerable<ValidationError> errors)
+        public MetaField Create(NewMetaField record, out ICollection<ValidationError> errors)
         {
             if (!_validator.Validate(record, out errors))
                 return null;
@@ -76,7 +76,7 @@ namespace Atlassed.Repositories.MapData
             };
         }
 
-        public bool Update(ref MetaField record, out IEnumerable<ValidationError> errors)
+        public bool Update(ref MetaField record, out ICollection<ValidationError> errors)
         {
             if (!_validator.Validate(record, out errors))
                 return false;

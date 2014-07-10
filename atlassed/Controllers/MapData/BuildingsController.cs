@@ -43,7 +43,7 @@ namespace Atlassed.Controllers.MapData
 
         public HttpResponseMessage Post([FromBody]NewBuilding building)
         {
-            IEnumerable<ValidationError> errors;
+            ICollection<ValidationError> errors;
             var b = _repository.Create(building, out errors);
             if (b == null) throw new HttpResponseException(HttpStatusCode.BadRequest);
 
@@ -52,7 +52,7 @@ namespace Atlassed.Controllers.MapData
 
         public Building Put([FromBody]Building building)
         {
-            IEnumerable<ValidationError> errors;
+            ICollection<ValidationError> errors;
             if (!_repository.Update(ref building, out errors))
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 

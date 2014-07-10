@@ -22,7 +22,7 @@ namespace Atlassed.Models.MapData
 
     public class BuildingValidator : IValidator<Building>
     {
-        public bool Validate(Building record, out IEnumerable<ValidationError> errors)
+        public bool Validate(Building record, out ICollection<ValidationError> errors)
         {
             errors = new List<ValidationError>();
             return true;

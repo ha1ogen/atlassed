@@ -21,7 +21,7 @@ namespace Atlassed.Models.MapData
 
     public class CampusMapValidator : IValidator<CampusMap>
     {
-        public bool Validate(CampusMap record, out IEnumerable<ValidationError> errors)
+        public bool Validate(CampusMap record, out ICollection<ValidationError> errors)
         {
             errors = new List<ValidationError>();
             return true;

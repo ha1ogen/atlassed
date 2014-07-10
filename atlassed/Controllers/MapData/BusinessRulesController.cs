@@ -36,14 +36,14 @@ namespace Atlassed.Controllers.MapData
 
         public HttpResponseMessage Post([FromBody]BusinessRule businessRule)
         {
-            IEnumerable<ValidationError> errors;
+            ICollection<ValidationError> errors;
             var br = _repository.Create(businessRule, out errors);
             return Request.CreateResponse(HttpStatusCode.Created, br);
         }
 
         public BusinessRule Put([FromBody]BusinessRule businessRule)
         {
-            IEnumerable<ValidationError> errors;
+            ICollection<ValidationError> errors;
             if (!_repository.Update(ref businessRule, out errors))
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 

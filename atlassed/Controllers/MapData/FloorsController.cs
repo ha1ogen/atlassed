@@ -41,14 +41,14 @@ namespace Atlassed.Controllers.MapData
 
         public HttpResponseMessage Post([FromBody]FloorMap floor)
         {
-            IEnumerable<ValidationError> errors;
+            ICollection<ValidationError> errors;
             var f = _repository.Create(floor, out errors);
             return Request.CreateResponse(HttpStatusCode.Created, f);
         }
 
         public FloorMap Put([FromBody]FloorMap floor)
         {
-            IEnumerable<ValidationError> errors;
+            ICollection<ValidationError> errors;
             if (!_repository.Update(ref floor, out errors))
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 

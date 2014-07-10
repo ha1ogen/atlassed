@@ -30,7 +30,7 @@ namespace Atlassed.Repositories.MapData
             _validator = v;
         }
 
-        public FloorMap Create(FloorMap record, out IEnumerable<ValidationError> errors)
+        public FloorMap Create(FloorMap record, out ICollection<ValidationError> errors)
         {
             if (!_validator.Validate(record, out errors))
                 return null;
@@ -57,7 +57,7 @@ namespace Atlassed.Repositories.MapData
             };
         }
 
-        public bool Update(ref FloorMap record, out IEnumerable<ValidationError> errors)
+        public bool Update(ref FloorMap record, out ICollection<ValidationError> errors)
         {
             if (!_validator.Validate(record, out errors))
                 return false;

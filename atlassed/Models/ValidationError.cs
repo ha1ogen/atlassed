@@ -9,5 +9,11 @@ namespace Atlassed.Models
     {
         public string Message { get; set; }
         public int Code { get; set; }
+
+        public ValidationError(string message = "", int code = 0)
+        {
+            Message = message;
+            Code = code;
+        }
     }
 }
