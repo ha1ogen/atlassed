@@ -105,7 +105,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\MapData\CampusesController.cs" />
     <Compile Include="Controllers\MapData\MetaFieldsController.cs" />
-    <Compile Include="Controllers\MapData\UploadController.cs" />
+    <!--<Compile Include="Controllers\MapData\UploadController.cs" />-->
     <Compile Include="Controllers\SecuredImageHandler.cs" />
     <Compile Include="Controllers\MapData\BuildingsController.cs" />
     <Compile Include="Controllers\MapData\MapEntityClassesController.cs" />

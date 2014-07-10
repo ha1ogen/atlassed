@@ -152,13 +152,16 @@
             case 'Workstation':
                 obj = getObjectByLocationId(id);
                 var w = obj.locationObj;
-                title = "Location "; //+ w.Number;
+                title = w.ClassName;
                 details = {
-                    Name: w.Name,
+                    /*Name: w.MapLabel,
                     Description: w.Description,
                     Type: w.Type == null ? "Undefined" : w.Type,
-                    Assigned: w.AssignedPerson == null ? "Unassigned" : w.AssignedPerson.Name
+                    Assigned: w.AssignedPerson == null ? "Unassigned" : w.AssignedPerson.Name*/
+                    Number: w.MetaProperties.RoomNumber.Value,
+                    Capacity: w.MetaProperties.RoomCapacity.Value
                 };
+
                 PlacePin(obj);
                 break;
             case 'Person':
