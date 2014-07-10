@@ -275,6 +275,9 @@ window.CurrentContext = new (function () {
             if (metafields[i].FieldType === "INT") {
                 metafieldsValues[i] = parseInt(metafieldsValues[i]);
             }
+            else {
+                metafieldsValues[i] = "'"+metafieldsValues[i]+"'";
+            }
             metafieldsParams[metafields[i].FieldName] = metafieldsValues[i];
         }
 
