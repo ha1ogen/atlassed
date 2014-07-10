@@ -46,13 +46,23 @@ function ajax(options) {
     if (typeof internalOptions.failure !== 'function' && typeof internalOptions.failure !== 'undefined') {
         throw 'ajax: failure must be a function';
     }
-    if (internalOptions.type !== 'get' && internalOptions.type !== 'post' && internalOptions.type !== 'put' && internalOptions.type !== 'delete') {
+    if (internalOptions.type !== 'get' && internalOptions.type !== 'post' && 
+        internalOptions.type !== 'put' && internalOptions.type !== 'delete') {
         throw 'ajax: type is not valid';
     }
+
+    console.log (internalOptions.params);
 
     if (internalOptions.type === 'get') {
         internalOptions.params = $.param( internalOptions.params );
     }
+    else if (internalOptions.type === 'post') {
+        internalOptions.params.metaproperties = 
+            JSON.stringify( internalOptions.params.metaproperties || {});
+        internalOptions.params.metaproperties = internalOptions.params.metaproperties.replace (/"/g,'');;
+    }
+
+    
 
     var a = $.ajax({
         url: internalOptions.webservice,
@@ -70,3 +80,4 @@ function ajax(options) {
 
     return a;
 }
+

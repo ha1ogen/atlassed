@@ -30,11 +30,10 @@
         initSearch();
         Login.init();
         Tile.init();
-        
         // END INITIATE ELEMENT HANDLES
 
         Main.LoadBuildings();
-
+        CurrentContext.LoadEntityClasses();
 
         // ATTACH EVENT HANDLERS
         $('.tile-select').select2({
@@ -237,6 +236,26 @@
 
         Tile.SelectBuilding.change();
     },
+    LoadEntityDialog : function (data) {
+        var entityClasses = CurrentContext.GetEntityClasses();
+        var MetaFieldsWrapper = $("#MetaFieldsWrapper");
+        for (var i = 0; i < data.length; i++) {
+            if (data[i].ClassType === "ENTITY") {
+                entityClasses["" + data[i].ClassId] = data[i];
+                var o = new Option(data[i].ClassLabel, data[i].ClassId);
+                /// jquerify the DOM object 'o' so we can use the html method
+                $(o).html(data[i].ClassLabel);
+                $('#EntityList').append(o);
+            }
+        }
+        // load initial meta fields
+        for (var j = 0; j < data[1].MetaFields.length; j++) {
+            var metaField = data[1].MetaFields[j];
+            MetaFieldsWrapper.append('<br/><label id="' + metaField.FieldName + '">' + 
+                metaField.FieldLabel + ':</label>' + 
+                '<input id="' + metaField.FieldName + 'Value"></input>');
+        }
+    },
     TransformToHomepage : function () {
         Main.Toolbar.MouseModes.hide();
         Tile.SelectFloor.hide();
@@ -287,7 +306,7 @@
                 break;
             case 'Workstation':
                 var w = getObjectByLocationId(id);
-                WorkstationDialog.open(id, w, w.Point, function (newObject) {
+                EntityDialog.open(id, w, w.Point, function (newObject) {
                     if (newObject != null) {
                         w.w = newObject;
                     }
