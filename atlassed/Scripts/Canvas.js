@@ -228,20 +228,22 @@ function drawRect(x, y, w, h) {
 }
 
 function drawCircle(locationObj, x, y) {
-    var colour = 'black'; // default
-    switch (locationObj.ClassName){
-        case "Classroom":
-            colour = 'red';
-            break;
-        case "FoodServices":
-            colour = 'green';
-            break;
-        case "Office":
-            colour = 'blue';
-            break;
-        case "ParkingLot":
-            colour = 'brown';
-            break;
+    var colour = 'black'; //default
+    if (locationObj != null){
+        switch (locationObj.ClassName){
+            case "Classroom":
+                colour = 'red';
+                break;
+            case "FoodServices":
+                colour = 'green';
+                break;
+            case "Office":
+                colour = 'blue';
+                break;
+            case "ParkingLot":
+                colour = 'brown';
+                break;
+        }
     }
     var circle = new fabric.Circle({
         locationObj: locationObj,
