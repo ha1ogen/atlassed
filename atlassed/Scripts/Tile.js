@@ -2,13 +2,13 @@
 	SelectBuilding : null,
     SelectFloor : null,
     CenterTiles : null,
-    ZoomTiles : null,
+    LowerRightTiles : null,
     MapLink : null,
     init : function () {
 	    Tile.SelectBuilding = $('#Buildings');
 		Tile.SelectFloor = $('#Floors');
 		Tile.CenterTiles = $('#CenterTiles');
-		Tile.ZoomTiles = $('#ZoomTiles');
+		Tile.LowerRightTiles = $('#LowerRightTiles');
 		Tile.MapLink = $('#MapLink');
 
 		Tile.SelectBuilding.change(function (evt) {

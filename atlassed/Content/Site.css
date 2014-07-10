@@ -251,13 +251,12 @@
   margin-left: 5px;
   margin-top: 5px;
 }
-#ZoomTiles {
+#LowerRightTiles {
   position: absolute;
   right: 25px;
   bottom: 37px;
 }
-#ZoomTiles button {
-  margin-top:10px;
+#LowerRightTiles button {
   height: 30px;
   width: 30px;
   font-size: 1.7em;
@@ -584,9 +583,6 @@ button.disabled {
 button.disabled .select2-chosen {
   color: gray;
 }
-button:first-of-type {
-  margin-left: 0;
-}
 button:active {
   background-color: #7bb931;
 }
@@ -686,4 +682,15 @@ footer > div {
   width:80px;
   height:40px;
   padding:2px;
+}
+#Legend {
+  background: url(../Images/legend.png);
+  background-size:contain;
+  margin-top: 10px;
+  background-repeat:no-repeat;
+  width:120px;
+  height:100px;
+}
+.zoomtile{
+  margin-left: 90px;
 }

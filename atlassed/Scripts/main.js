@@ -245,7 +245,7 @@
     TransformToHomepage : function () {
         Main.Toolbar.MouseModes.hide();
         Tile.SelectFloor.hide();
-        Tile.ZoomTiles.hide();
+        Tile.LowerRightTiles.hide();
         Tile.MapLink.hide();
 
         var searchLeft = SearchContainer.css('left'),
@@ -366,7 +366,7 @@
 
         Main.MapDiv.hide('fade');
         Main.Toolbar.MouseModes.hide('fade');
-        Tile.ZoomTiles.hide('fade');
+        Tile.LowerRightTiles.hide('fade');
 
         if (floors.length == 1) {
             var id = floors[0].MapId;
@@ -387,7 +387,7 @@
                     Tile.CenterTiles.close();
                     Main.Watermark.hide('fade');
                     Main.Toolbar.MouseModes.show('fade');
-                    Tile.ZoomTiles.show('fade');
+                    Tile.LowerRightTiles.show('fade');
                     Main.MapDiv.show('fade', 200);
                     Main.ResizeElements();
                 } else {

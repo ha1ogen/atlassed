@@ -227,8 +227,24 @@ function drawRect(x, y, w, h) {
     return square;
 }
 
+function getColorForEntity(entity) {
+    switch (entity){
+        case "Classroom":
+            return 'red';
+        case "FoodServices":
+            return 'green';
+        case "Office":
+            return 'blue';
+        case "ParkingLot":
+            return 'brown';
+        default:
+            return 'black';
+    }
+}
+
 function drawCircle(locationObj, x, y) {
     var colour = classColour(locationObj);
+
     var circle = new fabric.Circle({
         locationObj: locationObj,
         radius: WORKSTATION_RADIUS * AbsoluteScale,
