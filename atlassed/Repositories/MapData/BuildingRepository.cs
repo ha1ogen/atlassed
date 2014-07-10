@@ -11,6 +11,7 @@ namespace Atlassed.Repositories.MapData
     public class BuildingRepository : MetaObjectRepository, IRepository<Building, NewBuilding, int, int?>
     {
         public const string _buildingId = "buildingId";
+        private const string _buildingAddress = "buildingAddress";
 
         private const string _spAddBuilding = "AddBuilding";
         private const string _spEditBuilding = "EditBuilding";
@@ -33,6 +34,7 @@ namespace Atlassed.Repositories.MapData
 
             return DB.NewSP(_spAddBuilding, _connectionFactory)
                 .AddParam(CampusRepository._campusMapId, record.CampusMapId)
+                .AddParam(_buildingAddress, record.BuildingAddress)
                 .AddParam(MapEntityRepository._entityCoordinates, Coordinate.MultiToString(record.EntityCoordinates))
                 .AddTVParam(_metaProperties, GenerateMetaPropertyTable(record))
                 .ExecExpectOne(x => Create(x));
@@ -44,6 +46,7 @@ namespace Atlassed.Repositories.MapData
             {
                 BuildingId = data.GetInt32(_buildingId),
                 CampusMapId = data.GetInt32(CampusRepository._campusMapId),
+                BuildingAddress = data.GetString(_buildingAddress),
                 MetaProperties = GetMetaProperties(data)
             };
         }

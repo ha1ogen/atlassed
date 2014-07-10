@@ -12,6 +12,7 @@ namespace Atlassed.Models.MapData
     {
         public int BuildingId { get; set; }
         public int CampusMapId { get; set; }
+        public string BuildingAddress { get; set; }
     }
 
     public class NewBuilding : Building
