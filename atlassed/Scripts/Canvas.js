@@ -379,7 +379,7 @@ function mouseup(e) {
                 } else */
                 if (obj.type == 'circle') {
                     obj.bringToFront();
-                    Main.ShowDetails('Workstation', obj.locationObj.EntityId);
+                    Main.ShowDetails('Entity', obj.locationObj.EntityId);
                 }
             }
             break;
