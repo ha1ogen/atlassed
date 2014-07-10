@@ -7,14 +7,13 @@ var admin = false;
 window.CurrentContext = new (function () {
     var self = this;
     $().ready(function () {
-        //var admin = $('[id$=_ADMIN]').val() == 1;
-        //$('[id$=_ADMIN]').remove();
         self.IsAdmin = function () { return admin; };
     });
 
     // Building
     this.CurrentBuildingId = 0;
     this.EditBuildingId = 0;
+    var entityClasses = {};
     var _buildings = 
                 [{  BuildingId:'1', 
                     BuildingName:'RCH', 
@@ -60,17 +59,21 @@ window.CurrentContext = new (function () {
                                 FloorId:'26', 
                                 Filename:'phase5b_2ndfloor.gif'}]}];
 
+    this.LoadEntityClasses = function () {
+        ajax({
+            webservice: 'api/mapEntityClasses',
+            async: true,
+            success: function (data){
+                Main.LoadEntityDialog(data);
+            }
+        });    
+    }
+
+    this.GetEntityClasses = function () {
+        return entityClasses;
+    }
+
     this.GetAllBuildings = function () {
-        /*if (_buildings == null) {
-            ajax({
-                webservice: 'Main',
-                func: 'GetBuildings',
-                async: false,
-                success: function (data) {
-                    _buildings = data;
-                }
-            });
-        }*/
         ajax({
             webservice: 'api/buildings',
             async: false,
@@ -260,26 +263,39 @@ window.CurrentContext = new (function () {
     // Workstation
     this.CurrentWorkstation = 0;
 
-    this.AddWorkstation = function (point, workspaceId, number, port, personId, callback) {
+    this.AddWorkstation = function (entityId, metafieldsValues, coordinates) {
+        if (!this.IsAdmin()) {
+            return false;
+        }
         var w = null;
-        //Stubbing
-        /*ajax({
-            webservice: 'Admin',
-            func: 'AddWorkstation',
-            async: false,
+
+        var metafieldsParams = {};
+        var metafields = entityClasses[entityId].MetaFields;
+        for (var i = 0; i < metafields.length; i++) {
+            if (metafields[i].FieldType === "INT") {
+                metafieldsValues[i] = parseInt(metafieldsValues[i]);
+            }
+            metafieldsParams[metafields[i].FieldName] = metafieldsValues[i];
+        }
+        console.log(metafieldsParams);
+        ajax({
+            webservice: 'api/mapEntities',
+            async: true,
+            type: 'post',
             params: {
-                point: point,
-                workspaceId: workspaceId,
-                number: number,
-                port: port,
-                personId: personId
+                classname: entityClasses[entityId].ClassName,
+                mapId:  parseInt(this.CurrentFloorId),
+                entityCoordinates: [{
+                    x : coordinates.X,
+                    y : coordinates.Y
+                }],
+                metaproperties : metafieldsParams
             },
             success: function (data) {
-                if (data !== null) {
-                    w = data;
-                }
+                w = data;
             }
-        });*/
+        });
+
         return w;
     }
 

@@ -404,7 +404,7 @@ function mouseup(e) {
             break;
         case T_TAG_WORKSTATION:
             AddingObject = true;
-            WorkstationDialog.open(Canvas.getActiveObject().parentLocationId, null, { X: Math.round(Canvas.getActiveObject().left), Y: Math.round(Canvas.getActiveObject().top) }, function (w) {
+            EntityDialog.open(Canvas.getActiveObject().parentLocationId, null, { X: Math.round(Canvas.getActiveObject().left), Y: Math.round(Canvas.getActiveObject().top) }, function (w) {
                 if (w == null) {
                     //not succesful, delete the obj
                     Canvas.remove(Canvas.getActiveObject());

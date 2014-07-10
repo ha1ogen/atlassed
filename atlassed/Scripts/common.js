@@ -32,3 +32,11 @@ function rectGetCentre(topLeft, bottomRight) {
         Y: topLeft.Y + (bottomRight.Y - topLeft.Y) / 2
     }
 }
+
+function isFloat(n) {
+    return n === +n && n !== (n|0);
+}
+
+function isInteger(n) {
+    return n === +n && n === (n|0);
+}

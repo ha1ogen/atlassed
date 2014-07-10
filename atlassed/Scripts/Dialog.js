@@ -1,12 +1,12 @@
 ﻿Dialog = {
     BuildingDialog : null,
     SpaceDialog : null,
-    WorkstationDialog : null,
+    EntityDialog : null,
     PersonDialog : null,
     init : function() {
         BuildingDialog = $('#BuildingDialog');
         SpaceDialog = $('#SpaceDialog');
-        WorkstationDialog = $('#WorkstationDialog');
+        EntityDialog = $('#EntityDialog');
         PersonDialog = $('#PersonDialog');
 
         // BUILDING DIALOG
@@ -175,99 +175,58 @@
         };
 
         // WORKSTATION
-        var AssignWorkstation = $('#AssignWorkstation');
-        AssignWorkstation.select2();
+        $("#EntityList").change(function() {
+            var MetaFieldsWrapper = $("#MetaFieldsWrapper");
+            MetaFieldsWrapper.empty();
+            var c = CurrentContext.GetEntityClasses();
+            for (var j = 0; j < c[this.value].MetaFields.length; j++) {
+                var metaField = c[this.value].MetaFields[j];
+                MetaFieldsWrapper.append('<br/><label id="' + metaField.FieldName + '">' + 
+                    metaField.FieldLabel + ':</label>' + 
+                    '<input id="' + metaField.FieldName + 'Value"></input>');
+            }
+        });
 
-        WorkstationDialog.saveCallback = undefined;
-        WorkstationDialog.dialog({
+        EntityDialog.saveCallback = undefined;
+        EntityDialog.dialog({
             title: "Add/Edit Location",
             autoOpen: false,
             buttons: {
                 Cancel: function () {
                     $(this).dialog('close');
-                    WorkstationDialog.saveCallback(null);
+                    EntityDialog.saveCallback(null);
                 },
                 Save: function () {
-                    var success = false;
+                    var entityId = $('#EntityList').val();
+                    var metafields = [];
+                    var metaFieldInputs = $("#MetaFieldsWrapper input");
 
-                    var number = $('#WorkstationNumber').val(),
-                        port = $('#WorkstationPort').val(),
-                        assignee = $('#AssignWorkstation').val();
+                    $.each(metaFieldInputs, function (i, v) {
+                        metafields.push(v.value);
+                    });
 
-                    var vMessage = '';
-                    if (number.length == 0) {
-                        vMessage += 'Name is required';
-                    }
-                    if (vMessage.length !== 0) {
-                        alert(vMessage);
-                    } else {
-                        success = true;
-                    }
+                    // var w;
+                    // if (AddingObject) {//point, workspaceId, number, port, personId
+                    CurrentContext.AddWorkstation(entityId, metafields, EntityDialog.currentPoint);
+                    // } else {//workstationId, point, number, port, personId
+                    //     w = CurrentContext.SaveWorkstation(EntityDialog.locationId, number, port, assignee);
+                    // }
 
-                    var w;
-
-                    if (AddingObject) {//point, workspaceId, number, port, personId
-                        w = CurrentContext.AddWorkstation(WorkstationDialog.currentPoint, WorkstationDialog.locationId, number, port, assignee);
-                    } else {//workstationId, point, number, port, personId
-                        w = CurrentContext.SaveWorkstation(WorkstationDialog.locationId, number, port, assignee);
-                    }
-
-                    //Stubbing temporarily for demo
-                    /*if (w == null) {
-                        alert("Error saving workstation");
-                        return;
-                    }*/
-
-                    AddingObject = false;
-                    if (success) {
-                        $(this).dialog('close');
-                    }
-                    //Changing for demo
-                    //WorkstationDialog.saveCallback(w);
-                    WorkstationDialog.saveCallback(1);
-                    /*setTimeout(function () {
-                        ShowDetails(TYPE_WORKSTATION, w.LocationId);
-                    }, 50);*/
+                    $(this).dialog('close');
+                    EntityDialog.saveCallback(1);
                 }
             },
             modal: true,
             position: { my: 'center top', at: 'center top+5' }
         });
-        WorkstationDialog.open = function (parentLocationId, w, point, callback) {
+        EntityDialog.open = function (parentLocationId, w, point, callback) {
             if (!CurrentContext.IsAdmin()) {
                 return;
             }
 
-            AssignWorkstation.empty();
-            //AssignWorkstation.append('<option>Unassigned</option>');
-            AssignWorkstation.append(selectOption(0, 'Unassigned'));
-            CurrentContext.GetUnassignedPeople(function (data) {
-                $.each(data, function (i, p) {
-                    AssignWorkstation.append(selectOption(p.PersonId, p.Name));
-                });
-            });
-            AssignWorkstation.prev().width(200);
-
-            var locationId;
-            if (w == null) {
-                $('#WorkstationNumber').val('');
-                $('#WorkstationPort').val('');
-                locationId = parentLocationId;
-            } else {
-                $('#WorkstationNumber').val(w.w.Number);
-                $('#WorkstationPort').val(w.w.PortNumber);
-                var person = w.w.AssignedPerson;
-                if (person != null) {
-                    AssignWorkstation.append(selectOption(person.PersonId, person.Name)).val(person.PersonId).change();
-                } else {
-                    AssignWorkstation.val(0).change();
-                }
-                locationId = w.w.LocationId;
-            }
-
-            WorkstationDialog.currentPoint = point;
-            WorkstationDialog.saveCallback = function (result) { if (callback != undefined) return callback(result); };
-            WorkstationDialog.locationId = locationId;
+            EntityDialog.currentPoint = point;
+            EntityDialog.saveCallback = function (result) { if (callback != undefined) return callback(result); };
+            EntityDialog.locationId = parentLocationId;
 
             this.dialog('open');
         };
