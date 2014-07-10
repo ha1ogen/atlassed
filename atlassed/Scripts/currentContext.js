@@ -283,7 +283,7 @@ window.CurrentContext = new (function () {
 
         ajax({
             webservice: 'api/mapEntities',
-            async: true,
+            async: false,
             type: 'post',
             params: {
                 classname: entityClasses[entityId].ClassName,

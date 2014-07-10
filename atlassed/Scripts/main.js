@@ -147,6 +147,7 @@
             case 'Entity':
                 obj = getObjectByLocationId(id);
                 data = obj.locationObj;
+                title = data.ClassName;
                 PlacePin(obj);
                 break;
             case 'Person':
