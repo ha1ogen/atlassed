@@ -99,7 +99,7 @@ function initSearch() {
         table.empty();
         $.each(details || [], function (label, value) {
         	if (value === "NULL") value = "n/a";
-            table.append('<tr><td>' + label + '</td><td>' + value + '</td></tr>');
+            table.append('<tr><td>' + label + ':</td><td>' + value + '</td></tr>');
         });
         SearchResultsDetailsCard.find('.remove').off().click(function () {
             RemoveEntity(type, id);

@@ -51,8 +51,6 @@ function ajax(options) {
         throw 'ajax: type is not valid';
     }
 
-    console.log (internalOptions.params);
-
     if (internalOptions.type === 'get') {
         internalOptions.params = $.param( internalOptions.params );
     }
@@ -62,14 +60,10 @@ function ajax(options) {
         internalOptions.params.metaproperties = internalOptions.params.metaproperties.replace (/"/g,'');;
     }
 
-    
-
     var a = $.ajax({
         url: internalOptions.webservice,
         data: internalOptions.params,
-        contentType: 'application/json; charset=utf-8',
         type: internalOptions.type,
-        dataType: 'json',
         async: internalOptions.async,
         success: function (data) {
             internalOptions.success(data);

@@ -277,7 +277,7 @@ window.CurrentContext = new (function () {
             }
             metafieldsParams[metafields[i].FieldName] = metafieldsValues[i];
         }
-        console.log(metafieldsParams);
+
         ajax({
             webservice: 'api/mapEntities',
             async: true,
