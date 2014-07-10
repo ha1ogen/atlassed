@@ -31,13 +31,16 @@ namespace Atlassed.Controllers.MapData
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
 
-            var classes = classNames.Split(',');
             
             var results = _repository.GetMany(mapId);
-            
-            if (classNames == "" || classes.Length == 0) return results;
 
-            return results.Where(x => classes.Contains(x.ClassName));
+            if (classNames != string.Empty)
+            {
+                var classes = classNames.Split(',');
+                results = results.Where(x => classes.Contains(x.ClassName));
+            }
+
+            return results;
         }
 
         [HttpGet]
@@ -45,7 +48,7 @@ namespace Atlassed.Controllers.MapData
         {
             if (take <= 0) throw new ArgumentOutOfRangeException("take", take, "take must be a positive integer");
 
-            IEnumerable<SearchResult> results = _repository.Search(q, skip, take);
+            var results = _repository.Search(q, skip, take);
 
             if (mapId != null)
             {
@@ -85,10 +88,12 @@ namespace Atlassed.Controllers.MapData
             return entity;
         }
 
-        public void Delete(int id)
+        public bool Delete(int id)
         {
             if (!_repository.Delete(id))
                 throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            return true;
         }
     }
 }

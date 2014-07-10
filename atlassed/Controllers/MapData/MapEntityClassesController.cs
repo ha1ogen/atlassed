@@ -49,10 +49,12 @@ namespace Atlassed.Controllers.MapData
             return mapEntityClass;
         }
 
-        public void Delete(int id)
+        public bool Delete(int id)
         {
             if (!_repository.Delete(id))
                 throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            return true;
         }
     }
 }

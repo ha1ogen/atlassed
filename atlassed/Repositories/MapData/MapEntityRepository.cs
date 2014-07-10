@@ -87,7 +87,7 @@ namespace Atlassed.Repositories.MapData
                 .ExecExpectMultiple(x => Create(x));
         }
 
-        public List<SearchResult> Search(string query, int skip, int? take)
+        public IEnumerable<SearchResult> Search(string query, int skip, int? take)
         {
             return DB.NewSP(_spSearchMapEntities, _connectionFactory)
                         .AddParam(SearchResult._query, query)

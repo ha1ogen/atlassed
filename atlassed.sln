@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "atlassed", "atlassed\atlassed.csproj", "{BDFDDBAF-925C-4C15-BCC5-F6BBDE5E2DF8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "atlassed.test", "atlassed.test\atlassed.test.csproj", "{A84461F1-344D-4723-BA83-694871A67AB7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

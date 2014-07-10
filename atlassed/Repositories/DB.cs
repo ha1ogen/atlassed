@@ -108,7 +108,7 @@ namespace Atlassed.Repositories
 
         public static T GetReturnValue<T>(this SqlCommand query)
         {
-            return (T)query.Parameters[__returnParamName].Value;
+            return (T)Convert.ChangeType(query.Parameters[__returnParamName].Value, typeof(T));
         }
 
         public static T ExecExpectScalarValue<T>(this SqlCommand query)

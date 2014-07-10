@@ -8,6 +8,6 @@ namespace Atlassed.Repositories
 {
     interface ISearchableRepository<T, NT, ID, PID, ST> : IRepository<T, NT, ID, PID>
     {
-        List<ST> Search(string query, int skip, int? take);
+        IEnumerable<ST> Search(string query, int skip, int? take);
     }
 }
