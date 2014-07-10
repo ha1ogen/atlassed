@@ -30,9 +30,14 @@ namespace Atlassed.Controllers.MapData
             if (_campusRepository.GetOne(mapId) == null && _floorRepository.GetOne(mapId) == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
+
             var classes = classNames.Split(',');
-            return _repository.GetMany(mapId)
-                .Where(x => classes.Contains(x.ClassName));
+            
+            var results = _repository.GetMany(mapId);
+            
+            if (classNames == "" || classes.Length == 0) return results;
+
+            return results.Where(x => classes.Contains(x.ClassName));
         }
 
         [HttpGet]

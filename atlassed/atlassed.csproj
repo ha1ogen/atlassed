@@ -73,17 +73,24 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Site.css" />
+    <Content Include="file-upload.html" />
     <Content Include="index.html" />
     <Content Include="Global.asax" />
     <Content Include="Images\maps\map-2.png" />
     <Content Include="Images\pin.png" />
     <Content Include="Images\search-icon.png" />
     <Content Include="Images\search-icon2.png" />
-    <Content Include="Scripts\canvasInteractions.js" />
+    <Content Include="Scripts\Canvas.js" />
     <Content Include="Scripts\common.js" />
     <Content Include="Scripts\currentContext.js" />
+    <Content Include="Scripts\Dialog.js" />
+    <Content Include="Scripts\DialogBuilder.js" />
     <Content Include="Scripts\fabric.js" />
+    <Content Include="Scripts\FileUpload.js" />
+    <Content Include="Scripts\Login.js" />
     <Content Include="Scripts\main.js" />
+    <Content Include="Scripts\Network.js" />
+    <Content Include="Scripts\Search.js" />
     <Content Include="Scripts\select2-3.4.6\select2-bootstrap.css" />
     <Content Include="Scripts\select2-3.4.6\select2-spinner.gif" />
     <Content Include="Scripts\select2-3.4.6\select2.css" />
@@ -91,12 +98,14 @@
     <Content Include="Scripts\select2-3.4.6\select2.min.js" />
     <Content Include="Scripts\select2-3.4.6\select2.png" />
     <Content Include="Scripts\select2-3.4.6\select2x2.png" />
+    <Content Include="Scripts\Tile.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\MapData\CampusesController.cs" />
     <Compile Include="Controllers\MapData\MetaFieldsController.cs" />
+    <Compile Include="Controllers\MapData\UploadController.cs" />
     <Compile Include="Controllers\SecuredImageHandler.cs" />
     <Compile Include="Controllers\MapData\BuildingsController.cs" />
     <Compile Include="Controllers\MapData\MapEntityClassesController.cs" />
