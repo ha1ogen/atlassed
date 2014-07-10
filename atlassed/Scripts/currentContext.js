@@ -227,7 +227,7 @@ window.CurrentContext = new (function () {
                 internalCallback(false);
             }
         });
-        return _floors;
+        //return _floors;
 
         /*if (floorId == '13'){
             data = [{locationObj: {id: '1', Number:'1', Name:'Room 307', Type:'Classroom', Description: 'Max Occupancy 150' ,AssignedPerson: null}, X: '285', Y:'425'},

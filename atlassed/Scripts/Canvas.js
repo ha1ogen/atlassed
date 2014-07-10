@@ -180,7 +180,7 @@ function RenderObjects(spaces) {
         $.each(s.Workstations || [], function (j, w) {
             drawCircle(s.locationId, w.Point.X, w.Point.Y)
                 .set('w', w);*/
-        drawCircle(s.locationObj, s.X, s.Y);
+        drawCircle(s, s.EntityCoordinates[0].X, s.EntityCoordinates[0].Y);
     });
     Canvas.sendToBack(ImageObj);
     ImageObj.sendToBack();
@@ -353,7 +353,7 @@ function mouseup(e) {
             if (startedPanning){
                 startedPanning = false;
             }
-            else if (obj !== undefined && obj !== null) {
+            if (obj !== undefined && obj !== null) {
                 /*if (obj.type == 'rect') {
                     obj.sendToBack();
                     obj.text.sendToBack();
@@ -362,7 +362,7 @@ function mouseup(e) {
                 } else */
                 if (obj.type == 'circle') {
                     obj.bringToFront();
-                    Main.ShowDetails('Workstation', obj.locationObj.id);
+                    Main.ShowDetails('Workstation', obj.locationObj.EntityId);
                 }
             }
             break;
@@ -538,7 +538,7 @@ function selectObjectByLocationId(locationId) {
 function getObjectByLocationId(locationId) {
     var objects = Canvas.getObjects();
     for (var i in objects) {
-        if (objects[i].locationObj != undefined && objects[i].locationObj.id == locationId) {
+        if (objects[i].locationObj != undefined && objects[i].locationObj.EntityId == locationId) {
             return objects[i];
         }
     }
