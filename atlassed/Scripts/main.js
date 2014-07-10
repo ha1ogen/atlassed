@@ -125,54 +125,38 @@
         }
     },
     ShowDetails : function (type, id, callback) {
-        var title = "",
-            details = {},
-            obj;
+
+        var createDetails = function (data) {
+            var details = {};
+            $.each(data.MetaProperties, function(i, v) {
+                details[v.Label] = v.Value;
+            });
+            return details;
+        }
+
+        var title = "", details = {}, obj, data;
         switch (type) {
             case 'Building':
-                var b = CurrentContext.GetBuilding(id);
-                title = b.BuildingName;
-                details = {
-                    "Name": b.MetaProperties.BuildingName.Value,
-                    "Code": b.MetaProperties.BuildingCode.Value,
-                    "Faculty": b.MetaProperties.BuildingFaculty.Value
-                };
+                data = CurrentContext.GetBuilding(id);
                 break;
             case 'Space':
                 obj = getObjectByLocationId(id);
-                var s = obj.w;
-                title = s.Name;
-                details = {
-                    Number: s.Number,
-                    Location: s.Floor.Description
-                };
+                data = obj.w;
                 PlacePin(obj);
                 break;
-            case 'Workstation':
+            case 'Entity':
                 obj = getObjectByLocationId(id);
-                var w = obj.locationObj;
-                title = w.ClassName;
-                details = {
-                    /*Name: w.MapLabel,
-                    Description: w.Description,
-                    Type: w.Type == null ? "Undefined" : w.Type,
-                    Assigned: w.AssignedPerson == null ? "Unassigned" : w.AssignedPerson.Name*/
-                    Number: w.MetaProperties.RoomNumber.Value,
-                    Capacity: w.MetaProperties.RoomCapacity.Value
-                };
-
+                data = obj.locationObj;
                 PlacePin(obj);
                 break;
             case 'Person':
-                var p = CurrentContext.GetPerson(id);
-                title = p.Name;
-                details = {
-                    Team: p.Description
-                };
-                PlacePin(getObjectByLocationId(p.LocationId));
+                data = CurrentContext.GetPerson(id);
+                title = data.Name;
+                PlacePin(getObjectByLocationId(data.LocationId));
                 break;
             default:
         }
+        details = createDetails(data);
         SearchResultsDetailsCard.fillAndShow(type, id, title, details, callback);
     },
     ResizeCanvasWrapper : function () {

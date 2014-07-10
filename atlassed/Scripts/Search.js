@@ -213,20 +213,16 @@ function FormatSearchResults (results) {
 
     $('.search-result').click(function (e) {
         var self = this;
-        clickResult.call(this, e, function () {
-            var result = $(self).closest('.search-result'),
-                id = result.data('result-id'),
-                type = result.data('result-type');
-
+        clickResult.call(this, e, function (type, id) {
             Main.ShowDetails(type, id);
         });
         return false;
     });
 
     function clickResult(e, callback) {
-        var innerCallback = function (success) {
+        var innerCallback = function (success, type, id) {
             if (callback != undefined) {
-                callback(success);
+                callback(type, id);
             }
         };
         var result = $(this).closest('.search-result'),
@@ -234,21 +230,28 @@ function FormatSearchResults (results) {
             type = result.data('result-type'),
             secondaryId = result.data('result-secondaryid');
 
+        $.each(CurrentContext.GetEntityClasses(), function(i, v) {
+        	if (v.ClassName.toLowerCase() == type.toLowerCase()) {
+        		type = 'Entity';
+        		return false;
+        	}
+        });
+
         switch (type) {
             case 'Building':
                 Main.GoToBuilding(id);
-                innerCallback(true);
+                innerCallback(true, type, id);
                 break;
             case 'Person':
                 if (secondaryId == 0) return;
             case 'Space':
-            case 'Classroom':
+            case 'Entity':
             case 'Workstation':
                 Main.GoToFloor(secondaryId, function (success) {
                     if (success) {
                         selectObjectByLocationId(id);
                     }
-                    innerCallback(success);
+                    innerCallback(success, type, id);
                 });
                 break;
         }
