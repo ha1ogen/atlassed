@@ -257,6 +257,7 @@
   bottom: 37px;
 }
 #ZoomTiles button {
+  margin-top:10px;
   height: 30px;
   width: 30px;
   font-size: 1.7em;
