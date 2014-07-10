@@ -137,6 +137,7 @@
         var title = "", details = {}, obj, data;
         switch (type) {
             case 'Building':
+                title = 'Building';
                 data = CurrentContext.GetBuilding(id);
                 break;
             case 'Space':
@@ -147,7 +148,7 @@
             case 'Entity':
                 obj = getObjectByLocationId(id);
                 data = obj.locationObj;
-                title = data.ClassName;
+                title = ((data.ClassName == "ParkingLot") ? "Parking Lot" : data.ClassName);
                 PlacePin(obj);
                 break;
             case 'Person':
