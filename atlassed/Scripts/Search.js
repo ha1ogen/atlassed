@@ -98,6 +98,7 @@ function initSearch() {
         var table = $('#DetailsCardTable');
         table.empty();
         $.each(details || [], function (label, value) {
+        	if (value === "NULL") value = "n/a";
             table.append('<tr><td>' + label + '</td><td>' + value + '</td></tr>');
         });
         SearchResultsDetailsCard.find('.remove').off().click(function () {
@@ -241,6 +242,7 @@ function FormatSearchResults (results) {
             case 'Person':
                 if (secondaryId == 0) return;
             case 'Space':
+            case 'Classroom':
             case 'Workstation':
                 Main.GoToFloor(secondaryId, function (success) {
                     if (success) {
@@ -282,19 +284,22 @@ function FormatSearchResults (results) {
 function AppendSearchResult(i, resultData) {
     var result = $('#SearchResultTemplate').clone();
     // reset template
-    result.attr('id', 'result' + i);
     result.css('display', '');
     // properties
     result.attr('data-result-id', resultData.PrimaryId);
-    result.attr('data-result-type', resultData.Type);
-    //result.attr('data-result-secondaryid', resultData.SecondaryId);
+    result.attr('data-result-type', resultData.ClassName);
+    result.attr('data-result-secondaryid', resultData.SecondaryId);
     if (resultData.Point !== undefined) {
         result.attr('data-result-point', resultData.Point.X + ',' + resultData.Point.Y);
     }
     // set visible elements
     result.find('.primary-text').text(resultData.PrimaryText);
-    result.find('.secondary-text').text(resultData.SecondaryText);
-    // result.find('.right').text(resultData.right);
+    if (resultData.ClassName === "Classroom" && resultData.SecondaryText === "") {
+    	result.find('.secondary-text').text("Classroom");
+    }
+    else {
+    	result.find('.secondary-text').text(resultData.SecondaryText);
+    }
 
     SearchResultList.append(result);
 }

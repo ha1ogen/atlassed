@@ -10,8 +10,6 @@ window.CurrentContext = new (function () {
         //var admin = $('[id$=_ADMIN]').val() == 1;
         //$('[id$=_ADMIN]').remove();
         self.IsAdmin = function () { return admin; };
-
-        self.GetAllBuildings();
     });
 
     // Building
@@ -84,13 +82,11 @@ window.CurrentContext = new (function () {
     }
 
     this.GetBuilding = function (buildingId) {
-        var buildings = this.GetAllBuildings();
-        for (var i = 0; i < buildings.length; i++) {
-            if (buildings[i].BuildingId == buildingId) {
-                return buildings[i];
+        for (var i = 0; i < _buildings.length; i++) {
+            if (_buildings[i].BuildingId == buildingId) {
+                return _buildings[i];
             }
         }
-
         return null;
     }
 
@@ -181,13 +177,12 @@ window.CurrentContext = new (function () {
 
     function getFloor(floorId) {
         var floor = null;
-        var buildings = self.GetAllBuildings();
-        $.each(buildings, function (i, b) {
-            $.each(b.Floors, function (j, f) {
-                if (f.FloorId == floorId) {
-                    floor = f;
-                }
-            });
+        ajax({
+            webservice: 'api/floors/' + floorId,
+            async: false,
+            success: function (data){
+                floor = data;
+            }
         });
         return floor;
     }
@@ -222,7 +217,14 @@ window.CurrentContext = new (function () {
             webservice: 'api/maps/' + floorId + '/entities',
             async: false,
             success: function (data){
-                LoadCanvas(floorId + '.png', data, internalCallback);
+                LoadCanvas(f.MapFilename, data, internalCallback);
+                self.CurrentFloorId = floorId;
+            },
+            failure: function (data) {
+                internalCallback(false);
+            },
+            error: function (data) {
+                internalCallback(false);
             }
         });
         return _floors;

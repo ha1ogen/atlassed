@@ -134,7 +134,9 @@
                 var b = CurrentContext.GetBuilding(id);
                 title = b.BuildingName;
                 details = {
-                    "": b.BuildingAddress
+                    "Name:": b.MetaProperties.BuildingName.Value,
+                    "Code:": b.MetaProperties.BuildingCode.Value,
+                    "Faculty:": b.MetaProperties.BuildingFaculty.Value
                 };
                 break;
             case 'Space':
@@ -341,13 +343,13 @@
             //var label = 'Floor ' + e.FloorNumber;
 
             option = $('<option/>');
-            option.val(e.FloorCode);
+            option.val(e.MapId);
             option.text(e.FloorLabel);
             Tile.SelectFloor.append(option);
 
             // add center tile
             Tile.CenterTiles.append(CreateTileLink(e.FloorLabel, function () {
-                Tile.SelectFloor.val(e.FloorCode).change();
+                Tile.SelectFloor.val(e.MapId).change();
             }, 'large'));
         });
 
@@ -359,7 +361,7 @@
         Tile.ZoomTiles.hide('fade');
 
         if (floors.length == 1) {
-            var id = floors[0].FloorCode;
+            var id = floors[0].MapId;
             Tile.SelectFloor.val(id).change();
             Main.GoToFloor(id);
         }

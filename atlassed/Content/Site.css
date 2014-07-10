@@ -192,10 +192,12 @@
 #Search #SearchResults #SearchResultList .search-result {
   margin-bottom: 5px;
   padding: 5px;
-  min-height: 60px;
   cursor: pointer;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3), 0 4px 15px -5px rgba(0, 0, 0, 0.3);
   border: 1px solid #a9a9a9;
+}
+#Search #SearchResults #SearchResultList .search-result:hover {
+  background-color:#7bb931;
 }
 #Search #SearchResults #SearchResultList .search-result .left {
   display: inline-block;
@@ -271,8 +273,6 @@
   vertical-align: middle;
   display: inline-block;
   cursor: pointer;
-  width: 80px;
-  height: 80px;
 }
 .tile-select:focus {
   outline: 1px dotted black;
@@ -288,6 +288,9 @@
   outline: none;
   color: lightgray;
   outline-color: lightgray;
+}
+.select2-chosen {
+  text-overflow:ellipsis;
 }
 .tile-select.disabled .select2-chosen {
   color: gray;
@@ -671,4 +674,15 @@ footer > div {
 }
 .ui-widget-overlay {
   background: black;
+}
+#s2id_Buildings {
+  width:160px;
+  height:40px;
+  padding:2px;
+  overflow:hidden;
+}
+#s2id_Floors {
+  width:80px;
+  height:40px;
+  padding:2px;
 }
