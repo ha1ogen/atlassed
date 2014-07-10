@@ -19,11 +19,13 @@ namespace Atlassed.Repositories.MapData
 
         private readonly SqlConnectionFactory _connectionFactory;
         private readonly IValidator<MapEntityClass> _validator;
+        private readonly IRepository<MetaField, NewMetaField, int, string> _metaFieldRepository;
 
         public MapEntityClassRepository(SqlConnectionFactory f, IValidator<MapEntityClass> v)
         {
             _connectionFactory = f;
             _validator = v;
+            _metaFieldRepository = new MetaFieldRepository(f, new MetaFieldValidator());
         }
 
         public MapEntityClass Create(MapEntityClass record, out ICollection<ValidationError> errors)
@@ -47,7 +49,8 @@ namespace Atlassed.Repositories.MapData
                 ClassType = data.GetString(_classType),
                 ClassTypeDescription = data.GetString(_classTypeDescription),
                 ClassLabel = data.GetString(_classLabel),
-                MapLabelFieldName = data.GetString(_mapLabelFieldName)
+                MapLabelFieldName = data.GetString(_mapLabelFieldName),
+                MetaFields = _metaFieldRepository.GetMany(data.GetString(_className))
             };
         }
 

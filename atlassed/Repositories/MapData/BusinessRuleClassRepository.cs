@@ -17,11 +17,13 @@ namespace Atlassed.Repositories.MapData
 
         private readonly SqlConnectionFactory _connectionFactory;
         private readonly IValidator<BusinessRuleClass> _validator;
+        private readonly IRepository<MetaField, NewMetaField, int, string> _metaFieldRepository;
 
         public BusinessRuleClassRepository(SqlConnectionFactory f, IValidator<BusinessRuleClass> v)
         {
             _connectionFactory = f;
             _validator = v;
+            _metaFieldRepository = new MetaFieldRepository(f, new MetaFieldValidator());
         }
 
         public BusinessRuleClass Create(BusinessRuleClass record, out ICollection<ValidationError> errors)
@@ -43,7 +45,8 @@ namespace Atlassed.Repositories.MapData
                 ClassName = data.GetString(_className),
                 ClassType = data.GetString(_classType),
                 ClassTypeDescription = data.GetString(_classTypeDescription),
-                ClassLabel = data.GetString(_classLabel)
+                ClassLabel = data.GetString(_classLabel),
+                MetaFields = _metaFieldRepository.GetMany(data.GetString(_className))
             };
         }
 

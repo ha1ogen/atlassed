@@ -14,6 +14,6 @@ namespace Atlassed.Models.MapData
         public string ClassType { get; set; }
         public string ClassTypeDescription { get; set; }
         public string ClassLabel { get; set; }
-        public List<MetaField> MetaFields { get; set; }
+        public IEnumerable<MetaField> MetaFields { get; set; }
     }
 }
