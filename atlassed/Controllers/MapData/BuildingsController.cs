@@ -16,10 +16,12 @@ namespace Atlassed.Controllers.MapData
     public class BuildingsController : SinglePageAppApiController
     {
         private IRepository<Building, NewBuilding, int, int?> _repository;
+        private IExistenceRepository<int> _campusRepository;
 
         public BuildingsController(SqlConnectionFactory f)
         {
             _repository = new BuildingRepository(f, new BuildingValidator());
+            _campusRepository = new CampusRepository(f, new CampusMapValidator());
         }
 
         public IEnumerable<Building> Get()
@@ -30,6 +32,9 @@ namespace Atlassed.Controllers.MapData
         [Route("api/campuses/{campusId}/buildings")]
         public IEnumerable<Building> GetBuildings(int campusId)
         {
+            if (!_campusRepository.RecordExists(campusId))
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
             return _repository.GetMany(campusId);
         }
 

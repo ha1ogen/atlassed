@@ -14,7 +14,7 @@ namespace Atlassed.Controllers.MapData
     public class FloorsController : SinglePageAppApiController
     {
         private IRepository<FloorMap, FloorMap, int, int> _repository;
-        private IRepository<Building, NewBuilding, int, int?> _buildingRepository;
+        private IExistenceRepository<int> _buildingRepository;
 
         public FloorsController(SqlConnectionFactory f)
         {
@@ -25,7 +25,7 @@ namespace Atlassed.Controllers.MapData
         [Route("api/buildings/{id}/floors")]
         public IEnumerable<FloorMap> GetFloors(int id)
         {
-            if (_buildingRepository.GetOne(id) == null)
+            if (!_buildingRepository.RecordExists(id))
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
             return _repository.GetMany(id);

@@ -16,4 +16,13 @@ namespace Atlassed.Models.MapData
         public string ClassLabel { get; set; }
         public IEnumerable<MetaField> MetaFields { get; set; }
     }
+
+    public class MetaClassValidator : IValidator<MetaClass>
+    {
+        public bool Validate(MetaClass record, out ICollection<ValidationError> errors)
+        {
+            errors = new List<ValidationError>();
+            return true;
+        }
+    }
 }

@@ -9,7 +9,7 @@ namespace Atlassed.Controllers
 {
     public abstract class SinglePageAppApiController : ApiController
     {
-        private const string _sessionIdHeader = "Session-Id";
+        public const string _sessionIdHeader = "Session-Id";
 
         private Guid _sessionId;
         public Guid SessionId

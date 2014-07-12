@@ -17,6 +17,7 @@ namespace Atlassed.Repositories.MapData
         private const string _spEditMapEntity = "EditMapEntity";
         private const string _spDeleteMapEntity = "DeleteMapEntity";
         private const string _spGetMapEntities = "GetMapEntities";
+        private const string _fncCheckMapEntityExists = "CheckMapEntityExists";
         private const string _spSearchMapEntities = "SearchMapEntities";
 
         private readonly SqlConnectionFactory _connectionFactory;
@@ -34,7 +35,7 @@ namespace Atlassed.Repositories.MapData
                 return null;
 
             return DB.NewSP(_spAddMapEntity, _connectionFactory)
-                    .AddParam(Map._mapId, record.MapId)
+                    .AddParam(MapRepository._mapId, record.MapId)
                     .AddParam(MetaClassRepository._className, record.ClassName)
                     .AddParam(_entityCoordinates, Coordinate.MultiToString(record.EntityCoordinates))
                     .AddTVParam(_metaProperties, GenerateMetaPropertyTable(record))
@@ -47,7 +48,7 @@ namespace Atlassed.Repositories.MapData
             {
                 EntityId = data.GetInt32(_entityId),
                 ClassName = data.GetString(MetaClassRepository._className),
-                MapId = data.GetInt32(Map._mapId),
+                MapId = data.GetInt32(MapRepository._mapId),
                 EntityCoordinates = Coordinate.ParseMultiCoordinateString(data.GetString(_entityCoordinates)),
                 MapLabel = data.GetString("mapLabel"),
                 MetaProperties = GetMetaProperties(data)
@@ -73,6 +74,13 @@ namespace Atlassed.Repositories.MapData
                     .ExecExpectReturnValue<bool>();
         }
 
+        public bool RecordExists(int recordId)
+        {
+            return DB.NewSP(_fncCheckMapEntityExists, _connectionFactory)
+                .AddParam(_entityId, recordId)
+                .ExecExpectReturnValue<bool>();
+        }
+
         public MapEntity GetOne(int recordId)
         {
             return DB.NewSP(_spGetMapEntities, _connectionFactory)
@@ -83,7 +91,7 @@ namespace Atlassed.Repositories.MapData
         public IEnumerable<MapEntity> GetMany(int mapId)
         {
             return DB.NewSP(_spGetMapEntities, _connectionFactory)
-                .AddParam(Map._mapId, mapId)
+                .AddParam(MapRepository._mapId, mapId)
                 .ExecExpectMultiple(x => Create(x));
         }
 

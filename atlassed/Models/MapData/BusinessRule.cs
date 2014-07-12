@@ -23,7 +23,11 @@ namespace Atlassed.Models.MapData
         public bool Validate(BusinessRule record, out ICollection<ValidationError> errors)
         {
             errors = new List<ValidationError>();
-            return true;
+
+            if (record.Code.Length > 5)
+                errors.Add(new ValidationError("Code must not exceed 5 characters"));
+
+            return !errors.Any();
         }
     }
 }

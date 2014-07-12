@@ -20,6 +20,7 @@ namespace Atlassed.Repositories.MapData
         private const string _spEditBusinessRule = "EditBusinessRule";
         private const string _spDeleteBusinessRule = "DeleteBusinessRule";
         private const string _spGetBusinessRules = "GetBusinessRules";
+        private const string _fncCheckBusinessRuleExists = "CheckBusinessRuleExists";
 
         private readonly SqlConnectionFactory _connectionFactory;
         private readonly IValidator<BusinessRule> _validator;
@@ -75,6 +76,13 @@ namespace Atlassed.Repositories.MapData
             return DB.NewSP(_spDeleteBusinessRule, _connectionFactory)
                     .AddParam(_businessRuleId, recordId)
                     .ExecExpectReturnValue<bool>();
+        }
+
+        public bool RecordExists(int recordId)
+        {
+            return DB.NewSP(_fncCheckBusinessRuleExists, _connectionFactory)
+                .AddParam(_businessRuleId, recordId)
+                .ExecExpectReturnValue<bool>();
         }
 
         public BusinessRule GetOne(int recordId)

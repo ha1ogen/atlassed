@@ -22,6 +22,7 @@ namespace Atlassed.Repositories.MapData
         private readonly IRepository<MetaField, NewMetaField, int, string> _metaFieldRepository;
 
         public MapEntityClassRepository(SqlConnectionFactory f, IValidator<MapEntityClass> v)
+            : base(f)
         {
             _connectionFactory = f;
             _validator = v;
@@ -60,7 +61,7 @@ namespace Atlassed.Repositories.MapData
                 return false;
 
             return DB.NewSP(_spEditMapEntityClass, _connectionFactory)
-                    .AddParam(_className, record.ClassName)
+                    .AddParam(_classId, record.ClassId)
                     .AddParam(_classLabel, record.ClassLabel)
                     .AddParam(_mapLabelFieldName, record.MapLabelFieldName)
                     .ExecExpectOne(x => Create(x), out record)

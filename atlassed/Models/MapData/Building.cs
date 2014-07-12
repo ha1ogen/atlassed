@@ -25,7 +25,13 @@ namespace Atlassed.Models.MapData
         public bool Validate(Building record, out ICollection<ValidationError> errors)
         {
             errors = new List<ValidationError>();
-            return true;
+
+            if (record.BuildingAddress.Length > 100)
+            {
+                errors.Add(new ValidationError("BuildingAddress cannot exceed 100 characters"));
+            }
+
+            return !errors.Any();
         }
     }
 }

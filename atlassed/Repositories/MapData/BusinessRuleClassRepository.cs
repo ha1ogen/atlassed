@@ -20,6 +20,7 @@ namespace Atlassed.Repositories.MapData
         private readonly IRepository<MetaField, NewMetaField, int, string> _metaFieldRepository;
 
         public BusinessRuleClassRepository(SqlConnectionFactory f, IValidator<BusinessRuleClass> v)
+            : base(f)
         {
             _connectionFactory = f;
             _validator = v;

@@ -20,6 +20,7 @@ namespace Atlassed.Repositories.MapData
         private const string _spEditFloor = "EditFloor";
         private const string _spDeleteFloor = "DeleteFloor";
         private const string _spGetFloors = "GetFloors";
+        private const string _fncCheckFloorExists = "CheckFloorExists";
 
         private readonly SqlConnectionFactory _connectionFactory;
         private readonly IValidator<FloorMap> _validator;
@@ -77,6 +78,13 @@ namespace Atlassed.Repositories.MapData
             return DB.NewSP(_spDeleteFloor, _connectionFactory)
                     .AddParam(_floorMapId, recordId)
                     .ExecExpectReturnValue<bool>();
+        }
+
+        public bool RecordExists(int recordId)
+        {
+            return DB.NewSP(_fncCheckFloorExists, _connectionFactory)
+                .AddParam(_floorMapId, recordId)
+                .ExecExpectReturnValue<bool>();
         }
 
         public FloorMap GetOne(int recordId)

@@ -14,20 +14,18 @@ namespace Atlassed.Controllers.MapData
     public class MapEntitiesController : SinglePageAppApiController
     {
         private ISearchableRepository<MapEntity, MapEntity, int, int, SearchResult> _repository;
-        private IRepository<CampusMap, CampusMap, int, int?> _campusRepository;
-        private IRepository<FloorMap, FloorMap, int, int> _floorRepository;
+        private IExistenceRepository<int> _mapRepository;
 
         public MapEntitiesController(SqlConnectionFactory f)
         {
             _repository = new MapEntityRepository(f, new MapEntityValidator());
-            _campusRepository = new CampusRepository(f, new CampusMapValidator());
-            _floorRepository = new FloorRepository(f, new FloorMapValidator());
+            _mapRepository = new MapRepository(f);
         }
 
         [Route("api/maps/{mapId}/entities")]
         public IEnumerable<MapEntity> GetMapEntities(int mapId, string classNames = "")
         {
-            if (_campusRepository.GetOne(mapId) == null && _floorRepository.GetOne(mapId) == null)
+            if (!_mapRepository.RecordExists(mapId))
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
             var results = _repository.GetMany(mapId);

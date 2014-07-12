@@ -29,6 +29,7 @@ namespace Atlassed.Repositories.MapData
         private const string _spEditMetaField = "EditMetaField";
         private const string _spDeleteMetaField = "DeleteMetaField";
         private const string _spGetMetaFields = "GetMetaFields";
+        private const string _fncCheckMetaFieldExists = "CheckMetaFieldExists";
 
         private readonly SqlConnectionFactory _connectionFactory;
         private readonly IValidator<MetaField> _validator;
@@ -115,6 +116,12 @@ namespace Atlassed.Repositories.MapData
                 .ExecExpectMultiple(mf => Create(mf));
         }
 
+        public bool RecordExists(int recordId)
+        {
+            return DB.NewSP(_fncCheckMetaFieldExists, _connectionFactory)
+                .AddParam(_fieldId, recordId)
+                .ExecExpectReturnValue<bool>();
+        }
 
         private static IEnumerable<SqlDataRecord> GenerateMetaConstraintTable(JObject metaConstraintsObject)
         {

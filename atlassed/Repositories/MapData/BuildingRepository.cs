@@ -17,6 +17,7 @@ namespace Atlassed.Repositories.MapData
         private const string _spEditBuilding = "EditBuilding";
         private const string _spDeleteBuilding = "DeleteBuilding";
         private const string _spGetBuildings = "GetBuildings";
+        private const string _fncCheckBuildingExists = "CheckBuildingExists";
 
         private readonly SqlConnectionFactory _connectionFactory;
         private readonly IValidator<Building> _validator;
@@ -69,6 +70,13 @@ namespace Atlassed.Repositories.MapData
                 .ExecExpectReturnValue<bool>();
         }
 
+        public bool RecordExists(int recordId)
+        {
+            return DB.NewSP(_fncCheckBuildingExists, _connectionFactory)
+                .AddParam(_buildingId, recordId)
+                .ExecExpectReturnValue<bool>();
+        }
+
         public Building GetOne(int recordId)
         {
             return DB.NewSP(_spGetBuildings, _connectionFactory)
@@ -79,7 +87,7 @@ namespace Atlassed.Repositories.MapData
         public IEnumerable<Building> GetMany(int? mapId = null)
         {
             return DB.NewSP(_spGetBuildings, _connectionFactory)
-                .AddParam(Map._mapId, mapId)
+                .AddParam(MapRepository._mapId, mapId)
                 .ExecExpectMultiple(b => Create(b));
         }
     }

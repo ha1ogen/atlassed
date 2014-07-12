@@ -17,5 +17,20 @@ namespace Atlassed.Repositories.MapData
         protected const string _classLabel = "classLabel";
 
         protected const string _spGetMetaClasses = "GetMetaClasses";
+        private const string _fncCheckMetaClassExists = "CheckMetaClassExists";
+
+        private SqlConnectionFactory _connectionFactory;
+
+        public MetaClassRepository(SqlConnectionFactory f)
+        {
+            _connectionFactory = f;
+        }
+
+        public bool RecordExists(int recordId)
+        {
+            return DB.NewSP(_fncCheckMetaClassExists, _connectionFactory)
+                .AddParam(_classId, recordId)
+                .ExecExpectReturnValue<bool>();
+        }
     }
 }

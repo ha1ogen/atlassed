@@ -14,15 +14,20 @@ namespace Atlassed.Controllers.MapData
     public class BusinessRulesController : SinglePageAppApiController
     {
         private IRepository<BusinessRule, BusinessRule, int, int> _repository;
+        private IExistenceRepository<int> _businessRuleClassRepository;
 
         public BusinessRulesController(SqlConnectionFactory f)
         {
             _repository = new BusinessRuleRepository(f, new BusinessRuleValidator());
+            _businessRuleClassRepository = new BusinessRuleClassRepository(f, new BusinessRuleClassValidator());
         }
 
         [Route("api/BusinessRuleClasses/{classId}/rules")]
         public IEnumerable<BusinessRule> Get(int classId)
         {
+            if (!_businessRuleClassRepository.RecordExists(classId))
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
             return _repository.GetMany(classId);
         }
 

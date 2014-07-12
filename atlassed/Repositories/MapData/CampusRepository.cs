@@ -18,6 +18,7 @@ namespace Atlassed.Repositories.MapData
         private const string _spEditCampusMap = "EditCampusMap";
         private const string _spDeleteCampusMap = "DeleteCampusMap";
         private const string _spGetCampusMaps = "GetCampuses";
+        private const string _fncCheckCampusExists = "CheckCampusExists";
 
         private readonly SqlConnectionFactory _connectionFactory;
         private readonly IValidator<CampusMap> _validator;
@@ -68,6 +69,13 @@ namespace Atlassed.Repositories.MapData
         public bool Delete(int recordId)
         {
             return DB.NewSP(_spDeleteCampusMap, _connectionFactory)
+                .AddParam(_campusMapId, recordId)
+                .ExecExpectReturnValue<bool>();
+        }
+
+        public bool RecordExists(int recordId)
+        {
+            return DB.NewSP(_fncCheckCampusExists, _connectionFactory)
                 .AddParam(_campusMapId, recordId)
                 .ExecExpectReturnValue<bool>();
         }

@@ -14,10 +14,16 @@ namespace Atlassed.Models.MapData
 
     public class BusinessRuleClassValidator : IValidator<BusinessRuleClass>
     {
+        private readonly IValidator<MetaClass> _metaClassValidator;
+
+        public BusinessRuleClassValidator()
+        {
+            _metaClassValidator = new MetaClassValidator();
+        }
+
         public bool Validate(BusinessRuleClass record, out ICollection<ValidationError> errors)
         {
-            errors = new List<ValidationError>();
-            return true;
+            return _metaClassValidator.Validate(record, out errors);
         }
     }
 }
