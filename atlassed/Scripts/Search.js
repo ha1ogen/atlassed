@@ -297,12 +297,7 @@ function AppendSearchResult(i, resultData) {
     }
     // set visible elements
     result.find('.primary-text').text(resultData.PrimaryText);
-    if (resultData.ClassName === "Classroom" && resultData.SecondaryText === "") {
-    	result.find('.secondary-text').text("Classroom");
-    }
-    else {
-    	result.find('.secondary-text').text(resultData.SecondaryText);
-    }
+    result.find('.secondary-text').text(resultData.ClassName);
 
     SearchResultList.append(result);
 }
