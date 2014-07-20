@@ -17,7 +17,7 @@ namespace Atlassed.Controllers.MapData
 
         public CampusesController(SqlConnectionFactory f)
         {
-            _repository = new CampusRepository(f, new CampusMapValidator());
+            _repository = new CampusRepository(f, new CampusMapValidator(new MetaObjectValidator(new MetaFieldRepository(f))));
         }
 
         public IEnumerable<CampusMap> Get()
@@ -35,20 +35,30 @@ namespace Atlassed.Controllers.MapData
 
         public HttpResponseMessage Post([FromBody]CampusMap campus)
         {
-            ICollection<ValidationError> errors;
-            var c = _repository.Create(campus, out errors);
-            if (c == null) throw new HttpResponseException(HttpStatusCode.BadRequest);
+            if (campus == null) throw new HttpResponseException(HttpStatusCode.BadRequest);
+
+            IValidationResult validationResult;
+            var c = _repository.Create(campus, out validationResult);
+            if (!validationResult.IsValid())
+                return Request.CreateResponse(HttpStatusCode.BadRequest, validationResult);
 
             return Request.CreateResponse(HttpStatusCode.Created, c);
         }
 
-        public CampusMap Put([FromBody]CampusMap campus)
+        public HttpResponseMessage Put([FromBody]CampusMap campus)
         {
-            ICollection<ValidationError> errors;
-            if (!_repository.Update(ref campus, out errors))
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+            if (campus == null) throw new HttpResponseException(HttpStatusCode.BadRequest);
 
-            return campus;
+            IValidationResult validationResult;
+            if (!_repository.Update(ref campus, out validationResult))
+            {
+                if (!validationResult.IsValid())
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, validationResult);
+
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, campus);
         }
 
         public bool Delete(int id)

@@ -29,35 +29,40 @@ namespace Atlassed.Repositories.MapData
         private const string _spEditMetaField = "EditMetaField";
         private const string _spDeleteMetaField = "DeleteMetaField";
         private const string _spGetMetaFields = "GetMetaFields";
+        private const string _spGetMetaFieldsByObject = "GetMetaFieldsByObject";
         private const string _fncCheckMetaFieldExists = "CheckMetaFieldExists";
 
         private readonly SqlConnectionFactory _connectionFactory;
-        private readonly IValidator<MetaField> _validator;
+        private readonly IValidatorWNew<MetaField, NewMetaField> _validator;
 
-        public MetaFieldRepository(SqlConnectionFactory f, IValidator<MetaField> v)
+        public MetaFieldRepository(SqlConnectionFactory f, IValidatorWNew<MetaField, NewMetaField> v = null)
         {
             _connectionFactory = f;
             _validator = v;
         }
 
-        public MetaField Create(NewMetaField record, out ICollection<ValidationError> errors)
+        public MetaField Create(NewMetaField record, out IValidationResult validationResult)
         {
-            if (!_validator.Validate(record, out errors))
+            if (_validator == null) throw new NotSupportedException("Validator must be provided to make changes to the repository");
+
+            if (!_validator.ValidateNew(record, out validationResult))
                 return null;
 
-            return DB.NewSP(_spAddMetaField, _connectionFactory)
-                .AddParam(MetaClassRepository._className, record.ClassName)
-                .AddParam(_fieldName, record.FieldName)
-                .AddParam(_fieldType, record.FieldType)
-                .AddParam(_fieldLabel, record.FieldLabel)
-                .AddParam(_fieldDescription, record.FieldDescription)
-                .AddParam(_fieldIsRequired, record.FieldIsRequired)
-                .AddParam(_defaultValue, record.DefaultValue)
-                .AddParam(_fieldIsUnique, record.FieldIsUnique)
-                .AddTVParam(_metaConstraints, GenerateMetaConstraintTable(record.MetaConstraintsObject))
-                .AddParam(_fieldId, record.FieldId, ParameterDirection.Output)
-                .AddParam(_fieldOrdinal, record.FieldOrdinal, ParameterDirection.Output)
-                .ExecExpectOne(x => Create(x));
+            return SqlValidator.TryExecCatchValidation(
+                () => DB.NewSP(_spAddMetaField, _connectionFactory)
+                    .AddParam(MetaClassRepository._className, record.ClassName)
+                    .AddParam(_fieldName, record.FieldName)
+                    .AddParam(_fieldType, record.FieldType)
+                    .AddParam(_fieldLabel, record.FieldLabel)
+                    .AddParam(_fieldDescription, record.FieldDescription)
+                    .AddParam(_fieldIsRequired, record.FieldIsRequired)
+                    .AddParam(_defaultValue, record.DefaultValue)
+                    .AddParam(_fieldIsUnique, record.FieldIsUnique)
+                    .AddTVParam(_metaConstraints, GenerateMetaConstraintTable(record.MetaConstraintsObject))
+                    .AddParam(_fieldId, record.FieldId, ParameterDirection.Output)
+                    .AddParam(_fieldOrdinal, record.FieldOrdinal, ParameterDirection.Output)
+                    .ExecExpectOne(x => Create(x))
+                , ref validationResult);
         }
 
         private MetaField Create(IDataRecord data)
@@ -77,22 +82,26 @@ namespace Atlassed.Repositories.MapData
             };
         }
 
-        public bool Update(ref MetaField record, out ICollection<ValidationError> errors)
+        public bool Update(ref MetaField record, out IValidationResult validationResult)
         {
-            if (!_validator.Validate(record, out errors))
+            if (_validator == null) throw new NotSupportedException("Validator must be provided to make changes to the repository");
+
+            if (!_validator.Validate(record, out validationResult))
                 return false;
 
-            return DB.NewSP(_spEditMetaField, _connectionFactory)
-                    .AddParam(_fieldId, record.FieldId)
-                    .AddParam(MetaClassRepository._className, record.ClassName)
-                    .AddParam(_fieldName, record.FieldName)
-                    .AddParam(_fieldLabel, record.FieldLabel)
-                    .AddParam(_fieldDescription, record.FieldDescription)
-                    .AddParam(_fieldIsRequired, record.FieldIsRequired)
-                    .AddParam(_fieldIsUnique, record.FieldIsUnique)
-                    .AddTVParam(_metaConstraints, GenerateMetaConstraintTable(record.MetaConstraintsObject))
-                    .ExecExpectOne(x => Create(x), out record)
-                    .GetReturnValue<bool>();
+            return SqlValidator.TryExecCatchValidation(
+                (rec) => DB.NewSP(_spEditMetaField, _connectionFactory)
+                    .AddParam(_fieldId, rec.FieldId)
+                    .AddParam(MetaClassRepository._className, rec.ClassName)
+                    .AddParam(_fieldName, rec.FieldName)
+                    .AddParam(_fieldLabel, rec.FieldLabel)
+                    .AddParam(_fieldDescription, rec.FieldDescription)
+                    .AddParam(_fieldIsRequired, rec.FieldIsRequired)
+                    .AddParam(_fieldIsUnique, rec.FieldIsUnique)
+                    .AddTVParam(_metaConstraints, GenerateMetaConstraintTable(rec.MetaConstraintsObject))
+                    .ExecExpectOne(x => Create(x), out rec)
+                    .GetReturnValue<bool>()
+                , ref validationResult, ref record);
         }
 
         public bool Delete(int recordId)
@@ -113,6 +122,13 @@ namespace Atlassed.Repositories.MapData
         {
             return DB.NewSP(_spGetMetaFields, _connectionFactory)
                 .AddParam(MetaClassRepository._className, className)
+                .ExecExpectMultiple(mf => Create(mf));
+        }
+
+        public IEnumerable<MetaField> GetMany(int objectId)
+        {
+            return DB.NewSP(_spGetMetaFieldsByObject, _connectionFactory)
+                .AddParam(MetaObjectRepository._objectId, objectId)
                 .ExecExpectMultiple(mf => Create(mf));
         }
 

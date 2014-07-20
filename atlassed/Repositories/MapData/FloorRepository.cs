@@ -23,26 +23,28 @@ namespace Atlassed.Repositories.MapData
         private const string _fncCheckFloorExists = "CheckFloorExists";
 
         private readonly SqlConnectionFactory _connectionFactory;
-        private readonly IValidator<FloorMap> _validator;
+        private readonly IValidatorWNew<FloorMap, FloorMap> _validator;
 
-        public FloorRepository(SqlConnectionFactory f, IValidator<FloorMap> v)
+        public FloorRepository(SqlConnectionFactory f, IValidatorWNew<FloorMap, FloorMap> v)
         {
             _connectionFactory = f;
             _validator = v;
         }
 
-        public FloorMap Create(FloorMap record, out ICollection<ValidationError> errors)
+        public FloorMap Create(FloorMap record, out IValidationResult validationResult)
         {
-            if (!_validator.Validate(record, out errors))
+            if (!_validator.ValidateNew(record, out validationResult))
                 return null;
 
-            return DB.NewSP(_spAddFloor, _connectionFactory)
-                .AddParam(BuildingRepository._buildingId, record.BuildingId)
-                .AddParam(_floorOrdinal, record.FloorOrdinal)
-                .AddParam(_floorCode, record.FloorCode)
-                .AddParam(_floorLabel, record.FloorLabel)
-                .AddTVParam(_metaProperties, GenerateMetaPropertyTable(record))
-                .ExecExpectOne(x => Create(x));
+            return SqlValidator.TryExecCatchValidation(
+                () => DB.NewSP(_spAddFloor, _connectionFactory)
+                    .AddParam(BuildingRepository._buildingId, record.BuildingId)
+                    .AddParam(_floorOrdinal, record.FloorOrdinal)
+                    .AddParam(_floorCode, record.FloorCode)
+                    .AddParam(_floorLabel, record.FloorLabel)
+                    .AddTVParam(_metaProperties, GenerateMetaPropertyTable(record))
+                    .ExecExpectOne(x => Create(x))
+                , ref validationResult);
         }
 
         private FloorMap Create(IDataRecord data)
@@ -58,19 +60,21 @@ namespace Atlassed.Repositories.MapData
             };
         }
 
-        public bool Update(ref FloorMap record, out ICollection<ValidationError> errors)
+        public bool Update(ref FloorMap record, out IValidationResult validationResult)
         {
-            if (!_validator.Validate(record, out errors))
+            if (!_validator.Validate(record, out validationResult))
                 return false;
 
-            return DB.NewSP(_spEditFloor, _connectionFactory)
-                    .AddParam(_floorMapId, record.MapId)
-                    .AddParam(_floorOrdinal, record.FloorOrdinal)
-                    .AddParam(_floorCode, record.FloorCode)
-                    .AddParam(_floorLabel, record.FloorLabel)
-                    .AddTVParam(_metaProperties, GenerateMetaPropertyTable(record))
-                    .ExecExpectOne(x => Create(x), out record)
-                    .GetReturnValue<bool>();
+            return SqlValidator.TryExecCatchValidation(
+                (rec) => DB.NewSP(_spEditFloor, _connectionFactory)
+                    .AddParam(_floorMapId, rec.MapId)
+                    .AddParam(_floorOrdinal, rec.FloorOrdinal)
+                    .AddParam(_floorCode, rec.FloorCode)
+                    .AddParam(_floorLabel, rec.FloorLabel)
+                    .AddTVParam(_metaProperties, GenerateMetaPropertyTable(rec))
+                    .ExecExpectOne(x => Create(x), out rec)
+                    .GetReturnValue<bool>()
+                , ref validationResult, ref record);
         }
 
         public bool Delete(int recordId)

@@ -1,4 +1,7 @@
-﻿using Atlassed.Models.UserManagement;
+﻿using Atlassed.Models;
+using Atlassed.Models.UserManagement;
+using Atlassed.Repositories;
+using Atlassed.Repositories.UserManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,20 +16,26 @@ namespace Atlassed.Controllers.UserManagement
     {
         private const string _cookieName = "sessionId";
 
+        private IRepository<Session, Credentials, Guid, int?> _repository;
+
+        public SessionController(SqlConnectionFactory f)
+        {
+            _repository = new SessionRepository(f, new CredentialValidator(f));
+        }
+
         public Session Get()
         {
-            var session = Session.GetSession(SessionId);
-            if (session == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
+            var session = _repository.GetOne(SessionId);
+            if (session == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
             return session;
         }
 
-        public HttpResponseMessage Post([FromBody]Credentials credentials)
+        public HttpResponseMessage Post(Credentials credentials)
         {
-            var session = new Session(credentials);
+            IValidationResult validationResult;
+            var session = _repository.Create(credentials, out validationResult);
+
             var response = Request.CreateResponse(HttpStatusCode.Created, session);
             response.Headers.AddCookies(new CookieHeaderValue[] {
                 new CookieHeaderValue(_cookieName, session.SessionId.ToString()) {
@@ -39,15 +48,10 @@ namespace Atlassed.Controllers.UserManagement
             return response;
         }
 
-        public bool Delete()
+        public void Delete()
         {
-            var session = Session.GetSession(SessionId);
-            if (session == null)
-            {
+            if (!_repository.Delete(SessionId))
                 throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-            return session.Destroy();
         }
     }
 }

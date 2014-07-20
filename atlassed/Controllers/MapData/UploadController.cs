@@ -23,7 +23,7 @@ namespace Atlassed.Controllers.MapData
 
         public UploadController(SqlConnectionFactory f)
         {
-            _mapEntityClassRepository = new MapEntityClassRepository(f, new MapEntityClassValidator());
+            _mapEntityClassRepository = new MapEntityClassRepository(f, new MapEntityClassValidator(new MetaClassValidator()));
             _mapRepository = new MapRepository(f);
         }
 

@@ -38,20 +38,30 @@ namespace Atlassed.Controllers.MapData
 
         public HttpResponseMessage Post([FromBody]NewMetaField metaField)
         {
-            ICollection<ValidationError> errors;
-            var mf = _repository.Create(metaField, out errors);
-            if (mf == null) throw new HttpResponseException(HttpStatusCode.BadRequest);
+            if (metaField == null) throw new HttpResponseException(HttpStatusCode.BadRequest);
+
+            IValidationResult validationResult;
+            var mf = _repository.Create(metaField, out validationResult);
+            if (!validationResult.IsValid())
+                return Request.CreateResponse(HttpStatusCode.BadRequest, validationResult);
 
             return Request.CreateResponse(HttpStatusCode.Created, mf);
         }
 
-        public MetaField Put([FromBody]MetaField metaField)
+        public HttpResponseMessage Put([FromBody]MetaField metaField)
         {
-            ICollection<ValidationError> errors;
-            if (!_repository.Update(ref metaField, out errors))
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+            if (metaField == null) throw new HttpResponseException(HttpStatusCode.BadRequest);
 
-            return metaField;
+            IValidationResult validationResult;
+            if (!_repository.Update(ref metaField, out validationResult))
+            {
+                if (!validationResult.IsValid())
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, validationResult);
+
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, metaField);
         }
 
         public bool Delete(int id)

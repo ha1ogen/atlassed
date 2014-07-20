@@ -10,21 +10,46 @@ namespace Atlassed.Models.MapData
 {
     public class CampusMap : Map
     {
+        public override string _className { get { return typeof(CampusMap).Name; } }
         public string CampusName { get; set; }
-        public Coordinate MapCoordinates { get; set; }
-
-        public CampusMap()
-        {
-            MapCoordinates = new Coordinate();
-        }
+        public Tuple<Coordinate, Coordinate> MapCoordinates { get; set; }
     }
 
-    public class CampusMapValidator : IValidator<CampusMap>
+    public class CampusMapValidator : IValidatorWNew<CampusMap, CampusMap>
     {
-        public bool Validate(CampusMap record, out ICollection<ValidationError> errors)
+        private IValidator<MetaObject> _metaObjectValidator;
+
+        public CampusMapValidator(IValidator<MetaObject> metaObjectValidator)
         {
-            errors = new List<ValidationError>();
-            return true;
+            _metaObjectValidator = metaObjectValidator;
+        }
+
+        public bool Validate(CampusMap record, out IValidationResult result)
+        {
+            ValidateCommon(record, out result);
+
+            if (record.MapId == 0)
+                result.AddError("MapId", "Map ID is required");
+
+            return result.IsValid();
+        }
+
+        public bool ValidateNew(CampusMap record, out IValidationResult result)
+        {
+            return ValidateCommon(record, out result);
+        }
+
+        private bool ValidateCommon(CampusMap record, out IValidationResult result)
+        {
+            _metaObjectValidator.Validate(record, out result);
+
+            if (string.IsNullOrEmpty(record.CampusName))
+                result.AddError("CampusName", "Campus Name is required");
+
+            if (record.MapCoordinates == null)
+                result.AddError("MapCoordinates", "Map Coordinates are required");
+
+            return result.IsValid();
         }
     }
 }

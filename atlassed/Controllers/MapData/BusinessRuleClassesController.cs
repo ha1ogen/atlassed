@@ -17,7 +17,7 @@ namespace Atlassed.Controllers.MapData
 
         public BusinessRuleClassesController(SqlConnectionFactory f)
         {
-            _repository = new BusinessRuleClassRepository(f, new BusinessRuleClassValidator());
+            _repository = new BusinessRuleClassRepository(f, new BusinessRuleClassValidator(new MetaClassValidator()));
         }
 
         public IEnumerable<BusinessRuleClass> Get()
@@ -35,18 +35,30 @@ namespace Atlassed.Controllers.MapData
 
         public HttpResponseMessage Post([FromBody]BusinessRuleClass businessRuleClass)
         {
-            ICollection<ValidationError> errors;
-            var brc = _repository.Create(businessRuleClass, out errors);
+            if (businessRuleClass == null) throw new HttpResponseException(HttpStatusCode.BadRequest);
+
+            IValidationResult validationResult;
+            var brc = _repository.Create(businessRuleClass, out validationResult);
+            if (!validationResult.IsValid())
+                return Request.CreateResponse(HttpStatusCode.BadRequest, validationResult);
+
             return Request.CreateResponse(HttpStatusCode.Created, brc);
         }
 
-        public BusinessRuleClass Put([FromBody]BusinessRuleClass businessRuleClass)
+        public HttpResponseMessage Put([FromBody]BusinessRuleClass businessRuleClass)
         {
-            ICollection<ValidationError> errors;
-            if (!_repository.Update(ref businessRuleClass, out errors))
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+            if (businessRuleClass == null) throw new HttpResponseException(HttpStatusCode.BadRequest);
 
-            return businessRuleClass;
+            IValidationResult validationResult;
+            if (!_repository.Update(ref businessRuleClass, out validationResult))
+            {
+                if (!validationResult.IsValid())
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, validationResult);
+
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, businessRuleClass);
         }
 
         public bool Delete(int id)

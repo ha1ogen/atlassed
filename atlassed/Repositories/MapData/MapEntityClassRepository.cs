@@ -18,10 +18,10 @@ namespace Atlassed.Repositories.MapData
         private const string _spGetMapEntityClasses = "GetMapEntityClasses";
 
         private readonly SqlConnectionFactory _connectionFactory;
-        private readonly IValidator<MapEntityClass> _validator;
+        private readonly IValidatorWNew<MapEntityClass, MapEntityClass> _validator;
         private readonly IRepository<MetaField, NewMetaField, int, string> _metaFieldRepository;
 
-        public MapEntityClassRepository(SqlConnectionFactory f, IValidator<MapEntityClass> v)
+        public MapEntityClassRepository(SqlConnectionFactory f, IValidatorWNew<MapEntityClass, MapEntityClass> v)
             : base(f)
         {
             _connectionFactory = f;
@@ -29,16 +29,18 @@ namespace Atlassed.Repositories.MapData
             _metaFieldRepository = new MetaFieldRepository(f, new MetaFieldValidator());
         }
 
-        public MapEntityClass Create(MapEntityClass record, out ICollection<ValidationError> errors)
+        public MapEntityClass Create(MapEntityClass record, out IValidationResult validationResult)
         {
-            if (!_validator.Validate(record, out errors))
+            if (!_validator.ValidateNew(record, out validationResult))
                 return null;
 
-            return DB.NewSP(_spAddMapEntityClass, _connectionFactory)
-                .AddParam(_className, record.ClassName)
-                .AddParam(_classLabel, record.ClassLabel)
-                .AddParam(_mapLabelFieldName, record.MapLabelFieldName)
-                .ExecExpectOne(x => Create(x));
+            return SqlValidator.TryExecCatchValidation(
+                () => DB.NewSP(_spAddMapEntityClass, _connectionFactory)
+                    .AddParam(_className, record.ClassName)
+                    .AddParam(_classLabel, record.ClassLabel)
+                    .AddParam(_mapLabelFieldName, record.MapLabelFieldName)
+                    .ExecExpectOne(x => Create(x))
+                , ref validationResult);
         }
 
         private MapEntityClass Create(IDataRecord data)
@@ -55,17 +57,19 @@ namespace Atlassed.Repositories.MapData
             };
         }
 
-        public bool Update(ref MapEntityClass record, out ICollection<ValidationError> errors)
+        public bool Update(ref MapEntityClass record, out IValidationResult validationResult)
         {
-            if (!_validator.Validate(record, out errors))
+            if (!_validator.Validate(record, out validationResult))
                 return false;
 
-            return DB.NewSP(_spEditMapEntityClass, _connectionFactory)
-                    .AddParam(_classId, record.ClassId)
-                    .AddParam(_classLabel, record.ClassLabel)
-                    .AddParam(_mapLabelFieldName, record.MapLabelFieldName)
-                    .ExecExpectOne(x => Create(x), out record)
-                    .GetReturnValue<bool>();
+            return SqlValidator.TryExecCatchValidation(
+                (rec) => DB.NewSP(_spEditMapEntityClass, _connectionFactory)
+                    .AddParam(_classId, rec.ClassId)
+                    .AddParam(_classLabel, rec.ClassLabel)
+                    .AddParam(_mapLabelFieldName, rec.MapLabelFieldName)
+                    .ExecExpectOne(x => Create(x), out rec)
+                    .GetReturnValue<bool>()
+                , ref validationResult, ref record);
         }
 
         public bool Delete(int recordId)

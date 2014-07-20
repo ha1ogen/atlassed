@@ -33,6 +33,26 @@ namespace Atlassed.Models.MapData
             return new Coordinate(x, y);
         }
 
+        public static bool TryParse(string coordinate, out Coordinate output)
+        {
+            try
+            {
+                output = Parse(coordinate);
+                return true;
+            }
+            catch (ArgumentException e)
+            {
+                output = null;
+                return false;
+            }
+        }
+
+        public static bool TryParse(string coordinate)
+        {
+            Coordinate temp;
+            return TryParse(coordinate, out temp);
+        }
+
         public new string ToString()
         {
             return X + "," + Y;
@@ -44,7 +64,7 @@ namespace Atlassed.Models.MapData
             return points.Aggregate(output, (s, p) => s + "|" + p.ToString()).TrimStart('|');
         }
 
-        public static List<Coordinate> ParseMultiCoordinateString(string points)
+        public static IEnumerable<Coordinate> ParseMultiCoordinateString(string points)
         {
             if (points.Length == 0) return new List<Coordinate>();
 

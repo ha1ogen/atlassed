@@ -12,18 +12,23 @@ namespace Atlassed.Models.MapData
     {
     }
 
-    public class BusinessRuleClassValidator : IValidator<BusinessRuleClass>
+    public class BusinessRuleClassValidator : IValidatorWNew<BusinessRuleClass, BusinessRuleClass>
     {
-        private readonly IValidator<MetaClass> _metaClassValidator;
+        private readonly IValidatorWNew<MetaClass, MetaClass> _metaClassValidator;
 
-        public BusinessRuleClassValidator()
+        public BusinessRuleClassValidator(IValidatorWNew<MetaClass, MetaClass> metaClassValidator)
         {
-            _metaClassValidator = new MetaClassValidator();
+            _metaClassValidator = metaClassValidator;
         }
 
-        public bool Validate(BusinessRuleClass record, out ICollection<ValidationError> errors)
+        public bool Validate(BusinessRuleClass record, out IValidationResult result)
         {
-            return _metaClassValidator.Validate(record, out errors);
+            return _metaClassValidator.Validate(record, out result);
+        }
+
+        public bool ValidateNew(BusinessRuleClass record, out IValidationResult result)
+        {
+            return _metaClassValidator.ValidateNew(record, out result);
         }
     }
 }

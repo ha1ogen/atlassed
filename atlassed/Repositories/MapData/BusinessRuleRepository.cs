@@ -23,25 +23,27 @@ namespace Atlassed.Repositories.MapData
         private const string _fncCheckBusinessRuleExists = "CheckBusinessRuleExists";
 
         private readonly SqlConnectionFactory _connectionFactory;
-        private readonly IValidator<BusinessRule> _validator;
+        private readonly IValidatorWNew<BusinessRule, BusinessRule> _validator;
 
-        public BusinessRuleRepository(SqlConnectionFactory f, IValidator<BusinessRule> v)
+        public BusinessRuleRepository(SqlConnectionFactory f, IValidatorWNew<BusinessRule, BusinessRule> v)
         {
             _connectionFactory = f;
             _validator = v;
         }
 
-        public BusinessRule Create(BusinessRule record, out ICollection<ValidationError> errors)
+        public BusinessRule Create(BusinessRule record, out IValidationResult validationResult)
         {
-            if (!_validator.Validate(record, out errors))
+            if (!_validator.ValidateNew(record, out validationResult))
                 return null;
 
-            return DB.NewSP(_spAddBusinessRule, _connectionFactory)
-                .AddParam(MetaClassRepository._className, record.ClassName)
-                .AddParam(_code, record.Code)
-                .AddParam(_description, record.Description)
-                .AddTVParam(_metaProperties, GenerateMetaPropertyTable(record))
-                .ExecExpectOne(x => Create(x));
+            return SqlValidator.TryExecCatchValidation(
+                () => DB.NewSP(_spAddBusinessRule, _connectionFactory)
+                    .AddParam(MetaClassRepository._className, record.ClassName)
+                    .AddParam(_code, record.Code)
+                    .AddParam(_description, record.Description)
+                    .AddTVParam(_metaProperties, GenerateMetaPropertyTable(record))
+                    .ExecExpectOne(x => Create(x))
+                , ref validationResult);
         }
 
         private BusinessRule Create(IDataRecord data)
@@ -57,18 +59,20 @@ namespace Atlassed.Repositories.MapData
             };
         }
 
-        public bool Update(ref BusinessRule record, out ICollection<ValidationError> errors)
+        public bool Update(ref BusinessRule record, out IValidationResult validationResult)
         {
-            if (!_validator.Validate(record, out errors))
+            if (!_validator.Validate(record, out validationResult))
                 return false;
 
-            return DB.NewSP(_spEditBusinessRule, _connectionFactory)
-                    .AddParam(_businessRuleId, record.BusinessRuleId)
-                    .AddParam(_code, record.Code)
-                    .AddParam(_description, record.Description)
-                    .AddTVParam(_metaProperties, GenerateMetaPropertyTable(record))
-                    .ExecExpectOne(x => Create(x), out record)
-                    .GetReturnValue<bool>();
+            return SqlValidator.TryExecCatchValidation(
+                (rec) => DB.NewSP(_spEditBusinessRule, _connectionFactory)
+                    .AddParam(_businessRuleId, rec.BusinessRuleId)
+                    .AddParam(_code, rec.Code)
+                    .AddParam(_description, rec.Description)
+                    .AddTVParam(_metaProperties, GenerateMetaPropertyTable(rec))
+                    .ExecExpectOne(x => Create(x), out rec)
+                    .GetReturnValue<bool>()
+                , ref validationResult, ref record);
         }
 
         public bool Delete(int recordId)

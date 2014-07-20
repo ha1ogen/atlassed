@@ -12,9 +12,9 @@ using System.Web.Http.Dispatcher;
 
 namespace Atlassed.Controllers
 {
-    public class ServiceActivator : IHttpControllerActivator
+    public class ControllerActivator : IHttpControllerActivator
     {
-        public ServiceActivator(HttpConfiguration configuration) { }
+        public ControllerActivator(HttpConfiguration configuration) { }
 
         public IHttpController Create(HttpRequestMessage request, HttpControllerDescriptor controllerDescriptor, Type controllerType)
         {

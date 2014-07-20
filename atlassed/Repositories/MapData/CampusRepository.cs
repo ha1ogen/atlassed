@@ -21,49 +21,56 @@ namespace Atlassed.Repositories.MapData
         private const string _fncCheckCampusExists = "CheckCampusExists";
 
         private readonly SqlConnectionFactory _connectionFactory;
-        private readonly IValidator<CampusMap> _validator;
+        private readonly IValidatorWNew<CampusMap, CampusMap> _validator;
 
-        public CampusRepository(SqlConnectionFactory f, IValidator<CampusMap> v)
+        public CampusRepository(SqlConnectionFactory f, IValidatorWNew<CampusMap, CampusMap> v)
         {
             _connectionFactory = f;
             _validator = v;
         }
 
-        public CampusMap Create(CampusMap record, out ICollection<ValidationError> errors)
+        public CampusMap Create(CampusMap record, out IValidationResult validationResult)
         {
-            if (!_validator.Validate(record, out errors))
+            if (!_validator.ValidateNew(record, out validationResult))
                 return null;
 
-            return DB.NewSP(_spAddCampusMap, _connectionFactory)
+            return SqlValidator.TryExecCatchValidation(
+                () => DB.NewSP(_spAddCampusMap, _connectionFactory)
                     .AddParam(_campusName, record.CampusName)
                     .AddParam(_mapCoordinates, record.MapCoordinates.ToString())
                     .AddTVParam(_metaProperties, GenerateMetaPropertyTable(record))
-                    .ExecExpectOne(x => Create(x));
+                    .ExecExpectOne(x => Create(x))
+                , ref validationResult);
         }
 
         private CampusMap Create(IDataRecord data)
         {
+            var coordinates = Coordinate.ParseMultiCoordinateString(data.GetString(_mapCoordinates));
+            if (coordinates.Count() != 2) return null;
+
             return new CampusMap()
             {
                 MapId = data.GetInt32(data.GetOrdinal(_campusMapId)),
                 CampusName = data.GetString(data.GetOrdinal(_campusName)),
-                MapCoordinates = Coordinate.Parse(data.GetString(_mapCoordinates)),
+                MapCoordinates = new Tuple<Coordinate, Coordinate>(coordinates.First(), coordinates.Last()),
                 MetaProperties = GetMetaProperties(data)
             };
         }
 
-        public bool Update(ref CampusMap record, out ICollection<ValidationError> errors)
+        public bool Update(ref CampusMap record, out IValidationResult validationResult)
         {
-            if (!_validator.Validate(record, out errors))
+            if (!_validator.Validate(record, out validationResult))
                 return false;
 
-            return DB.NewSP(_spEditCampusMap, _connectionFactory)
-                    .AddParam(_campusMapId, record.MapId)
-                    .AddParam(_campusName, record.CampusName)
-                    .AddParam(_mapCoordinates, record.MapCoordinates.ToString())
-                    .AddTVParam(_metaProperties, GenerateMetaPropertyTable(record))
-                    .ExecExpectOne(x => Create(x), out record)
-                    .GetReturnValue<bool>();
+            return SqlValidator.TryExecCatchValidation(
+                (rec) => DB.NewSP(_spEditCampusMap, _connectionFactory)
+                    .AddParam(_campusMapId, rec.MapId)
+                    .AddParam(_campusName, rec.CampusName)
+                    .AddParam(_mapCoordinates, rec.MapCoordinates.ToString())
+                    .AddTVParam(_metaProperties, GenerateMetaPropertyTable(rec))
+                    .ExecExpectOne(x => Create(x), out rec)
+                    .GetReturnValue<bool>()
+                , ref validationResult, ref record);
         }
 
         public bool Delete(int recordId)

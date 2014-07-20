@@ -3,6 +3,7 @@ using Atlassed.Models.MapData;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 
@@ -20,25 +21,27 @@ namespace Atlassed.Repositories.MapData
         private const string _fncCheckBuildingExists = "CheckBuildingExists";
 
         private readonly SqlConnectionFactory _connectionFactory;
-        private readonly IValidator<Building> _validator;
+        private readonly IValidatorWNew<Building, NewBuilding> _validator;
 
-        public BuildingRepository(SqlConnectionFactory f, IValidator<Building> v)
+        public BuildingRepository(SqlConnectionFactory f, IValidatorWNew<Building, NewBuilding> v)
         {
             _connectionFactory = f;
             _validator = v;
         }
 
-        public Building Create(NewBuilding record, out ICollection<ValidationError> errors)
+        public Building Create(NewBuilding record, out IValidationResult validationResult)
         {
-            if (!_validator.Validate(record, out errors))
+            if (!_validator.ValidateNew(record, out validationResult))
                 return null;
 
-            return DB.NewSP(_spAddBuilding, _connectionFactory)
-                .AddParam(CampusRepository._campusMapId, record.CampusMapId)
-                .AddParam(_buildingAddress, record.BuildingAddress)
-                .AddParam(MapEntityRepository._entityCoordinates, Coordinate.MultiToString(record.EntityCoordinates))
-                .AddTVParam(_metaProperties, GenerateMetaPropertyTable(record))
-                .ExecExpectOne(x => Create(x));
+            return SqlValidator.TryExecCatchValidation(
+                () => DB.NewSP(_spAddBuilding, _connectionFactory)
+                    .AddParam(CampusRepository._campusMapId, record.CampusMapId)
+                    .AddParam(_buildingAddress, record.BuildingAddress)
+                    .AddParam(MapEntityRepository._entityCoordinates, Coordinate.MultiToString(record.EntityCoordinates))
+                    .AddTVParam(_metaProperties, GenerateMetaPropertyTable(record))
+                    .ExecExpectOne(x => Create(x))
+                , ref validationResult);
         }
 
         private Building Create(IDataRecord data)
@@ -52,15 +55,17 @@ namespace Atlassed.Repositories.MapData
             };
         }
 
-        public bool Update(ref Building record, out ICollection<ValidationError> errors)
+        public bool Update(ref Building record, out IValidationResult validationResult)
         {
-            if (!_validator.Validate(record, out errors))
+            if (!_validator.Validate(record, out validationResult))
                 return false;
 
-            return DB.NewSP(_spEditBuilding, _connectionFactory)
-                    .AddTVParam(_metaProperties, GenerateMetaPropertyTable(record))
-                    .ExecExpectOne(x => Create(x), out record)
-                    .GetReturnValue<bool>();
+            return SqlValidator.TryExecCatchValidation(
+                (rec) => DB.NewSP(_spEditBuilding, _connectionFactory)
+                    .AddTVParam(_metaProperties, GenerateMetaPropertyTable(rec))
+                    .ExecExpectOne(x => Create(x), out rec)
+                    .GetReturnValue<bool>()
+                , ref validationResult, ref record);
         }
 
         public bool Delete(int recordId)

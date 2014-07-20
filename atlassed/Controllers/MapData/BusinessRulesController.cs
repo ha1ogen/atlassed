@@ -18,8 +18,8 @@ namespace Atlassed.Controllers.MapData
 
         public BusinessRulesController(SqlConnectionFactory f)
         {
-            _repository = new BusinessRuleRepository(f, new BusinessRuleValidator());
-            _businessRuleClassRepository = new BusinessRuleClassRepository(f, new BusinessRuleClassValidator());
+            _repository = new BusinessRuleRepository(f, new BusinessRuleValidator(new MetaObjectValidator(new MetaFieldRepository(f))));
+            _businessRuleClassRepository = new BusinessRuleClassRepository(f, new BusinessRuleClassValidator(new MetaClassValidator()));
         }
 
         [Route("api/BusinessRuleClasses/{classId}/rules")]
@@ -41,18 +41,30 @@ namespace Atlassed.Controllers.MapData
 
         public HttpResponseMessage Post([FromBody]BusinessRule businessRule)
         {
-            ICollection<ValidationError> errors;
-            var br = _repository.Create(businessRule, out errors);
+            if (businessRule == null) throw new HttpResponseException(HttpStatusCode.BadRequest);
+
+            IValidationResult validationResult;
+            var br = _repository.Create(businessRule, out validationResult);
+            if (!validationResult.IsValid())
+                return Request.CreateResponse(HttpStatusCode.BadRequest, validationResult);
+
             return Request.CreateResponse(HttpStatusCode.Created, br);
         }
 
-        public BusinessRule Put([FromBody]BusinessRule businessRule)
+        public HttpResponseMessage Put([FromBody]BusinessRule businessRule)
         {
-            ICollection<ValidationError> errors;
-            if (!_repository.Update(ref businessRule, out errors))
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+            if (businessRule == null) throw new HttpResponseException(HttpStatusCode.BadRequest);
 
-            return businessRule;
+            IValidationResult validationResult;
+            if (!_repository.Update(ref businessRule, out validationResult))
+            {
+                if (!validationResult.IsValid())
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, validationResult);
+
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, businessRule);
         }
 
         public bool Delete(int id)

@@ -20,8 +20,8 @@ namespace Atlassed.Repositories
 
     interface IRepository<T, NT, ID, PID> : IReadOnlyRepository<T, ID, PID>
     {
-        T Create(NT record, out ICollection<ValidationError> errors);
-        bool Update(ref T record, out ICollection<ValidationError> errors);
+        T Create(NT record, out IValidationResult validationResult);
+        bool Update(ref T record, out IValidationResult validationResult);
         bool Delete(ID recordId);
     }
 

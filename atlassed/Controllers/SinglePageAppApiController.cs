@@ -26,5 +26,7 @@ namespace Atlassed.Controllers
                 return _sessionId;
             }
         }
+
+
     }
 }

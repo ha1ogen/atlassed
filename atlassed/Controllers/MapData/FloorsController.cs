@@ -18,8 +18,8 @@ namespace Atlassed.Controllers.MapData
 
         public FloorsController(SqlConnectionFactory f)
         {
-            _repository = new FloorRepository(f, new FloorMapValidator());
-            _buildingRepository = new BuildingRepository(f, new BuildingValidator());
+            _repository = new FloorRepository(f, new FloorMapValidator(new MetaObjectValidator(new MetaFieldRepository(f))));
+            _buildingRepository = new BuildingRepository(f, new BuildingValidator(new MetaObjectValidator(new MetaFieldRepository(f))));
         }
 
         [Route("api/buildings/{id}/floors")]
@@ -41,18 +41,30 @@ namespace Atlassed.Controllers.MapData
 
         public HttpResponseMessage Post([FromBody]FloorMap floor)
         {
-            ICollection<ValidationError> errors;
-            var f = _repository.Create(floor, out errors);
+            if (floor == null) throw new HttpResponseException(HttpStatusCode.BadRequest);
+
+            IValidationResult validationResult;
+            var f = _repository.Create(floor, out validationResult);
+            if (!validationResult.IsValid())
+                return Request.CreateResponse(HttpStatusCode.BadRequest, validationResult);
+
             return Request.CreateResponse(HttpStatusCode.Created, f);
         }
 
-        public FloorMap Put([FromBody]FloorMap floor)
+        public HttpResponseMessage Put([FromBody]FloorMap floor)
         {
-            ICollection<ValidationError> errors;
-            if (!_repository.Update(ref floor, out errors))
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+            if (floor == null) throw new HttpResponseException(HttpStatusCode.BadRequest);
 
-            return floor;
+            IValidationResult validationResult;
+            if (!_repository.Update(ref floor, out validationResult))
+            {
+                if (!validationResult.IsValid())
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, validationResult);
+
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, floor);
         }
 
         public bool Delete(int id)

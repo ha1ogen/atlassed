@@ -22,7 +22,7 @@ namespace Atlassed
                 defaults: new { id = RouteParameter.Optional }
             );
 
-            config.Services.Replace(typeof(IHttpControllerActivator), new ServiceActivator(config));
+            config.Services.Replace(typeof(IHttpControllerActivator), new ControllerActivator(config));
         }
     }
 }

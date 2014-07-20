@@ -21,25 +21,27 @@ namespace Atlassed.Repositories.MapData
         private const string _spSearchMapEntities = "SearchMapEntities";
 
         private readonly SqlConnectionFactory _connectionFactory;
-        private readonly IValidator<MapEntity> _validator;
+        private readonly IValidatorWNew<MapEntity, MapEntity> _validator;
 
-        public MapEntityRepository(SqlConnectionFactory f, IValidator<MapEntity> v)
+        public MapEntityRepository(SqlConnectionFactory f, IValidatorWNew<MapEntity, MapEntity> v)
         {
             _connectionFactory = f;
             _validator = v;
         }
 
-        public MapEntity Create(MapEntity record, out ICollection<ValidationError> errors)
+        public MapEntity Create(MapEntity record, out IValidationResult validationResult)
         {
-            if (!_validator.Validate(record, out errors))
+            if (!_validator.ValidateNew(record, out validationResult))
                 return null;
 
-            return DB.NewSP(_spAddMapEntity, _connectionFactory)
+            return SqlValidator.TryExecCatchValidation(
+                () => DB.NewSP(_spAddMapEntity, _connectionFactory)
                     .AddParam(MapRepository._mapId, record.MapId)
                     .AddParam(MetaClassRepository._className, record.ClassName)
                     .AddParam(_entityCoordinates, Coordinate.MultiToString(record.EntityCoordinates))
                     .AddTVParam(_metaProperties, GenerateMetaPropertyTable(record))
-                    .ExecExpectOne(x => Create(x));
+                    .ExecExpectOne(x => Create(x))
+                , ref validationResult);
         }
 
         private MapEntity Create(IDataRecord data)
@@ -55,16 +57,18 @@ namespace Atlassed.Repositories.MapData
             };
         }
 
-        public bool Update(ref MapEntity record, out ICollection<ValidationError> errors)
+        public bool Update(ref MapEntity record, out IValidationResult validationResult)
         {
-            if (!_validator.Validate(record, out errors))
+            if (!_validator.Validate(record, out validationResult))
                 return false;
 
-            return DB.NewSP(_spEditMapEntity, _connectionFactory)
-                    .AddParam(_entityId, record.EntityId)
-                    .AddTVParam(_metaProperties, GenerateMetaPropertyTable(record))
-                    .ExecExpectOne(x => Create(x), out record)
-                    .GetReturnValue<bool>();
+            return SqlValidator.TryExecCatchValidation(
+                (rec) => DB.NewSP(_spEditMapEntity, _connectionFactory)
+                    .AddParam(_entityId, rec.EntityId)
+                    .AddTVParam(_metaProperties, GenerateMetaPropertyTable(rec))
+                    .ExecExpectOne(x => Create(x), out rec)
+                    .GetReturnValue<bool>()
+                , ref validationResult, ref record);
         }
 
         public bool Delete(int recordId)

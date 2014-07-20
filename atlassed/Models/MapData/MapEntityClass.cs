@@ -22,12 +22,34 @@ namespace Atlassed.Models.MapData
         public string IconFilename { get { return "icon-" + ClassId + _iconFilenameExtension; } }
     }
 
-    public class MapEntityClassValidator : IValidator<MapEntityClass>
+    public class MapEntityClassValidator : IValidatorWNew<MapEntityClass, MapEntityClass>
     {
-        public bool Validate(MapEntityClass record, out ICollection<ValidationError> errors)
+        private readonly IValidatorWNew<MetaClass, MetaClass> _metaClassValidator;
+
+        public MapEntityClassValidator(IValidatorWNew<MetaClass, MetaClass> metaClassValidator)
         {
-            errors = new List<ValidationError>();
-            return true;
+            _metaClassValidator = metaClassValidator;
+        }
+
+        public bool Validate(MapEntityClass record, out IValidationResult result)
+        {
+            _metaClassValidator.Validate(record, out result);
+
+            if (string.IsNullOrEmpty(record.MapLabelFieldName))
+                result.AddError("MapLabelFieldName", "Map Label Field Name is required");
+
+            return result.IsValid();
+        }
+
+
+        public bool ValidateNew(MapEntityClass record, out IValidationResult result)
+        {
+            _metaClassValidator.ValidateNew(record, out result);
+
+            if (string.IsNullOrEmpty(record.MapLabelFieldName))
+                result.AddError("MapLabelFieldName", "Map Label Field Name is required");
+
+            return result.IsValid();
         }
     }
 }

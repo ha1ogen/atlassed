@@ -112,7 +112,7 @@
     <Compile Include="Controllers\MapData\BusinessRulesController.cs" />
     <Compile Include="Controllers\MapData\FloorsController.cs" />
     <Compile Include="Controllers\MapData\MapEntitiesController.cs" />
-    <Compile Include="Controllers\ServiceActivator.cs" />
+    <Compile Include="Controllers\ControllerActivator.cs" />
     <Compile Include="Controllers\SinglePageAppApiController.cs" />
     <Compile Include="Controllers\UserManagement\SessionController.cs" />
     <Compile Include="Global.asax.cs">
@@ -149,7 +149,7 @@
     <Compile Include="Repositories\MapData\MetaClassRepository.cs" />
     <Compile Include="Repositories\MapData\MetaFieldRepository.cs" />
     <Compile Include="Repositories\MapData\MetaObjectRepository.cs" />
-    <Compile Include="Models\ValidationError.cs" />
+    <Compile Include="Repositories\UserManagement\SessionRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

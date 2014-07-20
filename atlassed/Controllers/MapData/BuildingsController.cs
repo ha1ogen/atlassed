@@ -20,8 +20,8 @@ namespace Atlassed.Controllers.MapData
 
         public BuildingsController(SqlConnectionFactory f)
         {
-            _repository = new BuildingRepository(f, new BuildingValidator());
-            _campusRepository = new CampusRepository(f, new CampusMapValidator());
+            _repository = new BuildingRepository(f, new BuildingValidator(new MetaObjectValidator(new MetaFieldRepository(f))));
+            _campusRepository = new CampusRepository(f, new CampusMapValidator(new MetaObjectValidator(new MetaFieldRepository(f))));
         }
 
         public IEnumerable<Building> Get()
@@ -48,20 +48,30 @@ namespace Atlassed.Controllers.MapData
 
         public HttpResponseMessage Post([FromBody]NewBuilding building)
         {
-            ICollection<ValidationError> errors;
-            var b = _repository.Create(building, out errors);
-            if (b == null) throw new HttpResponseException(HttpStatusCode.BadRequest);
+            if (building == null) throw new HttpResponseException(HttpStatusCode.BadRequest);
+
+            IValidationResult validationResult;
+            var b = _repository.Create(building, out validationResult);
+            if (!validationResult.IsValid())
+                return Request.CreateResponse(HttpStatusCode.BadRequest, validationResult);
 
             return Request.CreateResponse(HttpStatusCode.Created, b);
         }
 
-        public Building Put([FromBody]Building building)
+        public HttpResponseMessage Put([FromBody]Building building)
         {
-            ICollection<ValidationError> errors;
-            if (!_repository.Update(ref building, out errors))
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+            if (building == null) throw new HttpResponseException(HttpStatusCode.BadRequest);
 
-            return building;
+            IValidationResult validationResult;
+            if (!_repository.Update(ref building, out validationResult))
+            {
+                if (!validationResult.IsValid())
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, validationResult);
+                else
+                    return Request.CreateResponse(HttpStatusCode.NotFound);
+            }
+
+            return Request.CreateResponse(building);
         }
 
         public bool Delete(int id)

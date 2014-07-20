@@ -32,12 +32,18 @@ namespace Atlassed.Models.MapData
         public string DefaultValue { get; set; }
     }
 
-    public class MetaFieldValidator : IValidator<MetaField>
+    public class MetaFieldValidator : IValidatorWNew<MetaField, NewMetaField>
     {
-        public bool Validate(MetaField record, out ICollection<ValidationError> errors)
+        public bool Validate(MetaField record, out IValidationResult result)
         {
-            errors = new List<ValidationError>();
-            return true;
+            result = new ValidationResult();
+            return result.IsValid();
+        }
+
+
+        public bool ValidateNew(NewMetaField record, out IValidationResult errors)
+        {
+            throw new NotImplementedException();
         }
     }
 }

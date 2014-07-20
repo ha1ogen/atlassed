@@ -17,7 +17,7 @@ namespace Atlassed.Controllers.MapData
 
         public MapEntityClassesController(SqlConnectionFactory f)
         {
-            _repository = new MapEntityClassRepository(f, new MapEntityClassValidator());
+            _repository = new MapEntityClassRepository(f, new MapEntityClassValidator(new MetaClassValidator()));
         }
 
         public IEnumerable<MapEntityClass> Get()
@@ -35,18 +35,30 @@ namespace Atlassed.Controllers.MapData
 
         public HttpResponseMessage Post([FromBody]MapEntityClass mapEntityClass)
         {
-            ICollection<ValidationError> errors;
-            var mec = _repository.Create(mapEntityClass, out errors);
+            if (mapEntityClass == null) throw new HttpResponseException(HttpStatusCode.BadRequest);
+
+            IValidationResult validationResult;
+            var mec = _repository.Create(mapEntityClass, out validationResult);
+            if (!validationResult.IsValid())
+                return Request.CreateResponse(HttpStatusCode.BadRequest, validationResult);
+
             return Request.CreateResponse(HttpStatusCode.Created, mec);
         }
 
-        public MapEntityClass Put([FromBody]MapEntityClass mapEntityClass)
+        public HttpResponseMessage Put([FromBody]MapEntityClass mapEntityClass)
         {
-            ICollection<ValidationError> errors;
-            if (!_repository.Update(ref mapEntityClass, out errors))
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+            if (mapEntityClass == null) throw new HttpResponseException(HttpStatusCode.BadRequest);
 
-            return mapEntityClass;
+            IValidationResult validationResult;
+            if (!_repository.Update(ref mapEntityClass, out validationResult))
+            {
+                if (!validationResult.IsValid())
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, validationResult);
+
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, mapEntityClass);
         }
 
         public bool Delete(int id)

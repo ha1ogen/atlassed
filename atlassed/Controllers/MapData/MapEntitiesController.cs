@@ -18,7 +18,7 @@ namespace Atlassed.Controllers.MapData
 
         public MapEntitiesController(SqlConnectionFactory f)
         {
-            _repository = new MapEntityRepository(f, new MapEntityValidator());
+            _repository = new MapEntityRepository(f, new MapEntityValidator(new MetaObjectValidator(new MetaFieldRepository(f))));
             _mapRepository = new MapRepository(f);
         }
 
@@ -40,7 +40,7 @@ namespace Atlassed.Controllers.MapData
         }
 
         [HttpGet]
-        public List<SearchResult> Search([FromUri]string q, [FromUri]string classNames = "", int? mapId = null, int skip = 0, int? take = null)
+        public List<SearchResult> Search([FromUri]string q, [FromUri]string classNames = "", [FromUri]int? mapId = null, [FromUri]int skip = 0, [FromUri]int? take = null)
         {
             if (take <= 0) throw new ArgumentOutOfRangeException("take", take, "take must be a positive integer");
 
@@ -70,20 +70,30 @@ namespace Atlassed.Controllers.MapData
 
         public HttpResponseMessage Post([FromBody]MapEntity entity)
         {
-            ICollection<ValidationError> errors;
-            var me = _repository.Create(entity, out errors);
+            if (entity == null) throw new HttpResponseException(HttpStatusCode.BadRequest);
+
+            IValidationResult validationResult;
+            var me = _repository.Create(entity, out validationResult);
+            if (!validationResult.IsValid())
+                return Request.CreateResponse(HttpStatusCode.BadRequest, validationResult);
+
             return Request.CreateResponse(HttpStatusCode.Created, me);
         }
 
-        public MapEntity Put([FromBody]MapEntity entity)
+        public HttpResponseMessage Put([FromBody]MapEntity entity)
         {
-            ICollection<ValidationError> errors;
-            if (!_repository.Update(ref entity, out errors))
+            if (entity == null) throw new HttpResponseException(HttpStatusCode.BadRequest);
+
+            IValidationResult validationResult;
+            if (!_repository.Update(ref entity, out validationResult))
             {
+                if (!validationResult.IsValid())
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, validationResult);
+
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return entity;
+            return Request.CreateResponse(HttpStatusCode.OK, entity);
         }
 
         public bool Delete(int id)
