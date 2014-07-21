@@ -209,7 +209,7 @@
                     if (AddingObject) {
                         w = CurrentContext.AddWorkstation(entityId, metafields, EntityDialog.currentPoint);
                     } else {
-                        w = CurrentContext.SaveWorkstation(EntityDialog.locationId, number, port, assignee);
+                        w = CurrentContext.SaveWorkstation(entityId, metafields, EntityDialog.currentPoint);
                     }
 
                     $(this).dialog('close');
