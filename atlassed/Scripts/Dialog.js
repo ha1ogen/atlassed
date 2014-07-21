@@ -206,11 +206,11 @@
                     });
 
                     var w;
-                    // if (AddingObject) {//point, workspaceId, number, port, personId
-                    w = CurrentContext.AddWorkstation(entityId, metafields, EntityDialog.currentPoint);
-                    // } else {//workstationId, point, number, port, personId
-                    //     w = CurrentContext.SaveWorkstation(EntityDialog.locationId, number, port, assignee);
-                    // }
+                    if (AddingObject) {
+                        w = CurrentContext.AddWorkstation(entityId, metafields, EntityDialog.currentPoint);
+                    } else {
+                        w = CurrentContext.SaveWorkstation(EntityDialog.locationId, number, port, assignee);
+                    }
 
                     $(this).dialog('close');
                     EntityDialog.saveCallback(w);
