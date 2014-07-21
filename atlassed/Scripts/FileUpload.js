@@ -1,5 +1,4 @@
 ﻿var VALID_IMG_TYPE = 'image/png';
-var files;
 
 $().ready(function () {
     // call initialization file
@@ -42,11 +41,11 @@ function FileSelectHandler(e) {
     FileDragHover(e);
 
     // fetch FileList object
-    files = e.target.files || e.originalEvent.dataTransfer.files;
+    var files = e.target.files || e.originalEvent.dataTransfer.files;
 
     // process all File objects
     PreviewFile(files[0]);
-    UploadFile(files[0]);
+    UploadFile(files[0], 'api/upload/.../', 'some-id'); // need to determine URI and id
 }
 
 function PreviewFile(file) {
@@ -59,15 +58,13 @@ function PreviewFile(file) {
     }
 }
 
-// upload JPEG files
-function UploadFile(file) {
+function UploadFile(file, uri) {
 
     var xhr = new XMLHttpRequest();
     if (xhr.upload && file.type == VALID_IMG_TYPE && file.size <= $("#MAX_FILE_SIZE").val())
     {
         // start upload
-        var mapId = '2';
-        xhr.open('post', $('#upload').attr('action') + mapId, true);
+        xhr.open('post', uri, true);
         xhr.setRequestHeader('X_FILENAME', file.name);
         // add Session-Id header...
         xhr.send(file);

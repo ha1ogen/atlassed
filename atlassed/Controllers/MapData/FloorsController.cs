@@ -39,6 +39,39 @@ namespace Atlassed.Controllers.MapData
             return f;
         }
 
+        [Route("api/buildings/{buildingId}/floors")]
+        public HttpResponseMessage PostMany(int buildingId, [FromBody]IEnumerable<FloorMap> floors)
+        {
+            if (floors == null || !floors.Any())
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Please provide at least one floor");
+
+            if (!_buildingRepository.RecordExists(buildingId))
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Invalid building ID");
+
+            var createdFloors = new List<FloorMap>();
+            var validationResults = new List<IValidationResult>();
+
+            foreach (var floor in floors)
+            {
+                if (floor == null)
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "null floor provided");
+
+                if (floor.BuildingId != 0)
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "buildingId should not be provided with each floor, it is provided in the request instead");
+
+                floor.BuildingId = buildingId;
+
+                IValidationResult validationResult;
+                createdFloors.Add(_repository.Create(floor, out validationResult));
+                validationResults.Add(validationResult);
+            }
+
+            if (validationResults.Where(x => !x.IsValid()).Any())
+                return Request.CreateResponse(HttpStatusCode.BadRequest, validationResults);
+
+            return Request.CreateResponse(HttpStatusCode.Created, createdFloors);
+        }
+
         public HttpResponseMessage Post([FromBody]FloorMap floor)
         {
             if (floor == null) throw new HttpResponseException(HttpStatusCode.BadRequest);
