@@ -223,8 +223,12 @@
             if (!CurrentContext.IsAdmin()) {
                 return;
             }
-
-            EntityDialog.currentPoint = point;
+            if (point){
+                EntityDialog.currentPoint = point;
+            }
+            else{
+                EntityDialog.currentPoint = w.locationObj.EntityCoordinates[0];
+            }
             EntityDialog.saveCallback = function (result) { if (callback != undefined) return callback(result); };
             EntityDialog.locationId = parentLocationId;
 
