@@ -21,11 +21,9 @@ DELETE api/buildings/{id} : void
 Floors:
 GET api/buildings/{id}/floors : List<FloorMap>
 GET api/floors/{id} : FloorMap
-
 *** NEW ***
 POST api/buildings/{buildingId}/floors List<FloorMap> : List<FloorMap>
 *** NEW ***
-
 POST api/floors FloorMap : FloorMap
 PUT api/floors FloorMap : FloorMap
 DELETE api/floors/{id} : void
