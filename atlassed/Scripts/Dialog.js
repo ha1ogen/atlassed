@@ -206,11 +206,11 @@
                     });
 
                     var w;
-                    // if (AddingObject) {//point, workspaceId, number, port, personId
-                    w = CurrentContext.AddWorkstation(entityId, metafields, EntityDialog.currentPoint);
-                    // } else {//workstationId, point, number, port, personId
-                    //     w = CurrentContext.SaveWorkstation(EntityDialog.locationId, number, port, assignee);
-                    // }
+                    if (AddingObject) {
+                        w = CurrentContext.AddWorkstation(entityId, metafields, EntityDialog.currentPoint);
+                    } else {
+                        w = CurrentContext.SaveWorkstation(entityId, metafields, EntityDialog.currentPoint);
+                    }
 
                     $(this).dialog('close');
                     EntityDialog.saveCallback(w);
@@ -223,8 +223,12 @@
             if (!CurrentContext.IsAdmin()) {
                 return;
             }
-
-            EntityDialog.currentPoint = point;
+            if (point){
+                EntityDialog.currentPoint = point;
+            }
+            else{
+                EntityDialog.currentPoint = w.locationObj.EntityCoordinates[0];
+            }
             EntityDialog.saveCallback = function (result) { if (callback != undefined) return callback(result); };
             EntityDialog.locationId = parentLocationId;
 

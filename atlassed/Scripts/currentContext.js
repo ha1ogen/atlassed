@@ -303,28 +303,41 @@ window.CurrentContext = new (function () {
         return w;
     }
 
-    this.SaveWorkstation = function (workstationId, number, port, personId) {
+    this.SaveWorkstation = function (entityId, metafieldsValues, coordinates) {
         if (!this.IsAdmin()) {
             return false;
         }
-
         var w = null;
+
+        var metafieldsParams = {};
+        var metafields = entityClasses[entityId].MetaFields;
+        for (var i = 0; i < metafields.length; i++) {
+            if (metafields[i].FieldType === "INT") {
+                metafieldsValues[i] = parseInt(metafieldsValues[i]);
+            }
+            else {
+                metafieldsValues[i] = "'"+metafieldsValues[i]+"'";
+            }
+            metafieldsParams[metafields[i].FieldName] = metafieldsValues[i];
+        }
+
         ajax({
-            webservice: 'Admin',
-            func: 'SaveWorkstation',
+            webservice: 'api/mapEntities',
             async: false,
+            type: 'put',
             params: {
-                number: number,
-                port: port,
-                personId: personId,
-                workstationId: workstationId
+                classname: entityClasses[entityId].ClassName,
+                mapId:  parseInt(this.CurrentFloorId),
+                entityCoordinates: [{
+                    x : coordinates.X,
+                    y : coordinates.Y
+                }],
+                metaproperties : metafieldsParams
             },
             success: function (data) {
                 w = data;
             }
         });
-
-        this.LoadFloor(this.CurrentFloorId);
 
         return w;
     }
