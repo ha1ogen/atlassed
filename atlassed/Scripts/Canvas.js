@@ -425,11 +425,16 @@ function mouseup(e) {
             if (obj && obj.type != 'img') {
                 if (obj.type == 'circle') {
                     removeWorkstation(obj);
-                } else if (obj.type == 'rect') {
-                    removeSpace(obj);
                 }
             }
             break;
+        case T_EDIT:
+            if (obj && obj.type != 'img') {
+                if (obj.type == 'circle') {
+                    //Populate edit card, if success perform callback function to change colour
+                    Main.EditEntity('Workstation', obj.locationObj.EntityId);
+                }
+            }
     }
 
     //makes rectangles able to be selected/hovered over well
@@ -438,7 +443,6 @@ function mouseup(e) {
 
 function removeWorkstation(obj) {
     if (confirm("Are you sure you want to delete this workstation?")) {
-        //Temporary Stub to allow for deleting without any server calls
         if (CurrentContext.RemoveWorkstation(obj.locationObj.EntityId)) {
             Canvas.remove(obj);
             HidePin();
