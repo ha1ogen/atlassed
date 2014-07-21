@@ -2,7 +2,8 @@
     T_DRAW_RECT = 'T_DRAW_RECT',
     T_DRAW_POLY = 'T_DRAW_POLY',
     T_TAG_WORKSTATION = 'T_TAG_WORKSTATION',
-    T_ERASE = 'T_ERASE';
+    T_ERASE = 'T_ERASE',
+    T_EDIT = 'T_EDIT';
 var admin = false;
 window.CurrentContext = new (function () {
     var self = this;

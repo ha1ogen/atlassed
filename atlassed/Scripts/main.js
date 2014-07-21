@@ -292,9 +292,9 @@
                 break;
             case 'Workstation':
                 var w = getObjectByLocationId(id);
-                EntityDialog.open(id, w, w.Point, function (newObject) {
+                EntityDialog.open(id, w, function (newObject) {
                     if (newObject != null) {
-                        w.w = newObject;
+                        w.LocationObj = newObject;
                     }
                 });
                 break;
