@@ -64,3 +64,9 @@ GET api/metaFields/{id} : MetaField
 POST api/metaFields MetaField : MetaField
 PUT api/metaFields MetaField : MetaField
 DELETE api/metaFields/{id} : void
+
+Uploads:
+GET images/map/{mapId}/exists : bool
+POST images/map/{mapId} : void
+GET images/entityClassIcon/{classId}/exists : bool
+POST images/entityClassIcon/{classId} : void
