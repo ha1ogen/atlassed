@@ -27,13 +27,13 @@ namespace Atlassed.Controllers.MapData
             _mapRepository = new MapRepository(f);
         }
 
-        [Route("mapImage/{mapId}/exists")]
+        [Route("images/map/{mapId}/exists")]
         public bool GetMapImageExists(int mapId)
         {
             return File.Exists(HttpContext.Current.Server.MapPath(string.Format(Map.MapImagePath, mapId)));
         }
 
-        [Route("mapImage/{mapId}")]
+        [Route("images/map/{mapId}")]
         public HttpResponseMessage PostMap(int mapId)
         {
             if (!_mapRepository.RecordExists(mapId))
@@ -46,13 +46,13 @@ namespace Atlassed.Controllers.MapData
             );
         }
 
-        [Route("enityClassIcon/{classId}/exists")]
+        [Route("images/entityClassIcon/{classId}/exists")]
         public bool GetEntityIconImageExists(int classId)
         {
             return File.Exists(HttpContext.Current.Server.MapPath(string.Format(MapEntityClass.EntityIconPath, classId)));
         }
 
-        [Route("enityClassIcon/{classId}")]
+        [Route("images/entityClassIcon/{classId}")]
         public HttpResponseMessage PostEntityIcon(int classId)
         {
             if (!_mapEntityClassRepository.RecordExists(classId))
