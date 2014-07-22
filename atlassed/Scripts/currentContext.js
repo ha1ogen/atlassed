@@ -264,20 +264,14 @@ window.CurrentContext = new (function () {
     // Workstation
     this.CurrentWorkstation = 0;
 
-    this.AddEditWorkstation = function (add, entityId, metafieldsValues, coordinates) {
+    this.AddEditWorkstation = function (add, classIndex, metafieldsValues, coordinates, entityId) {
         if (!this.IsAdmin()) {
             return false;
         }
-        var type;
-        if (add)
-            type = 'post'; 
-        else 
-            type = 'put';
-
         var w = null;
 
         var metafieldsParams = {};
-        var metafields = entityClasses[entityId].MetaFields;
+        var metafields = entityClasses[classIndex].MetaFields;
         for (var i = 0; i < metafields.length; i++) {
             if (metafields[i].FieldType === "INT") {
                 metafieldsValues[i] = parseInt(metafieldsValues[i]);
@@ -288,19 +282,30 @@ window.CurrentContext = new (function () {
             metafieldsParams[metafields[i].FieldName] = metafieldsValues[i];
         }
 
+       var params = {
+            classname: entityClasses[classIndex].ClassName,
+            mapId:  parseInt(this.CurrentFloorId),
+            entityCoordinates: [{
+                x : coordinates.X,
+                y : coordinates.Y
+            }],
+            metaproperties : metafieldsParams
+        };
+
+        var type;
+        if (add) {
+            type = 'post';
+        } 
+        else {
+            params.entityId = entityId;
+            type = 'put';
+        }
+
         ajax({
             webservice: 'api/mapEntities',
             async: false,
-            type: 'post',
-            params: {
-                classname: entityClasses[entityId].ClassName,
-                mapId:  parseInt(this.CurrentFloorId),
-                entityCoordinates: [{
-                    x : coordinates.X,
-                    y : coordinates.Y
-                }],
-                metaproperties : metafieldsParams
-            },
+            type: type,
+            params: params,
             success: function (data) {
                 w = data;
             }

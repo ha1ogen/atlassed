@@ -234,13 +234,6 @@
                 $('#EntityList').append(o);
             }
         }
-        // load initial meta fields
-        for (var j = 0; j < data[1].MetaFields.length; j++) {
-            var metaField = data[1].MetaFields[j];
-            MetaFieldsWrapper.append('<br/><label id="' + metaField.FieldName + '">' + 
-                metaField.FieldLabel + ':</label>' + 
-                '<input id="' + metaField.FieldName + 'Value"></input>');
-        }
     },
     TransformToHomepage : function () {
         Main.Toolbar.MouseModes.hide();
@@ -292,7 +285,7 @@
                 break;
             case 'Workstation':
                 var w = getObjectByLocationId(id);
-                EntityDialog.open(id, w, function (newObject) {
+                EntityDialog.open(id, w, null, function (newObject) {
                     if (newObject != null) {
                         w.LocationObj = newObject;
                     }

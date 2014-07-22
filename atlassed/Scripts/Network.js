@@ -54,7 +54,7 @@ function ajax(options) {
     if (internalOptions.type === 'get') {
         internalOptions.params = $.param( internalOptions.params );
     }
-    else if (internalOptions.type === 'post' && internalOptions.type === 'put') {
+    else if (internalOptions.type === 'post' || internalOptions.type === 'put') {
         internalOptions.params.metaproperties = 
             JSON.stringify( internalOptions.params.metaproperties || {});
         internalOptions.params.metaproperties = internalOptions.params.metaproperties.replace (/"/g,'');;
