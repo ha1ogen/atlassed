@@ -205,12 +205,8 @@
                         metafields.push(v.value);
                     });
 
-                    var w;
-                    if (AddingObject) {
-                        w = CurrentContext.AddWorkstation(entityId, metafields, EntityDialog.currentPoint);
-                    } else {
-                        w = CurrentContext.SaveWorkstation(entityId, metafields, EntityDialog.currentPoint);
-                    }
+                    var w = CurrentContext.AddEditWorkstation(EntityDialog.addingObject, 
+                        entityId, metafields, EntityDialog.currentPoint);
 
                     $(this).dialog('close');
                     EntityDialog.saveCallback(w);
@@ -232,6 +228,20 @@
             EntityDialog.saveCallback = function (result) { if (callback != undefined) return callback(result); };
             EntityDialog.locationId = parentLocationId;
 
+            if (w !== null && w.locationObj !== null && w.locationObj.MetaProperties != null) {
+                EntityDialog.addingObject = false;
+                $('#EntityListWrapper').hide();
+                var metaProperties = w.locationObj.MetaProperties;
+                for (var fieldName in w.locationObj.MetaProperties) {
+                    var input = $("#" + fieldName + "Value");
+                    input.val(metaProperties[fieldName].Value);
+                }
+                point = w.locationObj.EntityCoordinates[0];
+            }
+            else {
+                EntityDialog.addingObject = true;
+                $('#EntityListWrapper').show();
+            }
             this.dialog('open');
         };
 

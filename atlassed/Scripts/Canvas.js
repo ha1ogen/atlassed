@@ -442,13 +442,13 @@ function mouseup(e) {
 }
 
 function removeWorkstation(obj) {
-    if (confirm("Are you sure you want to delete this workstation?")) {
+    if (confirm("Are you sure you want to delete this location?")) {
         if (CurrentContext.RemoveWorkstation(obj.locationObj.EntityId)) {
             Canvas.remove(obj);
             HidePin();
             SearchResultsDetailsCard.clear();
         } else {
-            alert('Unable to remove the workstation');
+            alert('Unable to remove the location');
         }
     }
 }
