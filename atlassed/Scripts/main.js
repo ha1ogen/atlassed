@@ -287,7 +287,7 @@
                 var w = getObjectByLocationId(id);
                 EntityDialog.open(id, w, null, function (newObject) {
                     if (newObject != null) {
-                        w.LocationObj = newObject;
+                        w.locationObj = newObject;
                     }
                 });
                 break;
