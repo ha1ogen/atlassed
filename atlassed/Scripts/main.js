@@ -100,11 +100,9 @@
         
         Main.Toolbar.find('#T_BUILDINGS').click(function () {
             BuildingDialog.open();
-            PersonDialog.close();
             return false;
         });
         Main.Toolbar.find('#T_PEOPLE').click(function () {
-            PersonDialog.open();
             BuildingDialog.close();
             return false;
         });
@@ -204,7 +202,7 @@
         }
     },
     LoadBuildings : function () {
-        var data = CurrentContext.GetAllBuildings();
+        var data = CurrentContext.GetBuildingsFromServer();
 
         Tile.SelectBuilding.empty();
 
@@ -275,14 +273,6 @@
             case 'Building':
                 BuildingDialog.open(id);
                 break;
-            case 'Space':
-                var s = getObjectByLocationId(id);
-                SpaceDialog.open(id, s, s.TopLeft, s.BottomRight, function (newObject) {
-                    if (newObject != null) {
-                        s.w = newObject;
-                    }
-                });
-                break;
             case 'Workstation':
                 var w = getObjectByLocationId(id);
                 EntityDialog.open(id, w, null, function (newObject) {
@@ -290,9 +280,6 @@
                         w.LocationObj = newObject;
                     }
                 });
-                break;
-            case 'Person':
-                PersonDialog.open(id);
                 break;
             default:
                 throw 'invalid type';

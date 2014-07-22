@@ -15,50 +15,7 @@ window.CurrentContext = new (function () {
     this.CurrentBuildingId = 0;
     this.EditBuildingId = 0;
     var entityClasses = {};
-    var _buildings = 
-                [{  BuildingId:'1', 
-                    BuildingName:'RCH', 
-                    BuildingAddress: 'J.R. Coutts Engineering Lecture Hall Waterloo',
-                    Floors:[{   BuildingId:'1',
-                                FloorNumber:'1', 
-                                FloorId:'11', 
-                                Filename:'rch1.png'},
-                            {   BuildingId:'1',
-                                FloorNumber:'2', 
-                                FloorId:'12', 
-                                Filename:'rch2.png'},
-                            {   BuildingId:'1',
-                                FloorNumber:'3', 
-                                FloorId:'13', 
-                                Filename:'rch3.png'}]}, 
-                            
-                {   BuildingId:'2',
-                    BuildingName:'MC', 
-                    BuildingAddress: 'Mathematics and Computer Waterloo',
-                    Floors:[{   BuildingId:'2',
-                                FloorNumber:'1', 
-                                FloorId:'21', 
-                                Filename:'Atlanta7thfloor.gif'},
-                            {   BuildingId:'2',
-                                FloorNumber:'2', 
-                                FloorId:'22', 
-                                Filename:'Atlanta8thfloor.gif'},
-                            {   BuildingId:'2',
-                                FloorNumber:'3', 
-                                FloorId:'23', 
-                                Filename:'phase5b_2ndfloor.gif'},
-                            {   BuildingId:'2',
-                                FloorNumber:'4', 
-                                FloorId:'24', 
-                                Filename:'phase5b_2ndfloor.gif'},
-                            {   BuildingId:'2',
-                                FloorNumber:'5', 
-                                FloorId:'25', 
-                                Filename:'phase5b_2ndfloor.gif'},
-                            {   BuildingId:'2',
-                                FloorNumber:'6', 
-                                FloorId:'26', 
-                                Filename:'phase5b_2ndfloor.gif'}]}];
+    var _buildings = [];
 
     this.LoadEntityClasses = function () {
         ajax({
@@ -74,7 +31,7 @@ window.CurrentContext = new (function () {
         return entityClasses;
     }
 
-    this.GetAllBuildings = function () {
+    this.GetBuildingsFromServer = function () {
         ajax({
             webservice: 'api/buildings',
             async: false,
@@ -82,6 +39,10 @@ window.CurrentContext = new (function () {
                 _buildings = data;
             }
         });
+        return _buildings;
+    }
+
+    this.GetBuildings = function (buildingId) {
         return _buildings;
     }
 
@@ -94,54 +55,35 @@ window.CurrentContext = new (function () {
         return null;
     }
 
-    this.AddBuilding = function (name, address) {
-        var b = null;
-        ajax({
-            webservice: 'Admin',
-            func: 'AddBuilding',
-            async: false,
-            params: {
-                name: name,
-                address: address
-            },
-            success: function (data) {
-                b = data;
-            }
-        });
-        return b;
-    }
 
-    this.SaveBuilding = function (name, address, floors) {
+    this.AddBuilding = function (name, code, type, faculty, address) {
         if (!this.IsAdmin()) {
             return false;
         }
 
         var success = false;
         ajax({
-            webservice: 'Admin',
-            func: 'SaveBuilding',
+            webservice: 'api/buildings',
+            type:'post',
             async: false,
             params: {
-                buildingId: this.EditBuildingId,
-                name: name,
-                address: address,
-                floors: floors
+                buildingAddress : address,
+                campusmapid : 2,
+                entityCoordinates : [{x:0,y:0}],
+                metaproperties: {
+                    buildingname: name, 
+                    buildingcode: code, 
+                    buildingtype: type, 
+                    buildingfaculty: faculty
+                }
             },
             success: function (data) {
                 if (data !== null) {
-                    _buildings = data;
+                    _buildings.push(data);
                     success = true;
                 }
             }
         });
-
-        // remove any removed floors from the dropdown
-        //var newFloors = 
-        //if (success && this.EditBuildingId == this.CurrentBuildingId) {
-        //    SelectFloor.children().each(function (i, o) {
-
-        //    });
-        //}
 
         return success;
     }

@@ -116,15 +116,6 @@
 
             <!--Dialogs-->
             <div style="display: none;">
-                <div id="PersonDialog">
-                    <div id="PersonInputs">
-                        <label>Name:</label>
-                        <input class="person-name" />
-                        <br />
-                        <label>Extension:</label>
-                        <input class="person-extension" size="6" />
-                    </div>
-                </div>
                 <div id="EntityDialog" style="overflow:hidden">
                     <div id="EntityListWrapper">
                         <label>Type:</label>
@@ -133,43 +124,41 @@
                     <div id="MetaFieldsWrapper">
                     </div>
                 </div>
-                <div id="SpaceDialog">
-                    <label>Number:</label>
-                    <input id="SpaceNumber" />
-                    <br />
-                    <label>Name:</label>
-                    <input id="SpaceName" />
-                </div>
                 <div id="BuildingDialog">
-                    <div id="BuildingInputs">
-                        <label>Name:</label>
-                        <input class="building-name" />
-                        <br />
-                        <label>Address:</label>
-                        <input class="building-address" />
-                        <br />
-                        <br />
-                        <div id="FloorList" style="border: 1px solid black;padding:3px;">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Floor Number</th>
-                                        <th>File</th>
-                                        <th></th>
-                                    </tr>
-                                    <tr class="template" data-floor-id="0">
-                                        <td>
-                                            <input class="floor-number" size="2" maxlength="3" /></td>
-                                        <td>
-                                            <input class="floor-filename" size="20" /></td>
-                                        <td><a class="floor-remove">X</a></td>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                            <a class="add-floor">Add Floor</a>
-                        </div>
-                    </div>
+                    <label>Name:</label>
+                    <input id="BuildingNameValue" />
+                    <br />
+                    <label>Code:</label>
+                    <input id="BuildingCodeValue" />
+                    <br />
+                    <label>Type:</label>
+                    <input id="BuildingTypeValue" />
+                    <br />
+                    <label>Faculty:</label>
+                    <input id="BuildingFacultyValue" />
+                    <br />
+                    <label>Address:</label>
+                    <input id="BuildingAddressValue" />
+                    <!-- <div id="FloorList" style="border: 1px solid black;padding:3px;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Floor Number</th>
+                                    <th>File</th>
+                                    <th></th>
+                                </tr>
+                                <tr class="template" data-floor-id="0">
+                                    <td>
+                                        <input class="floor-number" size="2" maxlength="3" /></td>
+                                    <td>
+                                        <input class="floor-filename" size="20" /></td>
+                                    <td><a class="floor-remove">X</a></td>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <a class="add-floor">Add Floor</a>
+                    </div> -->
                 </div>
             </div>
         </div>
