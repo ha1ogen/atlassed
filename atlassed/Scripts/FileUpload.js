@@ -45,7 +45,7 @@ function FileSelectHandler(e) {
 
     // process all File objects
     PreviewFile(files[0]);
-    UploadFile(files[0], 'api/upload/.../', 'some-id'); // need to determine URI and id
+    UploadFile(files[0], 'api/upload/.../some-id'); // need to determine URI and id
 }
 
 function PreviewFile(file) {

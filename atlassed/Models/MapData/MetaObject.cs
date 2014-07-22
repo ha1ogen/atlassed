@@ -51,17 +51,21 @@ namespace Atlassed.Models.MapData
             var metaProperties = record.MetaPropertiesObject;
             var metaFields = (record.ObjectId != 0) ? _metaFieldRepository.GetMany(record.ObjectId) : _metaFieldRepository.GetMany(record._className);
 
+            var properties = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var prop in metaProperties)
+            {
+                properties.Add(prop.Key, prop.Value.Value<string>());
+            }
+
             foreach (var field in metaFields)
             {
-                var property = metaProperties[field.FieldName];
-                if (property == null)
+                if (!properties.ContainsKey(field.FieldName))
                 {
                     result.AddError(field.FieldName, field.FieldLabel + " is required");
                     continue;
                 }
-                var value = property.Value<string>();
 
-                CheckType(field, value, ref result);
+                CheckType(field, properties[field.FieldName], ref result);
             }
 
             return result.IsValid();
