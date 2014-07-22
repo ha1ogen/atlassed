@@ -176,7 +176,7 @@
 
         // WORKSTATION
         $("#EntityList").change(function() {
-            Dialog.changeEntityDialogClass(CurrentContext.GetEntityClasses()[this.value]);
+            Dialog.changeEntityDialogClass(this.value);
         });
 
 
@@ -233,7 +233,7 @@
                 EntityDialog.currentPoint = w.locationObj.EntityCoordinates[0];
 
             if (w !== null && w.locationObj !== null) {
-                Dialog.changeEntityDialogClass(w.locationObj.ClassName);
+                Dialog.changeEntityDialogClass(null, w.locationObj.ClassName);
                 EntityDialog.addingObject = false;
                 EntityDialog.ClassName = w.locationObj.ClassName;
                 EntityDialog.entityId = w.locationObj.EntityId;
@@ -248,7 +248,7 @@
             else {
                 EntityDialog.addingObject = true;
                 $('#EntityListWrapper').show();
-                Dialog.changeEntityDialogClass('Classroom');
+                Dialog.changeEntityDialogClass(null, 'Classroom');
             }
             this.dialog('open');
         };
@@ -310,32 +310,31 @@
             this.dialog('close');
         }
     },
-    changeEntityDialogClass: function (newClass){
-            var MetaFieldsWrapper = $("#MetaFieldsWrapper");
-            MetaFieldsWrapper.empty();
-            var classes = CurrentContext.GetEntityClasses();
-            if (newClass === null) {
-                var classId = this.value;
-                for (var j = 0; j < classes[classId].MetaFields.length; j++) {
-                    var metaField = classes[classId].MetaFields[j];
-                    MetaFieldsWrapper.append('<br/><label id="' + metaField.FieldName + '">' + 
-                        metaField.FieldLabel + ':</label>' + 
-                        '<input id="' + metaField.FieldName + 'Value"></input>');
-                } 
-            }
-            else {
-                $.each(classes, function (i, v) {
-                    if (v.ClassName === newClass) {
-                        for (var j = 0; j < v.MetaFields.length; j++) {
-                            var metaField = v.MetaFields[j];
-                            MetaFieldsWrapper.append('<br/><label id="' + metaField.FieldName + '">' + 
-                                metaField.FieldLabel + ':</label>' + 
-                                '<input id="' + metaField.FieldName + 'Value"></input>');
-                        } 
-                    }
-                    
-                });
-            }
+    changeEntityDialogClass: function (classIndex, newClass){
+        var MetaFieldsWrapper = $("#MetaFieldsWrapper");
+        MetaFieldsWrapper.empty();
+        var classes = CurrentContext.GetEntityClasses();
+        if (classIndex !== null) {
+            for (var j = 0; j < classes[classIndex].MetaFields.length; j++) {
+                var metaField = classes[classIndex].MetaFields[j];
+                MetaFieldsWrapper.append('<br/><label id="' + metaField.FieldName + '">' + 
+                    metaField.FieldLabel + ':</label>' + 
+                    '<input id="' + metaField.FieldName + 'Value"></input>');
+            } 
         }
+        else {
+            $.each(classes, function (i, v) {
+                if (v.ClassName === newClass) {
+                    for (var j = 0; j < v.MetaFields.length; j++) {
+                        var metaField = v.MetaFields[j];
+                        MetaFieldsWrapper.append('<br/><label id="' + metaField.FieldName + '">' + 
+                            metaField.FieldLabel + ':</label>' + 
+                            '<input id="' + metaField.FieldName + 'Value"></input>');
+                    } 
+                }
+                
+            });
+        }
+    }
 }
 
