@@ -95,13 +95,6 @@ namespace Atlassed.Repositories
         // EXECUTORS
         public static T ExecExpectReturnValue<T>(this SqlCommand query)
         {
-            query.Parameters.Add(new SqlParameter
-            {
-                ParameterName = __returnParamName,
-                SqlDbType = SqlDbType.Int,
-                Direction = ParameterDirection.ReturnValue
-            });
-
             query.ExecNonQuery();
             return query.GetReturnValue<T>();
         }
@@ -118,6 +111,13 @@ namespace Atlassed.Repositories
 
         public static int ExecNonQuery(this SqlCommand query)
         {
+            query.Parameters.Add(new SqlParameter
+            {
+                ParameterName = __returnParamName,
+                SqlDbType = SqlDbType.Int,
+                Direction = ParameterDirection.ReturnValue
+            });
+
             using (query.Connection)
             {
                 return query.ExecuteNonQuery();
@@ -164,6 +164,13 @@ namespace Atlassed.Repositories
 
         public static Collection<T> ExecExpectMultiple<T>(this SqlCommand query, Func<IDataRecord, T> convert)
         {
+            query.Parameters.Add(new SqlParameter
+            {
+                ParameterName = __returnParamName,
+                SqlDbType = SqlDbType.Int,
+                Direction = ParameterDirection.ReturnValue
+            });
+
             using (query.Connection)
             {
                 var result = query.ExecuteReader();
