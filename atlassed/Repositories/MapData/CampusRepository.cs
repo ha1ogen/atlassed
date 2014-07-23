@@ -3,6 +3,7 @@ using Atlassed.Models.MapData;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 
@@ -62,15 +63,21 @@ namespace Atlassed.Repositories.MapData
             if (!_validator.Validate(record, out validationResult))
                 return false;
 
-            return SqlValidator.TryExecCatchValidation(
-                (rec) => DB.NewSP(_spEditCampusMap, _connectionFactory)
-                    .AddParam(_campusMapId, rec.MapId)
-                    .AddParam(_campusName, rec.CampusName)
-                    .AddParam(_mapCoordinates, rec.MapCoordinates.ToString())
-                    .AddTVParam(_metaProperties, GenerateMetaPropertyTable(rec))
-                    .ExecExpectOne(x => Create(x), out rec)
-                    .GetReturnValue<bool>()
-                , ref validationResult, ref record);
+            try
+            {
+                return DB.NewSP(_spEditCampusMap, _connectionFactory)
+                    .AddParam(_campusMapId, record.MapId)
+                    .AddParam(_campusName, record.CampusName)
+                    .AddParam(_mapCoordinates, record.MapCoordinates.ToString())
+                    .AddTVParam(_metaProperties, GenerateMetaPropertyTable(record))
+                    .ExecExpectOne(x => Create(x), out record)
+                    .GetReturnValue<bool>();
+            }
+            catch (SqlException e)
+            {
+                e.ParseValidationMessages(ref validationResult);
+                return false;
+            }
         }
 
         public bool Delete(int recordId)

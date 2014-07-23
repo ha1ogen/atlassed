@@ -3,6 +3,7 @@ using Atlassed.Models.MapData;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 
@@ -65,16 +66,22 @@ namespace Atlassed.Repositories.MapData
             if (!_validator.Validate(record, out validationResult))
                 return false;
 
-            return SqlValidator.TryExecCatchValidation(
-                (rec) => DB.NewSP(_spEditFloor, _connectionFactory)
-                    .AddParam(_floorMapId, rec.MapId)
-                    .AddParam(_floorOrdinal, rec.FloorOrdinal)
-                    .AddParam(_floorCode, rec.FloorCode)
-                    .AddParam(_floorLabel, rec.FloorLabel)
-                    .AddTVParam(_metaProperties, GenerateMetaPropertyTable(rec))
-                    .ExecExpectOne(x => Create(x), out rec)
-                    .GetReturnValue<bool>()
-                , ref validationResult, ref record);
+            try
+            {
+                return DB.NewSP(_spEditFloor, _connectionFactory)
+                    .AddParam(_floorMapId, record.MapId)
+                    .AddParam(_floorOrdinal, record.FloorOrdinal)
+                    .AddParam(_floorCode, record.FloorCode)
+                    .AddParam(_floorLabel, record.FloorLabel)
+                    .AddTVParam(_metaProperties, GenerateMetaPropertyTable(record))
+                    .ExecExpectOne(x => Create(x), out record)
+                    .GetReturnValue<bool>();
+            }
+            catch (SqlException e)
+            {
+                e.ParseValidationMessages(ref validationResult);
+                return false;
+            }
         }
 
         public bool Delete(int recordId)

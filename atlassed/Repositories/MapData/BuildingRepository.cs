@@ -60,12 +60,20 @@ namespace Atlassed.Repositories.MapData
             if (!_validator.Validate(record, out validationResult))
                 return false;
 
-            return SqlValidator.TryExecCatchValidation(
-                (rec) => DB.NewSP(_spEditBuilding, _connectionFactory)
-                    .AddTVParam(_metaProperties, GenerateMetaPropertyTable(rec))
-                    .ExecExpectOne(x => Create(x), out rec)
-                    .GetReturnValue<bool>()
-                , ref validationResult, ref record);
+            try
+            {
+                return DB.NewSP(_spEditBuilding, _connectionFactory)
+                    .AddParam(_buildingId, record.BuildingId)
+                    .AddParam(_buildingAddress, record.BuildingAddress)
+                    .AddTVParam(_metaProperties, GenerateMetaPropertyTable(record))
+                    .ExecExpectOne(x => Create(x), out record)
+                    .GetReturnValue<bool>();
+            }
+            catch (SqlException e)
+            {
+                e.ParseValidationMessages(ref validationResult);
+                return false;
+            }
         }
 
         public bool Delete(int recordId)

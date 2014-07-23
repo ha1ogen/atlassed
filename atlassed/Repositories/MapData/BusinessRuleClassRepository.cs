@@ -3,6 +3,7 @@ using Atlassed.Models.MapData;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 
@@ -58,13 +59,19 @@ namespace Atlassed.Repositories.MapData
             if (!_validator.Validate(record, out validationResult))
                 return false;
 
-            return SqlValidator.TryExecCatchValidation(
-                (rec) => DB.NewSP(_spEditBusinessRuleClass, _connectionFactory)
-                    .AddParam(_classId, rec.ClassId)
-                    .AddParam(_classLabel, rec.ClassLabel)
-                    .ExecExpectOne(x => Create(x), out rec)
-                    .GetReturnValue<bool>()
-                , ref validationResult, ref record);
+            try
+            {
+                return DB.NewSP(_spEditBusinessRuleClass, _connectionFactory)
+                    .AddParam(_classId, record.ClassId)
+                    .AddParam(_classLabel, record.ClassLabel)
+                    .ExecExpectOne(x => Create(x), out record)
+                    .GetReturnValue<bool>();
+            }
+            catch (SqlException e)
+            {
+                e.ParseValidationMessages(ref validationResult);
+                return false;
+            }
         }
 
         public bool Delete(int recordId)

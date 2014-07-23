@@ -90,18 +90,5 @@ namespace Atlassed.Models
                 return default(T);
             }
         }
-
-        public static TOut TryExecCatchValidation<T, TOut>(Func<T, TOut> executeQuery, ref IValidationResult validationResult, ref T record)
-        {
-            try
-            {
-                return executeQuery(record);
-            }
-            catch (SqlException e)
-            {
-                e.ParseValidationMessages(ref validationResult);
-                return default(TOut);
-            }
-        }
     }
 }
