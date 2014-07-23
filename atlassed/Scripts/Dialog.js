@@ -115,6 +115,15 @@
 
                     var w = CurrentContext.AddEditWorkstation(EntityDialog.addingObject, 
                         classIndex, metafields, EntityDialog.currentPoint, EntityDialog.entityId);
+                    
+                    if (w == null && !EntityDialog.addingObject) {
+                        var o = getObjectByLocationId(EntityDialog.locationId);
+                        var n = 0;
+                        $.each(o.locationObj.MetaProperties, function (i, e) {
+                            e.Value = metafields[n];
+                            n++;
+                        });
+                    }
 
                     $(this).dialog('close');
                     EntityDialog.saveCallback(w);
