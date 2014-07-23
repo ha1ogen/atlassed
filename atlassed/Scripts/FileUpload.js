@@ -45,7 +45,7 @@ function FileSelectHandler(e) {
 
     // process all File objects
     PreviewFile(files[0]);
-    UploadFile(files[0], 'api/upload/.../some-id'); // need to determine URI and id
+    UploadFile(files[0], 'http://localhost:81/api/upload/images/map/1145'); // need to determine URI and id
 }
 
 function PreviewFile(file) {
@@ -61,7 +61,7 @@ function PreviewFile(file) {
 function UploadFile(file, uri) {
 
     var xhr = new XMLHttpRequest();
-    if (xhr.upload && file.type == VALID_IMG_TYPE && file.size <= $("#MAX_FILE_SIZE").val())
+    if (xhr.upload && file.type == VALID_IMG_TYPE)
     {
         // start upload
         xhr.open('post', uri, true);
