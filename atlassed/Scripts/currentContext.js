@@ -61,7 +61,7 @@ window.CurrentContext = new (function () {
             return false;
         }
 
-        var success = false;
+        var w = null;
         ajax({
             webservice: 'api/buildings',
             type:'post',
@@ -80,12 +80,12 @@ window.CurrentContext = new (function () {
             success: function (data) {
                 if (data !== null) {
                     _buildings.push(data);
-                    success = true;
+                    w = data;
                 }
             }
         });
 
-        return success;
+        return w;
     }
 
     this.RemoveBuilding = function (buildingId) {
@@ -201,6 +201,38 @@ window.CurrentContext = new (function () {
             }
         });
         return _floors;
+    }
+
+    this.AddFloor = function (buildingId, floors) {
+        if (!this.IsAdmin()) {
+            return false;
+        }
+        var w = null;
+
+        var params = [];
+
+        $.each(floors, function (i, n) {
+            params.push({
+                floorordinal: parseInt(n),
+                floorcode: n,
+                floorlabel: n,        
+                metaproperties : '{}'
+            });
+        });
+
+        ajax({
+            webservice: 'api/buildings/' + buildingId+ '/floors',
+            async: false,
+            type: 'post',
+            params: {
+                '' : params
+            },
+            success: function (data) {
+                w = data;
+            }
+        });
+
+        return w;
     }
 
     // Workstation

@@ -54,7 +54,9 @@ function ajax(options) {
     if (internalOptions.type === 'get') {
         internalOptions.params = $.param( internalOptions.params );
     }
-    else if (internalOptions.type === 'post' || internalOptions.type === 'put') {
+    else if (internalOptions.params.metaproperties != null &&
+        (internalOptions.type === 'post' || internalOptions.type === 'put')) {
+
         internalOptions.params.metaproperties = 
             JSON.stringify( internalOptions.params.metaproperties || {});
         internalOptions.params.metaproperties = internalOptions.params.metaproperties.replace (/"/g,'');;
@@ -75,3 +77,15 @@ function ajax(options) {
     return a;
 }
 
+function uploadFile(file, uri) {
+
+    var xhr = new XMLHttpRequest();
+    if (xhr.upload && file.type == 'image/png')
+    {
+        // start upload
+        xhr.open('post', uri, true);
+        xhr.setRequestHeader('X_FILENAME', file.name);
+        // add Session-Id header...
+        xhr.send(file);
+    }
+}

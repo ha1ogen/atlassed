@@ -32,7 +32,7 @@
         Tile.init();
         // END INITIATE ELEMENT HANDLES
 
-        Main.LoadBuildings();
+        Main.LoadBuildings(true);
         CurrentContext.LoadEntityClasses();
 
         // ATTACH EVENT HANDLERS
@@ -100,10 +100,6 @@
         
         Main.Toolbar.find('#T_BUILDINGS').click(function () {
             BuildingDialog.open();
-            return false;
-        });
-        Main.Toolbar.find('#T_PEOPLE').click(function () {
-            BuildingDialog.close();
             return false;
         });
 
@@ -201,8 +197,11 @@
             CenterSearch();
         }
     },
-    LoadBuildings : function () {
-        var data = CurrentContext.GetBuildingsFromServer();
+    LoadBuildings : function (fromserver) {
+        if (fromserver)
+            data = CurrentContext.GetBuildingsFromServer();
+        else
+            data = CurrentContext.GetBuildings();
 
         Tile.SelectBuilding.empty();
 

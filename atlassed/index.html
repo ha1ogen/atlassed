@@ -67,7 +67,7 @@
     
         <!--Toolbar-->
         <div id="HideAdminToolbar" runat="server">
-            <div id="Toolbar" class="floating-container">
+            <div id="Toolbar" class="floating-container" style="left:0px;">
                 <div id="MouseModes" class="toolbar-button-group">
                     <button id="T_SELECT" class="toolbar-button toggle-button selected">Select</button>
                     <button id="T_ERASE" class="toolbar-button toggle-button">Erase</button>
@@ -78,7 +78,6 @@
                 </div>
                 <div id="DataActions" class="toolbar-button-group">
                     <button id="T_BUILDINGS" class="toolbar-button">Add Building</button>
-                    <button id="T_PEOPLE" class="toolbar-button">Add Person</button>
                 </div>
             </div>
             <!--Tiles-->
@@ -139,7 +138,7 @@
                     <br />
                     <label>Address:</label>
                     <input id="BuildingAddressValue" />
-                    <!-- <div id="FloorList" style="border: 1px solid black;padding:3px;">
+                    <div id="FloorList">
                         <table>
                             <thead>
                                 <tr>
@@ -151,14 +150,15 @@
                                     <td>
                                         <input class="floor-number" size="2" maxlength="3" /></td>
                                     <td>
-                                        <input class="floor-filename" size="20" /></td>
+                                        <input type="file" id="fileselect" class="floor-filename" 
+                                        name="fileselect" />
                                     <td><a class="floor-remove">X</a></td>
                                 </tr>
                             </thead>
                             <tbody></tbody>
                         </table>
                         <a class="add-floor">Add Floor</a>
-                    </div> -->
+                    </div>
                 </div>
             </div>
         </div>

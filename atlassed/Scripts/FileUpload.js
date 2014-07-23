@@ -48,7 +48,7 @@ function FileSelectHandler(e) {
     UploadFile(files[0], 'http://localhost:81/api/upload/images/map/1145'); // need to determine URI and id
 }
 
-function PreviewFile(file) {
+function PreviewFile(file) {    
     if (file.type === VALID_IMG_TYPE) {
         var reader = new FileReader();
         reader.onload = function (e) {

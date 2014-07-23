@@ -23,25 +23,35 @@
                 },
                 Save: function () {
 
-                    // var validationMessage = '';
-                    // if (name.length == 0) {
-                    //     validationMessage += 'Building name is required. ';
-                    // }
-                    // if (floors.length == 0) {
-                    //     validationMessage += 'Each building must have at least one floor. ';
-                    // }
-                    // if (validationMessage.length > 0) {
-                    //     alert(validationMessage);
-                    //     return;
-                    // }
-
                     var name = "'" + $("#BuildingNameValue").val() + "'";
                     var code = "'" + $("#BuildingCodeValue").val()+ "'";
                     var type = "'" + $("#BuildingTypeValue").val()+ "'";
                     var faculty ="'" +  $("#BuildingFacultyValue").val()+ "'";
                     var address = "'" + $("#BuildingAddressValue").val()+ "'";
 
-                    CurrentContext.AddBuilding(name, code, type, faculty, address);
+                    var returnData = CurrentContext.AddBuilding(name, code, type, faculty, address);
+
+                    if (returnData !== null) {
+                        var floors=[];
+                        FloorList.find('tbody').children().each(function (i, f) {
+                            var n = $(f).find('.floor-number').val()
+                            floors.push(n);
+                        });
+                        var floorReturnData = CurrentContext.AddFloor(returnData.BuildingId, floors);
+
+                        if (floorReturnData !== null) {
+                            var  i = 0;
+                            FloorList.find('tbody').children().each(function (i, f) {
+                                var file = $(f).find('.floor-filename')[0].files[0];
+                                if (file != null) {
+                                    uploadFile(file, 'api/upload/images/map/' + floorReturnData[i].MapId);
+                                    i++;    
+                                }
+                            });                            
+                        }
+                    }
+
+                    Main.LoadBuildings(false);
 
                     BuildingDialog.dialog('close');
                 }
@@ -54,11 +64,16 @@
                 return;
             }
 
+            removeAllFloors();
+
             this.dialog('open');
         }
         BuildingDialog.close = function () {
             this.dialog('close');
         }
+        BuildingDialog.find('.add-floor').click(function () {
+            addFloorRow();
+        });
 
         function addFloorRow(floorId, number, filename) {
             var tr = FloorTemplate.clone();
