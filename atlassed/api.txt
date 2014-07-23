@@ -69,7 +69,7 @@ PUT api/metaFields MetaField : MetaField
 DELETE api/metaFields/{id} : void
 
 Uploads:								*** NEW ***
-GET images/map/{mapId}/exists : bool
-POST images/map/{mapId} : void
-GET images/entityClassIcon/{classId}/exists : bool
-POST images/entityClassIcon/{classId} : void
+GET api/upload/images/map/{mapId}/exists : bool
+POST api/upload/images/map/{mapId} : void
+GET api/upload/images/entityClassIcon/{classId}/exists : bool
+POST api/upload/images/entityClassIcon/{classId} : void
